@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:tfields/settings.dart';
@@ -36,7 +37,7 @@ mixin SettingsReader<S extends CommonSettings> {
 mixin CommonSettingsReader on SettingsReader<CommonSettings> {
   @override
   CommonSettings settingsFromJson(String fileContents) =>
-      CommonSettings.fromJson(fileContents);
+      CommonSettings.fromJson(json.decode(fileContents));
 
   @override
   CommonSettings settingsFromDefault() => CommonSettings.fromDefault();

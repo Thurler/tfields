@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:tfields/logger.dart';
 
@@ -20,8 +18,7 @@ class CommonSettings {
   CommonSettings.fromDefault();
 
   /// Initialize settings from a serialized JSON map
-  CommonSettings.fromJson(String raw) {
-    Map<String, dynamic> jsonContents = json.decode(raw);
+  CommonSettings.fromJson(Map<String, dynamic> jsonContents) {
     if (jsonContents.containsKey('logLevel')) {
       logLevel = LogLevel.fromName(jsonContents['logLevel']);
     }
@@ -32,11 +29,8 @@ class CommonSettings {
 
   /// Serialize settings into a JSON map
   @mustCallSuper
-  String toJson() {
-    Map<String, dynamic> result = <String, dynamic>{
-      'logLevel': logLevel.name,
-      'checkUpdates': checkUpdates,
-    };
-    return json.encode(result);
-  }
+  Map<String, dynamic> toJson() => <String, dynamic>{
+    'logLevel': logLevel.name,
+    'checkUpdates': checkUpdates,
+  };
 }

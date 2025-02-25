@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -87,7 +88,7 @@ abstract class AbstractSettingsState<S extends CommonSettings,
     // internal settings
     try {
       File settingsFile = File('./settings.json');
-      settingsFile.writeAsStringSync('${settings.toJson()}\n');
+      settingsFile.writeAsStringSync('${json.encode(settings.toJson())}\n');
     } on FileSystemException catch (e) {
       await _handleFileSystemException(e);
       return;
