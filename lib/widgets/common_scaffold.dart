@@ -58,7 +58,7 @@ class CommonScaffold extends StatelessWidget {
           if (settingsLink != null)
             // Only add settings action if we pass the function in
             TAppBarButton(
-              text: 'Configurações',
+              text: 'Settings',
               icon: Icons.settings,
               onTap: settingsLink!,
             ),
