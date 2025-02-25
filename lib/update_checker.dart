@@ -28,11 +28,14 @@ abstract class UpdateCheck with Loggable {
   /// Whether an update is available to download
   bool hasUpdate = false;
 
+  /// The latest version detected
+  String latestVersion = '';
+
   /// Make an HTTP request to Github and check for software updates. The request
   /// fetches the latest version, which is then compared to the current one
   /// residing in the code somewhere
   Future<void> checkForUpdates(
-    String currentVerison,
+    String currentVersion,
     Function() callback,
   ) async {
     // Never check multiple times
@@ -40,6 +43,7 @@ abstract class UpdateCheck with Loggable {
       return;
     }
     try {
+      latestVersion = currentVersion;
       AgattpJsonResponse<Map<String, dynamic>> response = await agattp.getJson(
         Uri.parse(githubEndpoint),
       );
@@ -49,10 +53,10 @@ abstract class UpdateCheck with Loggable {
         updateCheckSucceeded = false;
       } else {
         latestVersionUrl = body['html_url'];
-        String latestVersion = body['tag_name'];
+        latestVersion = body['tag_name'];
         // Yes I know it should have a proper compare, but are you REALLY that
         // concerned about a rollback?
-        hasUpdate = latestVersion != currentVerison;
+        hasUpdate = latestVersion != currentVersion;
         updateCheckSucceeded = true;
       }
     } catch (e) {
