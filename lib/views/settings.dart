@@ -14,21 +14,21 @@ import 'package:tfields/widgets/form/switch.dart';
 import 'package:tfields/widgets/rounded_border.dart';
 
 /// The widget that allows the user to change app settingss
-abstract class CommonSettingsWidget<S extends CommonSettings>
+abstract class AbstractSettingsWidget<S extends CommonSettings>
     extends StatefulWidget {
   final String title;
-  const CommonSettingsWidget({required this.title, super.key});
+  const AbstractSettingsWidget({required this.title, super.key});
 }
 
 /// The state consists only of the form elements, so we mix DiscardableChanges
 /// in to easily handle the changes in that state for us
-abstract class CommonSettingsState<S extends CommonSettings>
-    extends State<CommonSettingsWidget<S>>
+abstract class AbstractSettingsState<S extends CommonSettings>
+    extends State<AbstractSettingsWidget<S>>
     with
         Loggable,
         SettingsReader<S>,
-        AlertHandler<CommonSettingsWidget<S>>,
-        DiscardableChanges<CommonSettingsWidget<S>> {
+        AlertHandler<AbstractSettingsWidget<S>>,
+        DiscardableChanges<AbstractSettingsWidget<S>> {
   /// The dialog message to use on unhandled exceptions
   String get unhandledExceptionMessage;
 
