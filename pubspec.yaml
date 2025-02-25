@@ -1,0 +1,21 @@
+name: tfields
+description: "Thurler Flutter Fields and Widgets"
+version: 0.0.1
+
+publish_to: none
+
+environment:
+  sdk: ^3.5.4
+  flutter: ">=1.17.0"
+
+dependencies:
+  agattp:
+    git:
+      url: git@github.com:anlix-io/agattp.git
+      ref: v1.0.0
+  flutter:
+    sdk: flutter
+  url_launcher: ^6.1.11
+
+dev_dependencies:
+  flutter_lints: ^4.0.0
