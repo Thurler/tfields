@@ -115,7 +115,7 @@ class TFormDropdownState extends TFormState<String, TFormDropdown> {
   /// The controller used for the "other" option, if enabled
   final TextEditingController otherOptionController = TextEditingController();
 
-  late final List<String> _options;
+  late List<String> _options;
 
   /// Callback used in the DropdownButton
   void _updateValue(String? value) {
