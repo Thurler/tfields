@@ -13,6 +13,8 @@
 .metadata
 .flutter-plugins
 migrate_working_dir/
+settings.json
+applicationlog.txt
 
 # IntelliJ related
 *.iml
