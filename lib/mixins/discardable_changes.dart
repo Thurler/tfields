@@ -43,10 +43,10 @@ mixin DiscardableChanges<T extends StatefulWidget>
   Future<bool> _showUnsavedChangesDialog() {
     return showBoolDialog(
       TDialog.boolWarning(
-        titleText: 'Você tem alterações não salvas!',
-        bodyText: 'Tem certeza que deseja voltar e descartar suas alterações?',
-        confirmText: 'Sim, pode descartar',
-        cancelText: 'Não, permanecer aqui',
+        titleText: 'You have unsaved changes!',
+        bodyText: 'Are you sure you want to go back and discard your changes?',
+        confirmText: 'Yes, discard them',
+        cancelText: 'No, keep me here',
       ),
     );
   }

@@ -15,11 +15,11 @@ import 'package:tfields/settings.dart';
 /// the application, usually impeding normal operation in some way
 /// - None: nothing is logged, good luck debugging
 enum LogLevel {
-  debug('Debug (tudo será logado)'),
-  info('Info (informações de debug serão omitidas)'),
-  warning('Warning (somente alertas e erros serão logados)'),
-  error('Error (somente erros serão logados)'),
-  none('None (nada será logado)');
+  debug('Debug (everything is logged)'),
+  info('Info (major actions and higher are logged)'),
+  warning('Warning (warnings and higher are logged)'),
+  error('Error (only errors are logged)'),
+  none('None (nothing is logged)');
 
   /// The pretty text to be displayed in the settings dropdown
   final String dropdownText;

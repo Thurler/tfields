@@ -60,9 +60,9 @@ abstract class CommonSettingsState<S extends CommonSettings>
   Future<void> _handleFileSystemException(FileSystemException e) {
     return handleException(
       logMessage: 'FileSystem Exception when saving settings: ${e.message}',
-      dialogTitle: 'Um erro ocorreu ao salvar as configurações!',
-      dialogBody: 'Verifique se o seu usuário tem permissão de escrita no '
-          'diretório em que o Flashify foi instalado.',
+      dialogTitle: 'An error occured when saving the settings!',
+      dialogBody: 'Make sure your user has permission to write a file in '
+          'the folder this app is in.',
     );
   }
 
