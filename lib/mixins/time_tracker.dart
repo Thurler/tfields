@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 /// can be started, stopped and resumed to keep track of how many seconds have
 /// passed since it was started
 mixin TimeTracker<T extends StatefulWidget> on State<T> {
+  bool timerIsActive = false;
   int elapsedSeconds = 0;
   Timer? _timer;
 
@@ -13,8 +14,10 @@ mixin TimeTracker<T extends StatefulWidget> on State<T> {
 
   /// Start the timer, resetting the number of elapsed seconds to zero
   void startTimer() {
-    elapsedSeconds = 0;
-    _timer?.cancel();
+    setState(() {
+      elapsedSeconds = 0;
+    });
+    stopTimer();
     resumeTimer();
   }
 
@@ -24,6 +27,9 @@ mixin TimeTracker<T extends StatefulWidget> on State<T> {
     if (_timer != null) {
       return;
     }
+    setState(() {
+      timerIsActive = true;
+    });
     _timer = Timer.periodic(
       const Duration(seconds: 1),
       (_) => setState(() {
@@ -36,5 +42,8 @@ mixin TimeTracker<T extends StatefulWidget> on State<T> {
   void stopTimer() {
     _timer?.cancel();
     _timer = null;
+    setState(() {
+      timerIsActive = false;
+    });
   }
 }
