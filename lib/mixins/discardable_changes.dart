@@ -40,7 +40,7 @@ mixin DiscardableChanges<T extends StatefulWidget>
 
   /// Shows the unsaved changes dialog to the user, returning whether it was
   /// accepted or dismissed
-  Future<bool> _showUnsavedChangesDialog() {
+  Future<bool> showUnsavedChangesDialog() {
     return showBoolDialog(
       TDialog.boolWarning(
         titleText: 'You have unsaved changes!',
@@ -60,7 +60,7 @@ mixin DiscardableChanges<T extends StatefulWidget>
       return;
     }
     NavigatorState state = Navigator.of(context);
-    bool canDiscard = await _showUnsavedChangesDialog();
+    bool canDiscard = await showUnsavedChangesDialog();
     if (canDiscard) {
       await log(LogLevel.info, 'Discarding changes');
       if (state.mounted) {
