@@ -22,13 +22,9 @@ abstract class AbstractSettingsWidget<S extends CommonSettings>
 
 /// The state consists only of the form elements, so we mix DiscardableChanges
 /// in to easily handle the changes in that state for us
-abstract class AbstractSettingsState<S extends CommonSettings>
-    extends State<AbstractSettingsWidget<S>>
-    with
-        Loggable,
-        SettingsReader<S>,
-        AlertHandler<AbstractSettingsWidget<S>>,
-        DiscardableChanges<AbstractSettingsWidget<S>> {
+abstract class AbstractSettingsState<S extends CommonSettings,
+        T extends AbstractSettingsWidget<S>> extends State<T>
+    with Loggable, SettingsReader<S>, AlertHandler<T>, DiscardableChanges<T> {
   /// The dialog message to use on unhandled exceptions
   String get unhandledExceptionMessage;
 
