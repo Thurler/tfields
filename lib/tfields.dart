@@ -22,4 +22,5 @@ export 'widgets/rounded_border.dart';
 export 'widgets/save_button.dart';
 export 'widgets/spaced_row.dart';
 export 'widgets/switch.dart';
+export 'widgets/title_divider.dart';
 export 'widgets/update_status.dart';
