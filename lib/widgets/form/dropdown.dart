@@ -177,6 +177,7 @@ class TFormDropdownState extends TFormState<String, TFormDropdown> {
     super.initState();
     _options = widget.options;
     otherOptionController.addListener(() {
+      validate();
       widget.onValueChanged?.call(value);
     });
   }
