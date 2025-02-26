@@ -21,6 +21,7 @@ import 'package:tfields/widgets/switch.dart';
 import 'package:tfields/widgets/title_divider.dart';
 import 'package:tfields/widgets/update_status.dart';
 import 'package:tfields_example/custom_settings.dart';
+import 'package:tfields_example/form_showcase.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -118,7 +119,13 @@ class MainState extends State<MainWidget>
   }
 
   /// Navigate away to the form showcase widget
-  Future<void> _navigateToFormShowcase() async {}
+  Future<void> _navigateToFormShowcase() async {
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => const FormShowcase(),
+      ),
+    );
+  }
 
   /// Simple callback to update switch value
   void _toggleSwitch({required bool newValue}) => setState(() {
