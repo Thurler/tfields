@@ -32,6 +32,9 @@ class CommonScaffold extends StatelessWidget {
   /// The CrossAxisAlignment for the Column
   final CrossAxisAlignment crossAxisAlignment;
 
+  /// The TAppBarButtons to be rendered in the scaffold title bar
+  final List<TAppBarButton>? additionalAppBarButtons;
+
   /// A footer must specify a widget and the desired height
   final ({Widget widget, double height})? footer;
 
@@ -42,6 +45,7 @@ class CommonScaffold extends StatelessWidget {
     this.background,
     this.floatingActionButton,
     this.footer,
+    this.additionalAppBarButtons,
     this.padding = const EdgeInsets.symmetric(horizontal: 20),
     this.crossAxisAlignment = CrossAxisAlignment.center,
     super.key,
@@ -55,6 +59,7 @@ class CommonScaffold extends StatelessWidget {
         title: Text(title),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         actions: <Widget>[
+          if (additionalAppBarButtons != null) ...additionalAppBarButtons!,
           if (settingsLink != null)
             // Only add settings action if we pass the function in
             TAppBarButton(
