@@ -71,7 +71,7 @@ class MainUpdateCheck extends UpdateCheck {
 
 class MainWidget extends StatefulWidget {
   // This could be read from anywhere, just putting it here for simplicity
-  static const String version = '0.0.1';
+  static const String version = '1.0.0';
 
   const MainWidget({super.key});
 
