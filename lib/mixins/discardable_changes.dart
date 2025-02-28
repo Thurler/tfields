@@ -34,22 +34,19 @@ mixin DiscardableChanges<T extends StatefulWidget>
 
   /// A TSaveButton wrapped as a FloatingActionButton for Scaffolds that want to
   /// easily add this mixin's functionality into their build
-  FloatingActionButton? get saveButton {
-    return hasChanges ? TSaveButton(onPressed: saveChanges) : null;
-  }
+  FloatingActionButton? get saveButton =>
+      hasChanges ? TSaveButton(onPressed: saveChanges) : null;
 
   /// Shows the unsaved changes dialog to the user, returning whether it was
   /// accepted or dismissed
-  Future<bool> showUnsavedChangesDialog() {
-    return showBoolDialog(
-      TDialog.boolWarning(
-        titleText: 'You have unsaved changes!',
-        bodyText: 'Are you sure you want to go back and discard your changes?',
-        confirmText: 'Yes, discard them',
-        cancelText: 'No, keep me here',
-      ),
-    );
-  }
+  Future<bool> showUnsavedChangesDialog() => showBoolDialog(
+    TDialog.boolWarning(
+      titleText: 'You have unsaved changes!',
+      bodyText: 'Are you sure you want to go back and discard your changes?',
+      confirmText: 'Yes, discard them',
+      cancelText: 'No, keep me here',
+    ),
+  );
 
   /// The function invoked when pop is called in the Navigator. If there are no
   /// changes OR the user has forced a pop, will turn without doing anything.

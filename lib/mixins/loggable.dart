@@ -9,14 +9,12 @@ mixin Loggable {
   final Logger _logger = Logger();
 
   /// Log a message and immediately flush it to disk
-  Future<void> log(LogLevel level, dynamic message) {
-    return _logger.log(level, message);
-  }
+  Future<void> log(LogLevel level, dynamic message) =>
+      _logger.log(level, message);
 
   /// Log a message in the buffer, without flushing it to disk just yet
-  void logBuffer(LogLevel level, dynamic message) {
-    _logger.logBuffer(level, message);
-  }
+  void logBuffer(LogLevel level, dynamic message) =>
+      _logger.logBuffer(level, message);
 
   /// Flush the log buffer into disk
   Future<void> logFlush() => _logger.flush();

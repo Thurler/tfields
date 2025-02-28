@@ -1,9 +1,7 @@
 extension IterableExtension<T> on Iterable<T> {
   /// Deep copy a list's elements - caller is responsible for ensuring the
   /// provided function actually performs a deep copy
-  Iterable<T> deepCopyElements(T Function(T) f) {
-    return map((T t) => f(t));
-  }
+  Iterable<T> deepCopyElements(T Function(T) f) => map((T t) => f(t));
 
   /// Insert 'separator' in between each element of the list
   /// If 'separatorOnEnds' is provided, add it to start and end of list too

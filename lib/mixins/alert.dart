@@ -9,14 +9,10 @@ mixin AlertHandler<T extends StatefulWidget> on Loggable, State<T> {
   /// Show a dialog that doesn't return anything, just presents an information
   ///
   /// The Future completes when the dialog is dismissed
-  Future<void> showCommonDialog(TDialog dialog) {
-    return showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return dialog;
-      },
-    );
-  }
+  Future<void> showCommonDialog(TDialog dialog) => showDialog<void>(
+    context: context,
+    builder: (BuildContext context) => dialog,
+  );
 
   /// Show a dialog that returns a boolean value. A confirm/cancel button is
   /// displayed to the user, and a TRUE value is returned if and only if the
@@ -29,9 +25,7 @@ mixin AlertHandler<T extends StatefulWidget> on Loggable, State<T> {
   Future<bool> showBoolDialog(TDialog dialog) async {
     bool? canDiscard = await showDialog<bool>(
       context: context,
-      builder: (BuildContext context) {
-        return dialog;
-      },
+      builder: (BuildContext context) => dialog,
     );
     return canDiscard ?? false;
   }
