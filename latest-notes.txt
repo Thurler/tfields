@@ -1,0 +1,10 @@
+Release Notes
+=============
+
+- Initial version based on what was commonly used between three apps
+- Custom Iterable extension
+- Logger and Update Checking functionality
+- Settings functionality integrated with logger and update checking
+- Alert, Time tracker and Discardable changes mixins
+- Boolean, Dropdown, String and ListString Forms
+- Several other basic UI widgets
