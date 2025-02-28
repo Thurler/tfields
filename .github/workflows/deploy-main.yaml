@@ -3,7 +3,7 @@ name: Add Tag, Build Linux
 on:
   push:
     branches:
-      - 'main'
+      - 'master'
 
 jobs:
   build-linux:
@@ -37,7 +37,7 @@ jobs:
 
   make-tag:
     name: Add Tag and Release
-    depends-on: build-linux
+    needs: build-linux
     runs-on: ubuntu-latest
     steps:
       - name: Code Checkout
