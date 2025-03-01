@@ -2,14 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tfields/extensions/int.dart';
 
+/// Base class for numeric input formatters that restricts text input to valid
+/// numbers and provides min/max validation and comma separation formatting
 @immutable
 abstract class NumberInputFormatter<T extends Comparable<T>>
     extends TextInputFormatter {
+  /// Minimum allowed value (inclusive)
   final T? minValue;
+
+  /// Maximum allowed value (inclusive)
   final T? maxValue;
+
+  /// Function to parse string input to target number type
   final T? Function(String) tryParse;
+
+  /// Optional function to format numbers with comma separation
   final String Function(T)? commaSeparate;
 
+  /// Creates a number formatter with optional min/max constraints and formatting
+  ///
+  /// The [tryParse] function is required to convert string input to the target
+  /// type.
+  /// [minValue] and [maxValue] are optional constraints (inclusive bounds).
+  /// [commaSeparate] is an optional function to format numbers with comma
+  /// separators.
   const NumberInputFormatter({
     required this.tryParse,
     this.minValue,
@@ -68,17 +84,33 @@ abstract class NumberInputFormatter<T extends Comparable<T>>
   }
 }
 
+/// Private wrapper class that makes int values comparable for use with
+/// NumberInputFormatter
+///
+/// This is needed because NumberInputFormatter requires a Comparable<T> type
 class _ComparableInt implements Comparable<_ComparableInt> {
+  /// The wrapped int value
   final int _value;
 
+  /// Creates a new comparable wrapper for an int value
   const _ComparableInt(this._value);
 
   @override
   int compareTo(_ComparableInt other) => _value.compareTo(other._value);
 }
 
+/// Input formatter for integer values
+///
+/// Restricts input to valid integers and enforces min/max constraints.
+/// Can optionally format numbers with comma separators (e.g. 1,234,567).
 @immutable
 class IntInputFormatter extends NumberInputFormatter<_ComparableInt> {
+  /// Creates a new formatter for integer input
+  ///
+  /// [minValue] sets the minimum allowed value (inclusive, optional)
+  /// [maxValue] sets the maximum allowed value (inclusive, optional)
+  /// [commaSeparate] when true, formats numbers with comma separators
+  /// (e.g. 1,234,567)
   IntInputFormatter({
     int? minValue,
     int? maxValue,
@@ -95,8 +127,17 @@ class IntInputFormatter extends NumberInputFormatter<_ComparableInt> {
   );
 }
 
+/// Input formatter for BigInt values (for handling extremely large integers)
+///
+/// Restricts input to valid BigInt values and enforces min/max constraints.
+/// Can optionally format numbers with comma separators.
 @immutable
 class BigIntInputFormatter extends NumberInputFormatter<BigInt> {
+  /// Creates a new formatter for BigInt input
+  ///
+  /// [minValue] sets the minimum allowed value (inclusive, optional)
+  /// [maxValue] sets the maximum allowed value (inclusive, optional)
+  /// [commaSeparate] when true, formats numbers with comma separators
   BigIntInputFormatter({
     super.minValue,
     super.maxValue,
