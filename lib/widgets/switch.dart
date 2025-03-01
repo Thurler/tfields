@@ -53,8 +53,8 @@ class TSwitch extends StatelessWidget {
           ),
         Switch(
           value: value,
-          activeTrackColor: Colors.green.withOpacity(0.4),
-          activeColor: Colors.green,
+          activeTrackColor: Theme.of(context).primaryColor.withOpacity(0.4),
+          activeColor: Theme.of(context).primaryColor,
           onChanged: onChanged,
         ),
         if (onText != '')
