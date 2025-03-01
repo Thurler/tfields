@@ -4,7 +4,7 @@
 - Build: `flutter build`
 - Run app: `flutter run`
 - Format code: `dartformat .` (custom formatter, not standard `dart format`)
-- Lint: `flutter analyze`
+- Lint: `dart analyze`
 - Run tests: `flutter test`
 - Run single test: `flutter test example/test/widget_test.dart`
 
