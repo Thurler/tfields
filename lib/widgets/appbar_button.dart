@@ -12,10 +12,14 @@ class TAppBarButton extends StatelessWidget {
   /// The callback for when the widget is clicked on
   final void Function() onTap;
 
+  /// The button text font size
+  final double fontSize;
+
   const TAppBarButton({
     required this.text,
     required this.icon,
     required this.onTap,
+    this.fontSize = 16,
     super.key,
   });
 
@@ -32,7 +36,7 @@ class TAppBarButton extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 5),
               child: Text(
                 text,
-                style: const TextStyle(fontSize: 16),
+                style: TextStyle(fontSize: fontSize),
               ),
             ),
           ],
