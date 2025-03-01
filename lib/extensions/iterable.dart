@@ -33,5 +33,6 @@ extension IterableExtension<T> on Iterable<T> {
     return null;
   }
 
+  /// A safe version of elementAt that returns null if the index is invalid
   T? elementAtSafe(int index) => index < length ? elementAt(index) : null;
 }
