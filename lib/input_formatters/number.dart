@@ -39,22 +39,17 @@ abstract class NumberInputFormatter<T extends Comparable<T>>
     TextEditingValue newValue,
   ) {
     String baseText = newValue.text;
-    // Rollback empty value to zero
+    // Rollback empty value to min value, if present
     if (baseText.isEmpty && minValue != null) {
       baseText = minValue.toString();
     }
-    // Check if value is negative to properly handle comparisons
-    bool isNegative = baseText[0] == '-';
-    // Remove leading zeroes
-    int firstIndex = isNegative ? 1 : 0;
-    while (baseText.length > firstIndex + 1 && baseText[firstIndex] == '0') {
-      baseText = (isNegative ? '-' : '') + baseText.substring(firstIndex + 1);
-    }
-    // Apply min and max rules
+    // Try to parse the number input into a string - if it fails, just return
+    // the previous value
     T? value = tryParse(baseText);
     if (value == null) {
       return oldValue;
     }
+    // Apply min and max rules, if present
     if (minValue != null && value.compareTo(minValue!) < 0) {
       value = minValue;
     } else if (maxValue != null && value.compareTo(maxValue!) > 0) {
