@@ -128,7 +128,8 @@ class TFormBigInteger extends TFormNumber<BigInt> {
   );
 
   @override
-  State<TFormInteger> createState() => TFormNumberState<int, TFormInteger>();
+  State<TFormBigInteger> createState() =>
+      TFormNumberState<BigInt, TFormBigInteger>();
 }
 
 class TFormDouble extends TFormNumber<double> {
