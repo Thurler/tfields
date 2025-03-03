@@ -7,6 +7,7 @@ import 'package:tfields/widgets/dialog.dart';
 import 'package:tfields/widgets/form/base.dart';
 import 'package:tfields/widgets/form/dropdown.dart';
 import 'package:tfields/widgets/form/list_string.dart';
+import 'package:tfields/widgets/form/number.dart';
 import 'package:tfields/widgets/form/string.dart';
 import 'package:tfields/widgets/form/switch.dart';
 import 'package:tfields/widgets/rounded_border.dart';
@@ -35,7 +36,8 @@ class FormShowcaseState extends State<FormShowcase>
       (_dropdownFormKey.currentState?.hasChanges ?? false) ||
       (_dropdownExtraFormKey.currentState?.hasChanges ?? false) ||
       (_stringFormKey.currentState?.hasChanges ?? false) ||
-      (_listStringFormKey.currentState?.hasChanges ?? false);
+      (_listStringFormKey.currentState?.hasChanges ?? false) ||
+      (_integerFormKey.currentState?.hasChanges ?? false);
 
   /// Determines if any of the form fields have validation errors
   /// Used to prevent saving changes while errors exist
@@ -44,7 +46,8 @@ class FormShowcaseState extends State<FormShowcase>
       (_dropdownFormKey.currentState?.hasErrors ?? false) ||
       (_dropdownExtraFormKey.currentState?.hasErrors ?? false) ||
       (_stringFormKey.currentState?.hasErrors ?? false) ||
-      (_listStringFormKey.currentState?.hasErrors ?? false);
+      (_listStringFormKey.currentState?.hasErrors ?? false) ||
+      (_integerFormKey.currentState?.hasErrors ?? false);
 
   /// Collects error messages from all form fields with validation errors
   /// and formats them for display in a dialog
@@ -79,6 +82,10 @@ class FormShowcaseState extends State<FormShowcase>
       );
     }
 
+    if (_integerFormKey.currentState?.hasErrors ?? false) {
+      errors.add('TFormInteger: ${_integerFormKey.currentState!.errorMessage}');
+    }
+
     // Join all errors with newlines so they appear on separate lines
     return errors.join('\n');
   }
@@ -109,6 +116,7 @@ class FormShowcaseState extends State<FormShowcase>
     _dropdownExtraFormKey.currentState?.resetInitialValue();
     _stringFormKey.currentState?.resetInitialValue();
     _listStringFormKey.currentState?.resetInitialValue();
+    _integerFormKey.currentState?.resetInitialValue();
 
     // Refresh the UI to reflect changes in hasChanges state
     setState(() {});
@@ -227,6 +235,10 @@ class FormShowcaseState extends State<FormShowcase>
   late TFormListString _listStringForm;
   final ListStringFormKey _listStringFormKey = ListStringFormKey();
 
+  // Form instance and key for integer input form
+  late TFormInteger _integerForm;
+  final IntegerFormKey _integerFormKey = IntegerFormKey();
+
   /// Initialize all form widgets
   ///
   /// Forms are initialized in initState() rather than build()
@@ -335,6 +347,21 @@ class FormShowcaseState extends State<FormShowcase>
       key: _listStringFormKey,
     );
 
+    // Initialize integer form
+    // Demonstrates a numeric input with min/max constraints
+    _integerForm = TFormInteger(
+      enabled: true,
+      title: 'TFormInteger',
+      subtitle: 'This form only accepts digits 0-9, and will automatically '
+          'collapse to the min (1) and max (100000) values',
+      initialValue: '1000',
+      minValue: 1,
+      maxValue: 100000,
+      // Simple callback to refresh UI when value changes
+      onValueChanged: (_) => setState(() {}),
+      key: _integerFormKey,
+    );
+
     // Schedule validation after the first frame is rendered
     // This is necessary because the form states aren't fully initialized
     // until after the first build
@@ -384,6 +411,11 @@ class FormShowcaseState extends State<FormShowcase>
             color: TFormTitle.subtitleColor,
             childPadding: const EdgeInsets.only(right: 15),
             child: _listStringForm,
+          ),
+          TRoundedBorder(
+            color: TFormTitle.subtitleColor,
+            childPadding: const EdgeInsets.only(right: 15),
+            child: _integerForm,
           ),
         ],
       ),
