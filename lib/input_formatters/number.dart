@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:tfields/extensions/double.dart';
 import 'package:tfields/extensions/int.dart';
+import 'package:tfields/extensions/string.dart';
 
 /// Base class for numeric input formatters that restricts text input to valid
 /// numbers and provides min/max validation and comma separation formatting
@@ -43,6 +45,10 @@ abstract class NumberInputFormatter<T extends Comparable<T>>
     if (baseText.isEmpty && minValue != null) {
       baseText = minValue.toString();
     }
+    // Special handling for when user is typing a decimal point or negative sign
+    if (baseText.isEmpty || baseText == '-' || baseText.last == '.') {
+      return newValue;
+    }
     // Try to parse the number input into a string - if it fails, just return
     // the previous value
     T? value = tryParse(baseText);
@@ -55,11 +61,11 @@ abstract class NumberInputFormatter<T extends Comparable<T>>
     } else if (maxValue != null && value.compareTo(maxValue!) > 0) {
       value = maxValue;
     }
-    // Get the cursor shift from our updates
-    int cursorShift = value.toString().length - oldValue.text.length;
     // Compute and place the commas to separate digits
     String finalText =
         commaSeparate != null ? commaSeparate!(value!) : value.toString();
+    // Get the cursor shift from our updates
+    int cursorShift = finalText.length - oldValue.text.length;
     // Compute the final cursor position
     int textDiff = finalText.length - baseText.length;
     int finalOffset = oldValue.selection.baseOffset + cursorShift + textDiff;
@@ -92,6 +98,27 @@ class _ComparableInt implements Comparable<_ComparableInt> {
 
   @override
   int compareTo(_ComparableInt other) => _value.compareTo(other._value);
+
+  @override
+  String toString() => _value.toString();
+}
+
+/// Private wrapper class that makes double values comparable for use with
+/// NumberInputFormatter
+///
+/// This is needed because NumberInputFormatter requires a Comparable<T> type
+class _ComparableDouble implements Comparable<_ComparableDouble> {
+  /// The wrapped double value
+  final double _value;
+
+  /// Creates a new comparable wrapper for a double value
+  const _ComparableDouble(this._value);
+
+  @override
+  int compareTo(_ComparableDouble other) => _value.compareTo(other._value);
+
+  @override
+  String toString() => _value.toString();
 }
 
 /// Input formatter for integer values
@@ -114,10 +141,40 @@ class IntInputFormatter extends NumberInputFormatter<_ComparableInt> {
     minValue: minValue != null ? _ComparableInt(minValue) : null,
     maxValue: maxValue != null ? _ComparableInt(maxValue) : null,
     commaSeparate:
-        commaSeparate ? ((_ComparableInt v) => v._value.commaSeparate()) : null,
+        commaSeparate ? (_ComparableInt v) => v._value.commaSeparate() : null,
     tryParse: (String v) {
       int? parsed = int.tryParse(v);
       return parsed != null ? _ComparableInt(parsed) : null;
+    },
+  );
+}
+
+/// Input formatter for double values
+///
+/// Restricts input to valid doubles and enforces min/max constraints.
+/// Can optionally format numbers with comma separators while preserving
+/// decimal precision.
+@immutable
+class DoubleInputFormatter extends NumberInputFormatter<_ComparableDouble> {
+  /// Creates a new formatter for double input
+  ///
+  /// [minValue] sets the minimum allowed value (inclusive, optional)
+  /// [maxValue] sets the maximum allowed value (inclusive, optional)
+  /// [commaSeparate] when true, formats numbers with comma separators
+  /// (e.g. 1,234,567.89)
+  DoubleInputFormatter({
+    double? minValue,
+    double? maxValue,
+    bool commaSeparate = false,
+  }) : super(
+    minValue: minValue != null ? _ComparableDouble(minValue) : null,
+    maxValue: maxValue != null ? _ComparableDouble(maxValue) : null,
+    commaSeparate: commaSeparate
+      ? (_ComparableDouble v) => v._value.commaSeparate()
+      : null,
+    tryParse: (String v) {
+      double? parsed = double.tryParse(v);
+      return parsed != null ? _ComparableDouble(parsed) : null;
     },
   );
 }
@@ -138,7 +195,7 @@ class BigIntInputFormatter extends NumberInputFormatter<BigInt> {
     super.maxValue,
     bool commaSeparate = false,
   }) : super(
-    commaSeparate: commaSeparate ? ((BigInt v) => v.commaSeparate()) : null,
+    commaSeparate: commaSeparate ? (BigInt v) => v.commaSeparate() : null,
     tryParse: BigInt.tryParse,
   );
 }
