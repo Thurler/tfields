@@ -37,7 +37,8 @@ class FormShowcaseState extends State<FormShowcase>
       (_dropdownExtraFormKey.currentState?.hasChanges ?? false) ||
       (_stringFormKey.currentState?.hasChanges ?? false) ||
       (_listStringFormKey.currentState?.hasChanges ?? false) ||
-      (_integerFormKey.currentState?.hasChanges ?? false);
+      (_integerFormKey.currentState?.hasChanges ?? false) ||
+      (_bigIntegerFormKey.currentState?.hasChanges ?? false);
 
   /// Determines if any of the form fields have validation errors
   /// Used to prevent saving changes while errors exist
@@ -47,7 +48,8 @@ class FormShowcaseState extends State<FormShowcase>
       (_dropdownExtraFormKey.currentState?.hasErrors ?? false) ||
       (_stringFormKey.currentState?.hasErrors ?? false) ||
       (_listStringFormKey.currentState?.hasErrors ?? false) ||
-      (_integerFormKey.currentState?.hasErrors ?? false);
+      (_integerFormKey.currentState?.hasErrors ?? false) ||
+      (_bigIntegerFormKey.currentState?.hasErrors ?? false);
 
   /// Collects error messages from all form fields with validation errors
   /// and formats them for display in a dialog
@@ -86,6 +88,12 @@ class FormShowcaseState extends State<FormShowcase>
       errors.add('TFormInteger: ${_integerFormKey.currentState!.errorMessage}');
     }
 
+    if (_bigIntegerFormKey.currentState?.hasErrors ?? false) {
+      errors.add(
+        'TFormInteger: ${_bigIntegerFormKey.currentState!.errorMessage}',
+      );
+    }
+
     // Join all errors with newlines so they appear on separate lines
     return errors.join('\n');
   }
@@ -117,6 +125,7 @@ class FormShowcaseState extends State<FormShowcase>
     _stringFormKey.currentState?.resetInitialValue();
     _listStringFormKey.currentState?.resetInitialValue();
     _integerFormKey.currentState?.resetInitialValue();
+    _bigIntegerFormKey.currentState?.resetInitialValue();
 
     // Refresh the UI to reflect changes in hasChanges state
     setState(() {});
@@ -239,6 +248,10 @@ class FormShowcaseState extends State<FormShowcase>
   late TFormInteger _integerForm;
   final IntegerFormKey _integerFormKey = IntegerFormKey();
 
+  // Form instance and key for big integer input form
+  late TFormBigInteger _bigIntegerForm;
+  final BigIntegerFormKey _bigIntegerFormKey = BigIntegerFormKey();
+
   /// Initialize all form widgets
   ///
   /// Forms are initialized in initState() rather than build()
@@ -355,11 +368,30 @@ class FormShowcaseState extends State<FormShowcase>
       subtitle: 'This form only accepts digits 0-9, and will automatically '
           'collapse to the min (1) and max (100000) values',
       initialValue: '1000',
+      snapToMinOnEmpty: true,
       minValue: 1,
       maxValue: 100000,
       // Simple callback to refresh UI when value changes
       onValueChanged: (_) => setState(() {}),
       key: _integerFormKey,
+    );
+
+    // Initialize big integer form
+    // Demonstrates a numeric input with negative min/max constraints and comma
+    // separation
+    _bigIntegerForm = TFormBigInteger(
+      enabled: true,
+      title: 'TFormBigInteger',
+      subtitle: 'This form only accepts digits 0-9, and accepts very large '
+          'integers, up to 1 trillion including negatives. It also showcases '
+          'automatic comma separation, useful for large inputs',
+      initialValue: '0',
+      commaSeparate: true,
+      minValue: BigInt.parse('-1000000000000'),
+      maxValue: BigInt.parse('1000000000000'),
+      // Simple callback to refresh UI when value changes
+      onValueChanged: (_) => setState(() {}),
+      key: _bigIntegerFormKey,
     );
 
     // Schedule validation after the first frame is rendered
@@ -416,6 +448,11 @@ class FormShowcaseState extends State<FormShowcase>
             color: TFormTitle.subtitleColor,
             childPadding: const EdgeInsets.only(right: 15),
             child: _integerForm,
+          ),
+          TRoundedBorder(
+            color: TFormTitle.subtitleColor,
+            childPadding: const EdgeInsets.only(right: 15),
+            child: _bigIntegerForm,
           ),
         ],
       ),
