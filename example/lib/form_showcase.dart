@@ -38,7 +38,8 @@ class FormShowcaseState extends State<FormShowcase>
       (_stringFormKey.currentState?.hasChanges ?? false) ||
       (_listStringFormKey.currentState?.hasChanges ?? false) ||
       (_integerFormKey.currentState?.hasChanges ?? false) ||
-      (_bigIntegerFormKey.currentState?.hasChanges ?? false);
+      (_bigIntegerFormKey.currentState?.hasChanges ?? false) ||
+      (_doubleFormKey.currentState?.hasChanges ?? false);
 
   /// Determines if any of the form fields have validation errors
   /// Used to prevent saving changes while errors exist
@@ -49,7 +50,8 @@ class FormShowcaseState extends State<FormShowcase>
       (_stringFormKey.currentState?.hasErrors ?? false) ||
       (_listStringFormKey.currentState?.hasErrors ?? false) ||
       (_integerFormKey.currentState?.hasErrors ?? false) ||
-      (_bigIntegerFormKey.currentState?.hasErrors ?? false);
+      (_bigIntegerFormKey.currentState?.hasErrors ?? false) ||
+      (_doubleFormKey.currentState?.hasErrors ?? false);
 
   /// Collects error messages from all form fields with validation errors
   /// and formats them for display in a dialog
@@ -94,6 +96,12 @@ class FormShowcaseState extends State<FormShowcase>
       );
     }
 
+    if (_doubleFormKey.currentState?.hasErrors ?? false) {
+      errors.add(
+        'TFormInteger: ${_doubleFormKey.currentState!.errorMessage}',
+      );
+    }
+
     // Join all errors with newlines so they appear on separate lines
     return errors.join('\n');
   }
@@ -126,6 +134,7 @@ class FormShowcaseState extends State<FormShowcase>
     _listStringFormKey.currentState?.resetInitialValue();
     _integerFormKey.currentState?.resetInitialValue();
     _bigIntegerFormKey.currentState?.resetInitialValue();
+    _doubleFormKey.currentState?.resetInitialValue();
 
     // Refresh the UI to reflect changes in hasChanges state
     setState(() {});
@@ -251,6 +260,10 @@ class FormShowcaseState extends State<FormShowcase>
   // Form instance and key for big integer input form
   late TFormBigInteger _bigIntegerForm;
   final BigIntegerFormKey _bigIntegerFormKey = BigIntegerFormKey();
+
+  // Form instance and key for double input form
+  late TFormDouble _doubleForm;
+  final DoubleFormKey _doubleFormKey = DoubleFormKey();
 
   /// Initialize all form widgets
   ///
@@ -394,6 +407,24 @@ class FormShowcaseState extends State<FormShowcase>
       key: _bigIntegerFormKey,
     );
 
+    // Initialize double form
+    // Demonstrates a numeric input with double values, along with the
+    // previously showcased number functionality
+    _doubleForm = TFormDouble(
+      enabled: true,
+      title: 'TFormDouble',
+      subtitle: 'This form only accepts digits 0-9, and any value smaller than '
+          '9999.9999. It can go into the negatives and the integer part will '
+          'be comma separated, just like other number forms',
+      initialValue: '0.5',
+      userUnsigned: false,
+      commaSeparate: true,
+      maxValue: 9999.9999,
+      // Simple callback to refresh UI when value changes
+      onValueChanged: (_) => setState(() {}),
+      key: _doubleFormKey,
+    );
+
     // Schedule validation after the first frame is rendered
     // This is necessary because the form states aren't fully initialized
     // until after the first build
@@ -453,6 +484,11 @@ class FormShowcaseState extends State<FormShowcase>
             color: TFormTitle.subtitleColor,
             childPadding: const EdgeInsets.only(right: 15),
             child: _bigIntegerForm,
+          ),
+          TRoundedBorder(
+            color: TFormTitle.subtitleColor,
+            childPadding: const EdgeInsets.only(right: 15),
+            child: _doubleForm,
           ),
         ],
       ),

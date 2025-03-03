@@ -158,7 +158,7 @@ class TFormDouble extends TFormNumber<double> {
   );
 
   @override
-  State<TFormInteger> createState() => TFormNumberState<int, TFormInteger>();
+  State<TFormDouble> createState() => TFormNumberState<double, TFormDouble>();
 }
 
 class TFormNumberState<I, T extends TFormNumber<I>>
