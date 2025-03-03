@@ -1,4 +1,5 @@
 import 'package:tfields/extensions/int.dart';
+import 'package:tfields/extensions/string.dart';
 
 extension DoubleExtendion on double {
   /// Formats a double value's integer part with comma separators. If
@@ -10,6 +11,7 @@ extension DoubleExtendion on double {
     List<String> parts = toString().split('.');
     String integerPart = parts[0];
     String decimalPart = parts[1];
+    bool negative = integerPart.first == '-';
 
     // Parse and format the integer part with commas using the extension
     int? intValue = int.tryParse(integerPart);
@@ -19,6 +21,11 @@ extension DoubleExtendion on double {
     // If the decimal part is just a zero, we omit
     if (decimalPart == '0' && omitZeroDecimal) {
       return formattedInteger;
+    }
+
+    // Handle edge case where negative sign was lost in integer parsing 0
+    if (negative && formattedInteger.first != '-') {
+      formattedInteger = '-$formattedInteger';
     }
 
     // Return with decimal places if they exist
