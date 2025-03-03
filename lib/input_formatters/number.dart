@@ -21,6 +21,9 @@ abstract class NumberInputFormatter<T extends Comparable<T>>
   /// Optional function to format numbers with comma separation
   final String Function(T)? commaSeparate;
 
+  /// Whether an empty value snaps back to the min value or not
+  final bool snapToMinOnEmpty;
+
   /// Creates a number formatter with optional min/max constraints and formatting
   ///
   /// The [tryParse] function is required to convert string input to the target
@@ -30,6 +33,7 @@ abstract class NumberInputFormatter<T extends Comparable<T>>
   /// separators.
   const NumberInputFormatter({
     required this.tryParse,
+    this.snapToMinOnEmpty = false,
     this.minValue,
     this.maxValue,
     this.commaSeparate,
@@ -42,7 +46,7 @@ abstract class NumberInputFormatter<T extends Comparable<T>>
   ) {
     String baseText = newValue.text;
     // Rollback empty value to min value, if present
-    if (baseText.isEmpty && minValue != null) {
+    if (baseText.isEmpty && minValue != null && snapToMinOnEmpty) {
       baseText = minValue.toString();
     }
     // Special handling for when user is typing a decimal point or negative sign
@@ -66,9 +70,7 @@ abstract class NumberInputFormatter<T extends Comparable<T>>
         commaSeparate != null ? commaSeparate!(value!) : value.toString();
     // Get the cursor shift from our updates
     int cursorShift = finalText.length - oldValue.text.length;
-    // Compute the final cursor position
-    int textDiff = finalText.length - baseText.length;
-    int finalOffset = oldValue.selection.baseOffset + cursorShift + textDiff;
+    int finalOffset = oldValue.selection.baseOffset + cursorShift;
     // Snap back to text end if mass deletion caused negative offset
     // Or if for some reason we ever go overboard, snap back to text end
     if (finalOffset < 1 || finalOffset > finalText.length) {

@@ -39,6 +39,7 @@ abstract class TFormNumber<I> extends TFormString {
   final I? maxValue;
   final Type type;
   final bool userUnsigned;
+  final bool snapToMinOnEmpty;
   final bool commaSeparate;
   final FilteringTextInputFormatter maskFormatter;
   final FormatterBuildFunction<I> formatterConstructor;
@@ -54,6 +55,7 @@ abstract class TFormNumber<I> extends TFormString {
     required this.type,
     this.minValue,
     this.maxValue,
+    this.snapToMinOnEmpty = false,
     this.commaSeparate = false,
     super.errorMessage = '',
     super.validationCallback,
@@ -80,6 +82,7 @@ class TFormInteger extends TFormNumber<int> {
     super.userUnsigned = true,
     super.minValue,
     super.maxValue,
+    super.snapToMinOnEmpty,
     super.commaSeparate,
     super.errorMessage,
     super.validationCallback,
@@ -108,6 +111,7 @@ class TFormBigInteger extends TFormNumber<BigInt> {
     super.userUnsigned = true,
     super.minValue,
     super.maxValue,
+    super.snapToMinOnEmpty,
     super.commaSeparate,
     super.errorMessage,
     super.validationCallback,
@@ -136,6 +140,7 @@ class TFormDouble extends TFormNumber<double> {
     super.userUnsigned = true,
     super.minValue,
     super.maxValue,
+    super.snapToMinOnEmpty,
     super.commaSeparate,
     super.errorMessage,
     super.validationCallback,
