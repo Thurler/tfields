@@ -4,18 +4,19 @@ import 'package:tfields/input_formatters/number.dart';
 import 'package:tfields/widgets/form/string.dart';
 
 FilteringTextInputFormatter _makeNumberRegex(
-  dynamic minValue,
-  dynamic maxValue, {
+  dynamic minValue, {
+  required Type type,
   required bool userUnsigned,
 }) {
-  Type type = minValue != null ? minValue.runtimeType : maxValue.runtimeType;
-  bool signed = switch (type) {
-    const (int) => minValue as int < 0,
-    const (double) => minValue as double < 0,
-    const (BigInt) => minValue as BigInt < BigInt.zero,
-    _ => !userUnsigned,
-  };
-  bool allowDot = minValue is double;
+  bool allowDot = type == double;
+  bool signed = minValue != null
+    ? switch (type) {
+        const (int) => minValue as int < 0,
+        const (double) => minValue as double < 0,
+        const (BigInt) => minValue as BigInt < BigInt.zero,
+        _ => !userUnsigned,
+      }
+    : !userUnsigned;
   return FilteringTextInputFormatter.allow(
     RegExp('[${signed ? '-' : ''}${allowDot ? '.' : ''}\\d]'),
   );
@@ -30,6 +31,7 @@ typedef FormatterBuildFunction<I> = NumberInputFormatter<dynamic> Function({
 abstract class TFormNumber<I> extends TFormString {
   final I? minValue;
   final I? maxValue;
+  final Type type;
   final bool userUnsigned;
   final bool commaSeparate;
   final FilteringTextInputFormatter maskFormatter;
@@ -43,6 +45,7 @@ abstract class TFormNumber<I> extends TFormString {
     required this.userUnsigned,
     required this.formatterConstructor,
     required this.maskFormatter,
+    required this.type,
     this.minValue,
     this.maxValue,
     this.commaSeparate = false,
@@ -77,10 +80,11 @@ class TFormInteger extends TFormNumber<int> {
     super.onValueChanged,
     super.key,
   }) : super(
+    type: int,
     formatterConstructor: IntInputFormatter.new,
     maskFormatter: _makeNumberRegex(
       minValue,
-      maxValue,
+      type: int,
       userUnsigned: userUnsigned,
     ),
   );
@@ -104,10 +108,11 @@ class TFormBigInteger extends TFormNumber<BigInt> {
     super.onValueChanged,
     super.key,
   }) : super(
+    type: BigInt,
     formatterConstructor: BigIntInputFormatter.new,
     maskFormatter: _makeNumberRegex(
       minValue,
-      maxValue,
+      type: BigInt,
       userUnsigned: userUnsigned,
     ),
   );
@@ -116,8 +121,8 @@ class TFormBigInteger extends TFormNumber<BigInt> {
   State<TFormInteger> createState() => TFormNumberState<int, TFormInteger>();
 }
 
-class TFormDoubleInteger extends TFormNumber<double> {
-  TFormDoubleInteger({
+class TFormDouble extends TFormNumber<double> {
+  TFormDouble({
     required super.enabled,
     required super.title,
     required super.subtitle,
@@ -131,10 +136,11 @@ class TFormDoubleInteger extends TFormNumber<double> {
     super.onValueChanged,
     super.key,
   }) : super(
+    type: double,
     formatterConstructor: DoubleInputFormatter.new,
     maskFormatter: _makeNumberRegex(
       minValue,
-      maxValue,
+      type: double,
       userUnsigned: userUnsigned,
     ),
   );
@@ -153,7 +159,7 @@ class TFormNumberState<I, T extends TFormNumber<I>>
     _minValue = newValue;
     formatters[0] = _makeNumberRegex(
       minValue,
-      maxValue,
+      type: widget.type,
       userUnsigned: widget.userUnsigned,
     );
     formatters[1] = widget.formatterConstructor(
@@ -168,7 +174,7 @@ class TFormNumberState<I, T extends TFormNumber<I>>
     _maxValue = newValue;
     formatters[0] = _makeNumberRegex(
       minValue,
-      maxValue,
+      type: widget.type,
       userUnsigned: widget.userUnsigned,
     );
     formatters[1] = widget.formatterConstructor(
