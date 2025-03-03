@@ -3,6 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:tfields/input_formatters/number.dart';
 import 'package:tfields/widgets/form/string.dart';
 
+/// Shorthands for all kinds of Number Form's state
+typedef IntegerFormKey = GlobalKey<TFormNumberState<int, TFormInteger>>;
+typedef DoubleFormKey = GlobalKey<TFormNumberState<double, TFormDouble>>;
+typedef BigIntegerFormKey
+    = GlobalKey<TFormNumberState<BigInt, TFormBigInteger>>;
+
 FilteringTextInputFormatter _makeNumberRegex(
   dynamic minValue, {
   required Type type,
