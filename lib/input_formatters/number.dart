@@ -45,6 +45,10 @@ abstract class NumberInputFormatter<T extends Comparable<T>>
     TextEditingValue newValue,
   ) {
     String baseText = newValue.text;
+    // If multiple dots present, discard new input
+    if ('.'.allMatches(baseText).length > 1) {
+      return oldValue;
+    }
     // Rollback empty value to min value, if present
     if (baseText.isEmpty && minValue != null && snapToMinOnEmpty) {
       baseText = minValue.toString();
