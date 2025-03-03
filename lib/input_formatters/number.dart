@@ -120,7 +120,7 @@ class _ComparableDouble implements Comparable<_ComparableDouble> {
   int compareTo(_ComparableDouble other) => _value.compareTo(other._value);
 
   @override
-  String toString() => _value.toString();
+  String toString() => _value.toStringOmitZeroDecimal();
 }
 
 /// Input formatter for integer values
