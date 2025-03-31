@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:tfields/extensions/datetime.dart';
 import 'package:tfields/logger.dart';
 import 'package:tfields/mixins/alert.dart';
 import 'package:tfields/mixins/loggable.dart';
@@ -132,6 +133,8 @@ class MainState extends State<MainWidget>
     _currentSwitchValue = newValue;
   });
 
+  DateTime? _lastReset;
+
   /// Keep track of the switch's current state
   bool _currentSwitchValue = true;
 
@@ -248,7 +251,10 @@ class MainState extends State<MainWidget>
             children: <Widget>[
               Flexible(
                 child: Text(
-                  'The demo has been up for $elapsedSeconds seconds',
+                  _lastReset != null
+                    ? 'The timer was reset '
+                        '${_lastReset!.relativeTimestamp()}'
+                    : 'The demo has been up for $elapsedSeconds seconds',
                   style: const TextStyle(fontSize: 16),
                 ),
               ),
@@ -277,7 +283,10 @@ class MainState extends State<MainWidget>
                   icon: Icons.refresh,
                   // Calling startTimer, however, will reset the number of
                   // elapsed seconds the state has been keeping track of
-                  onPressed: startTimer,
+                  onPressed: () {
+                    _lastReset = DateTime.now();
+                    startTimer();
+                  },
                 ),
               ),
             ],

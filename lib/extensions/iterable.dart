@@ -33,6 +33,9 @@ extension IterableExtension<T> on Iterable<T> {
     return null;
   }
 
+  /// Shorthand for calling the `contains` function on an iterable of T elements
+  bool containsAny(Iterable<T>? values) => values?.any(contains) ?? false;
+
   /// A safe version of elementAt that returns null if the index is invalid
   T? elementAtSafe(int index) => index < length ? elementAt(index) : null;
 }
