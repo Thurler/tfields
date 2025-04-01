@@ -1,5 +1,15 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tfields/settings.dart';
+import 'package:tfields/tfields.dart';
+
+typedef ThemeBuilder = ThemeProvider Function(
+  Color seedColor,
+  BuildContext context,
+);
 
 class ThemeProvider with ChangeNotifier {
   final Color seedColor;
@@ -42,9 +52,30 @@ class ThemeProvider with ChangeNotifier {
     useMaterial3: true,
   );
 
+  @mustCallSuper
   void changeTheme(ThemeMode newMode) {
     themeMode = newMode;
     notifyListeners();
+  }
+}
+
+abstract class SettingsThemeProvider<S extends CommonSettings>
+    extends ThemeProvider with SettingsReader<S> {
+  SettingsThemeProvider(super.seedColor) {
+    loadSettings();
+    themeMode = settings.themeMode;
+  }
+
+  @override
+  void changeTheme(ThemeMode newMode) {
+    super.changeTheme(newMode);
+    settings.themeMode = newMode;
+    try {
+      File settingsFile = File('./settings.json');
+      settingsFile.writeAsStringSync('${json.encode(settings.toJson())}\n');
+    } on Exception catch (_) {
+      // Not a big deal if we don't save here - just a simple toggle
+    }
   }
 }
 
@@ -55,17 +86,20 @@ class ThemedApp extends StatelessWidget {
 
   final Color seedColor;
 
+  final ThemeBuilder themeBuilder;
+
   const ThemedApp({
     required this.title,
     required this.home,
     required this.seedColor,
+    required this.themeBuilder,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<ThemeProvider>(
-      create: (_) => ThemeProvider(seedColor),
+      create: (BuildContext c) => themeBuilder(seedColor, c),
       child: Consumer<ThemeProvider>(
         builder: (_, ThemeProvider themeProvider, __) => MaterialApp(
           title: title,

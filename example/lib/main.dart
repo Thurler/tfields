@@ -39,10 +39,11 @@ void main() {
     // Failed to create a default settings file, keep going as is
   }
   runApp(
-    const ThemedApp(
+    ThemedApp(
+      themeBuilder: (Color color, _) => CustomSettingsThemeProvider(color),
       title: 'TFields Demo',
       seedColor: Colors.green,
-      home: MainWidget(),
+      home: const MainWidget(),
     ),
   );
 }
@@ -159,6 +160,9 @@ class MainState extends State<MainWidget>
     // scrolling
     return CommonScaffold(
       title: 'TFields Demo',
+      // Because we want this app to be able to toggle between light/dark modes,
+      // we must provide a themeToggleCallback to redraw it wherever the user is
+      // allowed to toggle between the modes
       themeToggleCallback: Provider.of<ThemeProvider>(context).changeTheme,
       // Because settings are standardized, the CommonScaffold already provides
       // a a convenient way to link to settings in the top right corner, just

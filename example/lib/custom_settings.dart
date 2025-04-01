@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:tfields/mixins/settings_reader.dart';
 import 'package:tfields/settings.dart';
+import 'package:tfields/theme_provider.dart';
 import 'package:tfields/views/settings.dart';
 import 'package:tfields/widgets/form/base.dart';
 import 'package:tfields/widgets/form/string.dart';
@@ -51,6 +52,12 @@ class CustomSettingsWidget extends AbstractSettingsWidget<CustomSettings> {
 
   @override
   State<CustomSettingsWidget> createState() => CustomSettingsState();
+}
+
+/// We also extend the SettingsThemeProvider with our custom settings class
+class CustomSettingsThemeProvider extends SettingsThemeProvider<CustomSettings>
+    with CustomSettingsReader {
+  CustomSettingsThemeProvider(super.seedColor);
 }
 
 /// And also the AbstractSettingsState, making sure to override the functions
