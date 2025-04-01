@@ -15,7 +15,8 @@ dependencies:
       ref: v1.0.0
   flutter:
     sdk: flutter
-  url_launcher: ^6.1.11
+  provider: 6.1.4
+  url_launcher: 6.1.11
 
 dev_dependencies:
   flutter_lints: ^4.0.0

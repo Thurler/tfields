@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tfields/extensions/datetime.dart';
 import 'package:tfields/logger.dart';
 import 'package:tfields/mixins/alert.dart';
@@ -8,6 +9,7 @@ import 'package:tfields/mixins/loggable.dart';
 import 'package:tfields/mixins/settings_reader.dart';
 import 'package:tfields/mixins/time_tracker.dart';
 import 'package:tfields/mixins/update_checker.dart';
+import 'package:tfields/theme_provider.dart';
 import 'package:tfields/update_checker.dart';
 import 'package:tfields/widgets/appbar_button.dart';
 import 'package:tfields/widgets/button.dart';
@@ -36,31 +38,13 @@ void main() {
   } catch (e) {
     // Failed to create a default settings file, keep going as is
   }
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
+  runApp(
+    const ThemedApp(
       title: 'TFields Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
-        // This will make the scrollbar always visible
-        scrollbarTheme: ScrollbarThemeData(
-          trackColor: WidgetStateProperty.all(Colors.white.withOpacity(0.5)),
-          thumbColor: WidgetStateProperty.all(Colors.green),
-          trackVisibility: WidgetStateProperty.all(true),
-          thumbVisibility: WidgetStateProperty.all(true),
-        ),
-        useMaterial3: true,
-      ),
-      debugShowCheckedModeBanner: false,
-      home: const MainWidget(),
-    );
-  }
+      seedColor: Colors.green,
+      home: MainWidget(),
+    ),
+  );
 }
 
 /// Extend the basic UpdateCheck with the latest github releases endpoint
@@ -175,6 +159,7 @@ class MainState extends State<MainWidget>
     // scrolling
     return CommonScaffold(
       title: 'TFields Demo',
+      themeToggleCallback: Provider.of<ThemeProvider>(context).changeTheme,
       // Because settings are standardized, the CommonScaffold already provides
       // a a convenient way to link to settings in the top right corner, just
       // pass in a function to actually Navigate to it

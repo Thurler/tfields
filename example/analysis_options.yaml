@@ -104,5 +104,9 @@ linter:
 
     # Pub
     sort_pub_dependencies: true
+analyzer:
+  errors:
+    # Unfortunately need this for a bug in Provider analyzer
+    depend_on_referenced_packages: ignore
 
 # https://dart.dev/guides/language/analysis-options

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tfields/extensions/iterable.dart';
 import 'package:tfields/widgets/appbar_button.dart';
+import 'package:tfields/widgets/theme_switch.dart';
 
 /// A wrapper for a Scaffold that standardizes the way widgets create Scaffolds,
 /// to ensure consistency. Some variation is still allowed through the
@@ -38,16 +39,19 @@ class CommonScaffold extends StatelessWidget {
   /// A footer must specify a widget and the desired height
   final ({Widget widget, double height})? footer;
 
+  final void Function(ThemeMode newMode)? themeToggleCallback;
+
   const CommonScaffold({
     required this.title,
     required this.children,
+    this.padding = const EdgeInsets.symmetric(horizontal: 20),
+    this.crossAxisAlignment = CrossAxisAlignment.center,
     this.settingsLink,
     this.background,
     this.floatingActionButton,
     this.footer,
     this.additionalAppBarButtons,
-    this.padding = const EdgeInsets.symmetric(horizontal: 20),
-    this.crossAxisAlignment = CrossAxisAlignment.center,
+    this.themeToggleCallback,
     super.key,
   });
 
@@ -59,6 +63,7 @@ class CommonScaffold extends StatelessWidget {
         title: Text(title),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         actions: <Widget>[
+          if (themeToggleCallback != null) ThemeSwitch(themeToggleCallback!),
           if (additionalAppBarButtons != null) ...additionalAppBarButtons!,
           if (settingsLink != null)
             // Only add settings action if we pass the function in
