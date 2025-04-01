@@ -12,14 +12,14 @@ class TAppBarButton extends StatelessWidget {
   /// The callback for when the widget is clicked on
   final void Function() onTap;
 
-  /// The button text font size
-  final double fontSize;
+  /// The button text style - defaults to titleMedium
+  final TextStyle? styleOverride;
 
   const TAppBarButton({
     required this.text,
     required this.icon,
     required this.onTap,
-    this.fontSize = 16,
+    this.styleOverride,
     super.key,
   });
 
@@ -36,7 +36,7 @@ class TAppBarButton extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 5),
               child: Text(
                 text,
-                style: TextStyle(fontSize: fontSize),
+                style: styleOverride ?? Theme.of(context).textTheme.titleMedium,
               ),
             ),
           ],
