@@ -38,6 +38,11 @@ void main() {
   } catch (e) {
     // Failed to create a default settings file, keep going as is
   }
+  // We're using a ThemedApp here to quickly add functionality to toggle between
+  // light and dark modes - we provide the seed color and a theme builder. This
+  // builder is required since we want to save the current mode to the settings,
+  // therefore we'll need the CustomSettingsThemeProvider with our settings
+  // overrides and additions
   runApp(
     ThemedApp(
       themeBuilder: (Color color, _) => CustomSettingsThemeProvider(color),
