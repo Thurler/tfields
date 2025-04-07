@@ -3,23 +3,19 @@ import 'package:tfields/widgets/spaced_row.dart';
 
 class TBadge extends StatelessWidget {
   final String text;
-  final double fontSize;
-  final FontWeight fontWeight;
-  final Color color;
-  final Color textColor;
+  final TextStyle? styleOverride;
+  final Color? backgroundColorOverride;
   final Color? iconColor;
   final IconData? icon;
   final double iconSize;
 
   const TBadge({
     required this.text,
-    required this.color,
-    required this.textColor,
-    this.fontSize = 14,
     this.iconSize = 20,
-    this.fontWeight = FontWeight.normal,
     this.iconColor,
     this.icon,
+    this.backgroundColorOverride,
+    this.styleOverride,
     super.key,
   }) : super();
 
@@ -28,7 +24,8 @@ class TBadge extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(Radius.circular(10)),
-        color: color,
+        color: backgroundColorOverride ??
+            Theme.of(context).colorScheme.inversePrimary,
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
@@ -44,11 +41,7 @@ class TBadge extends StatelessWidget {
               ),
             Text(
               text,
-              style: TextStyle(
-                color: textColor,
-                fontSize: fontSize,
-                fontWeight: fontWeight,
-              ),
+              style: styleOverride ?? Theme.of(context).textTheme.titleSmall,
             ),
           ],
         ),
