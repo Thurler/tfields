@@ -27,13 +27,15 @@ class TDialogTitle extends StatelessWidget {
         Icon(
           icon,
           color: iconColor,
-          size: 30,
+          size: 36,
         ),
         const SizedBox(width: 10),
         Flexible(
           child: Text(
             text,
-            style: const TextStyle(fontWeight: FontWeight.bold),
+            style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       ],
@@ -54,7 +56,11 @@ class TDialogBody extends StatelessWidget {
     double width = MediaQuery.of(context).size.width;
     return SizedBox(
       width: width * 2 / 3,
-      child: SelectableText(text, textAlign: TextAlign.center),
+      child: SelectableText(
+        text,
+        textAlign: TextAlign.center,
+        style: Theme.of(context).textTheme.bodyLarge,
+      ),
     );
   }
 }
