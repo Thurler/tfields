@@ -3,8 +3,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tfields/mixins/settings_reader.dart';
 import 'package:tfields/settings.dart';
-import 'package:tfields/tfields.dart';
 
 typedef ThemeBuilder = ThemeProvider Function(
   Color seedColor,

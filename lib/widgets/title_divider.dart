@@ -5,14 +5,14 @@ import 'package:flutter/material.dart';
 class TTitleDivider extends StatelessWidget {
   final Color dividerColor;
   final String titleText;
-  final double fontSize;
-  final FontWeight fontWeight;
+
+  /// The button text style - defaults to titleLarge with bold
+  final TextStyle? styleOverride;
 
   const TTitleDivider({
     required this.titleText,
     this.dividerColor = Colors.grey,
-    this.fontSize = 20,
-    this.fontWeight = FontWeight.w700,
+    this.styleOverride,
     super.key,
   });
 
@@ -29,7 +29,10 @@ class TTitleDivider extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Text(
               titleText,
-              style: TextStyle(fontSize: fontSize, fontWeight: fontWeight),
+              style: styleOverride ??
+                  Theme.of(context).textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ),

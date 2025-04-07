@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tfields/tfields.dart';
+import 'package:tfields/extensions/iterable.dart';
 
 /// A wrapper class for a Row whose elemnts all share the same flex number and
 /// class (e.g.: Expanded). A spacer widget can also be provided to interleave

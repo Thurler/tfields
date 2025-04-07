@@ -53,18 +53,16 @@ class UpdateStatus extends StatelessWidget {
       text = 'You are using the latest version!';
     }
 
-    Widget row = TSpacedRow(
-      mainAxisAlignment: MainAxisAlignment.center,
-      spacer: const SizedBox(width: 5),
-      children: <Widget>[
-        icon,
-        Text(text),
-      ],
+    return TClickable(
+      onTap: clickable ? onUpdateTap : null,
+      child: TSpacedRow(
+        mainAxisAlignment: MainAxisAlignment.center,
+        spacer: const SizedBox(width: 5),
+        children: <Widget>[
+          icon,
+          Text(text, style: Theme.of(context).textTheme.bodyMedium),
+        ],
+      ),
     );
-
-    if (!clickable) {
-      return row;
-    }
-    return TClickable(onTap: onUpdateTap, child: row);
   }
 }

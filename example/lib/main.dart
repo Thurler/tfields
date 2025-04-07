@@ -204,7 +204,10 @@ class MainState extends State<MainWidget>
       ),
       children: <Widget>[
         const TTitleDivider(titleText: 'Update Checker'),
-        const Text('Version ${MainWidget.version}'),
+        Text(
+          'Version ${MainWidget.version}',
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
         // Only display the update status if we actually have checkUpdates
         // enabled in the settings
         if (settings.checkUpdates)
