@@ -48,20 +48,21 @@ class TSwitch extends StatelessWidget {
             child: Text(
               offText,
               textAlign: TextAlign.right,
-              style: value ? disableStyle : null,
+              style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                fontWeight: value ? FontWeight.normal : FontWeight.bold,
+                color: value ? Colors.grey : null,
+              ),
             ),
           ),
-        Switch(
-          value: value,
-          activeTrackColor: Theme.of(context).primaryColor.withOpacity(0.4),
-          activeColor: Theme.of(context).primaryColor,
-          onChanged: onChanged,
-        ),
+        Switch(value: value, onChanged: onChanged),
         if (onText != '')
           Expanded(
             child: Text(
               onText,
-              style: value ? null : disableStyle,
+              style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                fontWeight: value ? FontWeight.bold : FontWeight.normal,
+                color: value ? null : Colors.grey,
+              ),
             ),
           ),
       ],
@@ -71,7 +72,11 @@ class TSwitch extends StatelessWidget {
     }
     return Column(
       children: <Widget>[
-        if (title != '') Text(title, style: titleStyle),
+        if (title != '')
+          Text(
+            title,
+            style: Theme.of(context).textTheme.labelLarge,
+          ),
         mainRow,
       ],
     );
