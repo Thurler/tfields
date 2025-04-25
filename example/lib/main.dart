@@ -417,32 +417,23 @@ class MainState extends State<MainWidget>
             ),
             // A TRoundedBorder is just a simple standardized way to wrap a
             // Widget in a rounded border, to minimize boilerplate and
-            // indentation
-            TRoundedBorder(
+            // indentation - we use a specialized version here that keeps track
+            // of whether the mouse is inside its region or not, to highlight
+            // when the user is interacting with it
+            TClickableRoundedBorder(
+              highlightedColor: Colors.green,
+              highlightedWidth: 3,
+              normalColor: Colors.grey,
+              normalWidth: 1,
+              onTap: () => _toggleSwitch(newValue: !_currentSwitchValue),
+              stateUpdateCallback: () => setState(() {}),
               childPadding: const EdgeInsets.symmetric(
                 vertical: 10,
                 horizontal: 20,
               ),
-              // By piggybacking on a TClickable's onEnter and onExit events,
-              // you can also highlight the border whenever the user's mouse
-              // enters and leaves the TRoundedBorder's region
-              color: _hoveringOverText ? Colors.green : Colors.grey,
-              width: _hoveringOverText ? 3 : 1,
-              child: TClickable(
-                // These callbacks are only really useful for web and desktop
-                // environments, since mobile users have no mouse cursor to
-                // enter and leave the Widget's region
-                onEnter: (_) => setState(() {
-                  _hoveringOverText = true;
-                }),
-                onExit: (_) => setState(() {
-                  _hoveringOverText = false;
-                }),
-                onTap: () => _toggleSwitch(newValue: !_currentSwitchValue),
-                child: const Text(
-                  'This text is also clickable, but has a fancy border!',
-                  style: TextStyle(fontSize: 16),
-                ),
+              child: const Text(
+                'This text is also clickable, but has a "fancy" border!',
+                style: TextStyle(fontSize: 16),
               ),
             ),
           ],
