@@ -11,6 +11,9 @@ typedef ThemeBuilder = ThemeProvider Function(
   BuildContext context,
 );
 
+/// A wrapper to the light and dark Themes, that provides them to applications
+/// through the ChangeNotifier mixin, that allows others to listen in on calls
+/// to change the current theme in the app
 class ThemeProvider with ChangeNotifier {
   final Color seedColor;
 
@@ -59,6 +62,9 @@ class ThemeProvider with ChangeNotifier {
   }
 }
 
+/// An extension of ThemeProvider that integrates itself with the CommonSettings
+/// structure, including the currently selected theme in the settings.json file
+/// used by the app's settings
 abstract class SettingsThemeProvider<S extends CommonSettings>
     extends ThemeProvider with SettingsReader<S> {
   SettingsThemeProvider(super.seedColor) {
@@ -79,13 +85,20 @@ abstract class SettingsThemeProvider<S extends CommonSettings>
   }
 }
 
+/// A wrapper around MaterialApp that allows easily toggling between themes,
+/// specifically a light and dark one. It calls upon ThemeProvider to supply it
+/// with any changes to the theme, re-rendering the app whenever it is toggled
 class ThemedApp extends StatelessWidget {
+  /// The title that will be passed to the MaterialApp
   final String title;
 
+  /// The home widget that will be passed to the MaterialApp
   final Widget home;
 
+  /// The color that seeds the theme's color scheme
   final Color seedColor;
 
+  /// A function that properly builds the Theme used in the MaterialApp
   final ThemeBuilder themeBuilder;
 
   const ThemedApp({

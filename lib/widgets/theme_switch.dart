@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
+/// A widget that toggles between light and dark modes, informing the callback
+/// of the newly selected mode. It presents itself as a Switch, with custom
+/// icons for light and dark modes.
 class ThemeSwitch extends StatelessWidget {
+  /// The callback that is called when the user toggles between modes
   final void Function(ThemeMode newTheme) themeToggleCallback;
 
   const ThemeSwitch(this.themeToggleCallback, {super.key});
