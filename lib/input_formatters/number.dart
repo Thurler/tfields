@@ -24,6 +24,9 @@ abstract class NumberInputFormatter<T extends Comparable<T>>
   /// Whether an empty value snaps back to the min value or not
   final bool snapToMinOnEmpty;
 
+  /// Whether a value snaps back to the max value when it is exceeded
+  final bool snapToMaxWhenOver;
+
   /// Creates a number formatter with optional min/max constraints and formatting
   ///
   /// The [tryParse] function is required to convert string input to the target
@@ -34,6 +37,7 @@ abstract class NumberInputFormatter<T extends Comparable<T>>
   const NumberInputFormatter({
     required this.tryParse,
     this.snapToMinOnEmpty = false,
+    this.snapToMaxWhenOver = false,
     this.minValue,
     this.maxValue,
     this.commaSeparate,
@@ -65,13 +69,17 @@ abstract class NumberInputFormatter<T extends Comparable<T>>
     }
     // Apply min and max rules, if present
     if (minValue != null && value.compareTo(minValue!) < 0) {
-      value = minValue;
+      value = snapToMinOnEmpty ? minValue : value;
     } else if (maxValue != null && value.compareTo(maxValue!) > 0) {
-      value = maxValue;
+      value = snapToMaxWhenOver ? maxValue : value;
     }
     // Compute and place the commas to separate digits
     String finalText =
-        commaSeparate != null ? commaSeparate!(value!) : value.toString();
+        value == null ? '' : commaSeparate?.call(value) ?? value.toString();
+    // If final text is the same as old text, just return same offset
+    if (finalText == oldValue.text) {
+      return oldValue;
+    }
     // Get the cursor shift from our updates
     int cursorShift = finalText.length - oldValue.text.length;
     int finalOffset = oldValue.selection.baseOffset + cursorShift;
@@ -143,6 +151,8 @@ class IntInputFormatter extends NumberInputFormatter<_ComparableInt> {
     int? minValue,
     int? maxValue,
     bool commaSeparate = false,
+    super.snapToMinOnEmpty,
+    super.snapToMaxWhenOver,
   }) : super(
     minValue: minValue != null ? _ComparableInt(minValue) : null,
     maxValue: maxValue != null ? _ComparableInt(maxValue) : null,
@@ -172,6 +182,8 @@ class DoubleInputFormatter extends NumberInputFormatter<_ComparableDouble> {
     double? minValue,
     double? maxValue,
     bool commaSeparate = false,
+    super.snapToMinOnEmpty,
+    super.snapToMaxWhenOver,
   }) : super(
     minValue: minValue != null ? _ComparableDouble(minValue) : null,
     maxValue: maxValue != null ? _ComparableDouble(maxValue) : null,
@@ -197,9 +209,11 @@ class BigIntInputFormatter extends NumberInputFormatter<BigInt> {
   /// [maxValue] sets the maximum allowed value (inclusive, optional)
   /// [commaSeparate] when true, formats numbers with comma separators
   BigIntInputFormatter({
+    bool commaSeparate = false,
     super.minValue,
     super.maxValue,
-    bool commaSeparate = false,
+    super.snapToMinOnEmpty,
+    super.snapToMaxWhenOver,
   }) : super(
     commaSeparate: commaSeparate ? (BigInt v) => v.commaSeparate() : null,
     tryParse: BigInt.tryParse,
