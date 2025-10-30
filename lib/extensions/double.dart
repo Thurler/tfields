@@ -1,7 +1,7 @@
 import 'package:tfields/extensions/int.dart';
 import 'package:tfields/extensions/string.dart';
 
-extension DoubleExtendion on double {
+extension DoubleExtension on double {
   /// Formats a double value's integer part with comma separators. If
   /// [omitZeroDecimal] is provided as true, then the trailing .0 will always
   /// be omitted, as if formatting an integer
