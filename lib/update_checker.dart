@@ -9,7 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 /// The URL must be for Github's Releases API:
 ///
 /// https://api.github.com/repos/owner/repo/releases/latest
-abstract class UpdateCheck with Loggable {
+abstract class TUpdateCheck with TLoggable {
   /// The Agattp client
   static final Agattp agattp = Agattp.authBasic(username: '', password: '');
 
@@ -49,7 +49,7 @@ abstract class UpdateCheck with Loggable {
       );
       Map<String, dynamic> body = response.json;
       if (!body.containsKey('tag_name') || !body.containsKey('html_url')) {
-        await log(LogLevel.warning, 'Invalid body when checking for updates');
+        await log(TLogLevel.warning, 'Invalid body when checking for updates');
         updateCheckSucceeded = false;
       } else {
         latestVersionUrl = body['html_url'];
@@ -61,7 +61,7 @@ abstract class UpdateCheck with Loggable {
       }
     } catch (e) {
       // If any exception happens with the request or json parse, set error flag
-      await log(LogLevel.warning, 'Exception when checking for updates: $e');
+      await log(TLogLevel.warning, 'Exception when checking for updates: $e');
       updateCheckSucceeded = false;
     }
     hasCheckedForUpdates = true;

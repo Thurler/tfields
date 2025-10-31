@@ -70,13 +70,12 @@ class TSwitch extends StatelessWidget {
     if (!expanded) {
       mainRow = IntrinsicWidth(child: mainRow);
     }
+    if (title.isEmpty) {
+      return mainRow;
+    }
     return Column(
       children: <Widget>[
-        if (title != '')
-          Text(
-            title,
-            style: Theme.of(context).textTheme.labelLarge,
-          ),
+        Text(title, style: Theme.of(context).textTheme.labelLarge),
         mainRow,
       ],
     );

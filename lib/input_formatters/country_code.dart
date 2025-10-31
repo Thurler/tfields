@@ -4,8 +4,8 @@ import 'package:flutter/services.dart';
 /// Class for forcing country code formatting, restricting to two uppercase
 /// A-Z characters
 @immutable
-class CountryCodeInputFormatter extends TextInputFormatter {
-  const CountryCodeInputFormatter() : super();
+class TCountryCodeInputFormatter extends TextInputFormatter {
+  const TCountryCodeInputFormatter() : super();
 
   @override
   TextEditingValue formatEditUpdate(

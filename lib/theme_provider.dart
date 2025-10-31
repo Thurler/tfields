@@ -1,12 +1,9 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tfields/mixins/settings_reader.dart';
+import 'package:tfields/mixins/settings.dart';
 import 'package:tfields/settings.dart';
 
-typedef ThemeBuilder = ThemeProvider Function(
+typedef TThemeBuilder = TThemeProvider Function(
   Color seedColor,
   BuildContext context,
 );
@@ -14,12 +11,12 @@ typedef ThemeBuilder = ThemeProvider Function(
 /// A wrapper to the light and dark Themes, that provides them to applications
 /// through the ChangeNotifier mixin, that allows others to listen in on calls
 /// to change the current theme in the app
-class ThemeProvider with ChangeNotifier {
+class TThemeProvider with ChangeNotifier {
   final Color seedColor;
 
   ThemeMode themeMode = ThemeMode.system;
 
-  ThemeProvider(this.seedColor);
+  TThemeProvider(this.seedColor);
 
   late final ColorScheme lightScheme = ColorScheme.fromSeed(
     seedColor: seedColor,
@@ -65,10 +62,10 @@ class ThemeProvider with ChangeNotifier {
 /// An extension of ThemeProvider that integrates itself with the CommonSettings
 /// structure, including the currently selected theme in the settings.json file
 /// used by the app's settings
-abstract class SettingsThemeProvider<S extends CommonSettings>
-    extends ThemeProvider with SettingsReader<S> {
-  SettingsThemeProvider(super.seedColor) {
-    loadSettings();
+abstract class TSettingsThemeProvider<S extends TCommonSettings>
+    extends TThemeProvider with TSettingsJsonWriter<S> {
+  TSettingsThemeProvider(super.seedColor) {
+    readSettings();
     themeMode = settings.themeMode;
   }
 
@@ -76,19 +73,19 @@ abstract class SettingsThemeProvider<S extends CommonSettings>
   void changeTheme(ThemeMode newMode) {
     super.changeTheme(newMode);
     settings.themeMode = newMode;
-    try {
-      File settingsFile = File('./settings.json');
-      settingsFile.writeAsStringSync('${json.encode(settings.toJson())}\n');
-    } on Exception catch (_) {
-      // Not a big deal if we don't save here - just a simple toggle
-    }
+    writeSettings();
+  }
+
+  @override
+  void handleWriteError(Object exception, StackTrace stackTrace) {
+    // Not a big deal if we error here - just a simple toggle
   }
 }
 
 /// A wrapper around MaterialApp that allows easily toggling between themes,
 /// specifically a light and dark one. It calls upon ThemeProvider to supply it
 /// with any changes to the theme, re-rendering the app whenever it is toggled
-class ThemedApp extends StatelessWidget {
+class TThemedApp extends StatelessWidget {
   /// The title that will be passed to the MaterialApp
   final String title;
 
@@ -99,9 +96,9 @@ class ThemedApp extends StatelessWidget {
   final Color seedColor;
 
   /// A function that properly builds the Theme used in the MaterialApp
-  final ThemeBuilder themeBuilder;
+  final TThemeBuilder themeBuilder;
 
-  const ThemedApp({
+  const TThemedApp({
     required this.title,
     required this.home,
     required this.seedColor,
@@ -111,10 +108,10 @@ class ThemedApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<ThemeProvider>(
+    return ChangeNotifierProvider<TThemeProvider>(
       create: (BuildContext c) => themeBuilder(seedColor, c),
-      child: Consumer<ThemeProvider>(
-        builder: (_, ThemeProvider themeProvider, __) => MaterialApp(
+      child: Consumer<TThemeProvider>(
+        builder: (_, TThemeProvider themeProvider, __) => MaterialApp(
           title: title,
           theme: themeProvider.light,
           darkTheme: themeProvider.dark,

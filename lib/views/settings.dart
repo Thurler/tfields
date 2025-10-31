@@ -3,10 +3,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:tfields/logger.dart';
-import 'package:tfields/mixins/alert.dart';
+import 'package:tfields/mixins/dialog_displayer.dart';
 import 'package:tfields/mixins/discardable_changes.dart';
 import 'package:tfields/mixins/loggable.dart';
-import 'package:tfields/mixins/settings_reader.dart';
+import 'package:tfields/mixins/settings.dart';
 import 'package:tfields/settings.dart';
 import 'package:tfields/widgets/common_scaffold.dart';
 import 'package:tfields/widgets/form/base.dart';
@@ -15,23 +15,27 @@ import 'package:tfields/widgets/form/switch.dart';
 import 'package:tfields/widgets/rounded_border.dart';
 
 /// The widget that allows the user to change app settingss
-abstract class AbstractSettingsWidget<S extends CommonSettings>
+abstract class TAbstractSettingsWidget<S extends TCommonSettings>
     extends StatefulWidget {
   final String title;
-  const AbstractSettingsWidget({required this.title, super.key});
+  const TAbstractSettingsWidget({required this.title, super.key});
 }
 
 /// The state consists only of the form elements, so we mix DiscardableChanges
 /// in to easily handle the changes in that state for us
-abstract class AbstractSettingsState<S extends CommonSettings,
-        T extends AbstractSettingsWidget<S>> extends State<T>
-    with Loggable, SettingsReader<S>, AlertHandler<T>, DiscardableChanges<T> {
+abstract class TAbstractSettingsState<S extends TCommonSettings,
+        T extends TAbstractSettingsWidget<S>> extends State<T>
+    with
+        TLoggable,
+        TSettingsAware<T, S>,
+        TDialogDisplayer<T>,
+        TDiscardableChanges<T> {
   /// The dialog message to use on unhandled exceptions
   String get unhandledExceptionMessage;
 
   /// The log level options, mapped to their dropdown text values
-  final List<String> _options = LogLevel.values.map(
-    (LogLevel level) => level.dropdownText,
+  final List<String> _options = TLogLevel.values.map(
+    (TLogLevel level) => level.dropdownText,
   ).toList();
 
   /// The log level dropdown form...
@@ -55,11 +59,11 @@ abstract class AbstractSettingsState<S extends CommonSettings,
 
   /// Handle the weird case where we can't save the settings file to disk
   Future<void> _handleFileSystemException(FileSystemException e) {
-    return handleException(
+    return showException(
+      'An error occured when saving the settings!',
       logMessage: 'FileSystem Exception when saving settings: ${e.message}',
-      dialogTitle: 'An error occured when saving the settings!',
-      dialogBody: 'Make sure your user has permission to write a file in '
-          'the folder this app is in.',
+      body: 'Make sure your user has permission to write a file in the folder '
+          'this app is in.',
     );
   }
 
@@ -67,7 +71,7 @@ abstract class AbstractSettingsState<S extends CommonSettings,
   void updateSettingsWithForm() {
     // Get the log level from the dropdown value, and save it to settings
     String chosenLogLevel = _logLevelFormKey.currentState!.value;
-    settings.logLevel = LogLevel.values[_options.indexOf(chosenLogLevel)];
+    settings.logLevel = TLogLevel.values[_options.indexOf(chosenLogLevel)];
     // Similarly to the remaining settings
     settings.checkUpdates = _checkUpdatesFormKey.currentState!.value;
   }
@@ -92,19 +96,15 @@ abstract class AbstractSettingsState<S extends CommonSettings,
     } on FileSystemException catch (e) {
       await _handleFileSystemException(e);
       return;
-    } on Exception catch (e, s) {
-      await handleUnexpectedException(
-        e,
-        s,
-        dialogBody: unhandledExceptionMessage,
-      );
+    } catch (e, s) {
+      await showUnexpectedException(e, s, body: unhandledExceptionMessage);
       return;
     }
     await log(
-      LogLevel.info,
+      TLogLevel.info,
       'Applying log level ${settings.logLevel.name}',
     );
-    await log(LogLevel.info, 'Saved settings changes');
+    await log(TLogLevel.info, 'Saved settings changes');
     logLevel = settings.logLevel;
     resetFormValues();
   }
@@ -114,9 +114,9 @@ abstract class AbstractSettingsState<S extends CommonSettings,
     if (chosen == null) {
       return;
     }
-    LogLevel chosenLevel = LogLevel.values[_options.indexOf(chosen)];
+    TLogLevel chosenLevel = TLogLevel.values[_options.indexOf(chosen)];
     await log(
-      LogLevel.debug,
+      TLogLevel.debug,
       'Log level changed to ${chosenLevel.name}',
     );
     // Refresh has changes flag
@@ -129,7 +129,7 @@ abstract class AbstractSettingsState<S extends CommonSettings,
       return;
     }
     await log(
-      LogLevel.debug,
+      TLogLevel.debug,
       'Auto update checks ${chosen ? 'enabled' : 'disabled'}',
     );
     // Refresh has changes flag
@@ -137,9 +137,8 @@ abstract class AbstractSettingsState<S extends CommonSettings,
   }
 
   @override
-  void initState() {
-    super.initState();
-    loadSettings();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     _logLevelForm = TFormDropdown(
       enabled: true,
       title: 'Log level',
@@ -162,6 +161,7 @@ abstract class AbstractSettingsState<S extends CommonSettings,
     );
   }
 
+  /// The additional forms that will be rendered alongside the common options
   List<Widget> get additionalForms;
 
   @override
@@ -169,7 +169,7 @@ abstract class AbstractSettingsState<S extends CommonSettings,
     return PopScope(
       canPop: !hasChanges,
       onPopInvokedWithResult: onPopInvoked,
-      child: CommonScaffold(
+      child: TCommonScaffold(
         title: widget.title,
         floatingActionButton: saveButton,
         children: <Widget>[

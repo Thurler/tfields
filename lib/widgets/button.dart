@@ -1,66 +1,56 @@
 import 'package:flutter/material.dart';
+import 'package:tfields/src/buttons/elevated.dart';
+import 'package:tfields/src/buttons/icon_and_label.dart';
+import 'package:tfields/src/buttons/icon_only.dart';
+import 'package:tfields/widgets/icons.dart';
 
-/// An ElevatedButton that has been standardized
-class TButton extends StatelessWidget {
-  /// The text to be displayed
-  final String text;
-
-  /// The callback to call when the button is pressed
+/// A common interface for all kinds of Button widgets
+///
+/// It is declared as abstract to force callers to use one of the provided
+/// builders that have different designs, which are more feature-complete than
+/// a generic interface. The current implementations are:
+///
+/// - `iconOnly`: the button is rendered as a lone icon, optionally with a
+/// rounded border and a tooltip
+/// - `iconAndLabel`: the button is rendered as an icon followed by a small text
+/// - `elevated`: the button is rendered as an elevated button, with the text
+/// optionally being accompanied by an icon
+///
+/// All rendering modes have presets for using common icons in the PresetIcon
+/// enum, and can be invoked as an extension of the builder:
+///
+/// - `TButton.iconOnly()` gives you full control over the icon
+/// - `TButton.iconOnly.delete()` will use the preset delete icon
+abstract class TButton extends StatelessWidget {
+  final TIconInterface? icon;
+  final String? text;
   final void Function()? onPressed;
+  final bool forceDefaultIconColor;
 
-  /// The icon to be displayed
-  final IconData? icon;
+  static TButtonIconOnlyBuilder get iconOnly => const TButtonIconOnlyBuilder();
 
-  /// The icon widget to be displayed - will have priority over the icon data
-  final Widget? iconWidget;
+  static TButtonIconAndLabelBuilder get iconAndLabel =>
+      const TButtonIconAndLabelBuilder();
 
-  /// The font size - defaults to 18
-  final double fontSize;
+  static TButtonElevatedBuilder get elevated => const TButtonElevatedBuilder();
 
-  /// Whether the button will have infinite width - defaults to TRUE
-  final bool usesMaxWidth;
+  Color? get colorLight =>
+      forceDefaultIconColor || icon == null ? null : icon!.colorLight;
+
+  Color? get colorDark =>
+      forceDefaultIconColor || icon == null ? null : icon!.colorDark;
+
+  Color? colorFromContext(BuildContext context) =>
+      switch (Theme.of(context).brightness) {
+    Brightness.light => colorLight,
+    Brightness.dark => colorDark,
+  };
 
   const TButton({
-    required this.text,
-    this.iconWidget,
-    this.onPressed,
     this.icon,
-    this.fontSize = 18,
-    this.usesMaxWidth = true,
+    this.text,
+    this.onPressed,
+    this.forceDefaultIconColor = false,
     super.key,
-  }) : super();
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      style: ButtonStyle(
-        backgroundColor: WidgetStateProperty.all(
-          Theme.of(context).colorScheme.secondaryContainer,
-        ),
-      ),
-      onPressed: onPressed,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        child: Row(
-          mainAxisSize: usesMaxWidth ? MainAxisSize.max : MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            if (icon != null || iconWidget != null) ...<Widget>[
-              iconWidget != null ? iconWidget! : Icon(icon),
-              const SizedBox(width: 10),
-            ],
-            Flexible(
-              child: Text(
-                text,
-                style: TextStyle(
-                  fontSize: fontSize,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  });
 }

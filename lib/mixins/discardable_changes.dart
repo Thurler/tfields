@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:tfields/logger.dart';
-import 'package:tfields/mixins/alert.dart';
+import 'package:tfields/mixins/dialog_displayer.dart';
 import 'package:tfields/mixins/loggable.dart';
 import 'package:tfields/widgets/dialog.dart';
 import 'package:tfields/widgets/save_button.dart';
@@ -9,7 +9,7 @@ import 'package:tfields/widgets/save_button.dart';
 /// Mixing this into a State allows that State to automatically prompt the user
 /// if they want to discard the changes they have made to the State before
 /// navigating away from it. This is displayed as a boolean dialog, so mixing
-/// AlertHandler is also required
+/// DialogDisplayer is also required
 ///
 /// A State mixed with this will require implementations for a hasChanges and a
 /// saveChanges function, which will easily inform the state if there are
@@ -20,8 +20,8 @@ import 'package:tfields/widgets/save_button.dart';
 /// onPopInvoked to the onPopInvokedWithResult argument
 ///
 /// The State is STILL responsible for properly handling the changes!
-mixin DiscardableChanges<T extends StatefulWidget>
-    on Loggable, AlertHandler<T> {
+mixin TDiscardableChanges<T extends StatefulWidget>
+    on TLoggable, TDialogDisplayer<T> {
   /// Whether the user forced a pop, will skip the dialog check
   bool _forcedPop = false;
 
@@ -39,14 +39,12 @@ mixin DiscardableChanges<T extends StatefulWidget>
 
   /// Shows the unsaved changes dialog to the user, returning whether it was
   /// accepted or dismissed
-  Future<bool> showUnsavedChangesDialog() => showBoolDialog(
-    TDialog.boolWarning(
-      titleText: 'You have unsaved changes!',
-      bodyText: 'Are you sure you want to go back and discard your changes?',
-      confirmText: 'Yes, discard them',
-      cancelText: 'No, keep me here',
-    ),
-  );
+  Future<bool> showUnsavedChangesDialog() => TDialog.warningChoice(
+    title: 'You have unsaved changes!',
+    body: 'Are you sure you want to go back and discard your changes?',
+    confirmText: 'Yes, discard them',
+    cancelText: 'No, keep me here',
+  ).showBool(context);
 
   /// The function invoked when pop is called in the Navigator. If there are no
   /// changes OR the user has forced a pop, will turn without doing anything.
@@ -59,7 +57,7 @@ mixin DiscardableChanges<T extends StatefulWidget>
     NavigatorState state = Navigator.of(context);
     bool canDiscard = await showUnsavedChangesDialog();
     if (canDiscard) {
-      await log(LogLevel.info, 'Discarding changes');
+      await log(TLogLevel.info, 'Discarding changes');
       if (state.mounted) {
         _forcedPop = true;
         Navigator.of(context).pop();

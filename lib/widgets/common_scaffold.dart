@@ -6,7 +6,7 @@ import 'package:tfields/widgets/theme_switch.dart';
 /// A wrapper for a Scaffold that standardizes the way widgets create Scaffolds,
 /// to ensure consistency. Some variation is still allowed through the
 /// standardized footer and background arguments
-class CommonScaffold extends StatelessWidget {
+class TCommonScaffold extends StatelessWidget {
   /// How many pixels the AppBar takes, to properly offset viewport height when
   /// computing the footer's Stack offset
   static const int footerOffset = 56;
@@ -39,9 +39,10 @@ class CommonScaffold extends StatelessWidget {
   /// A footer must specify a widget and the desired height
   final ({Widget widget, double height})? footer;
 
+  /// The callback to call when the theme switch is toggled
   final void Function(ThemeMode newMode)? themeToggleCallback;
 
-  const CommonScaffold({
+  const TCommonScaffold({
     required this.title,
     required this.children,
     this.padding = const EdgeInsets.symmetric(horizontal: 20),
@@ -63,7 +64,7 @@ class CommonScaffold extends StatelessWidget {
         title: Text(title),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         actions: <Widget>[
-          if (themeToggleCallback != null) ThemeSwitch(themeToggleCallback!),
+          if (themeToggleCallback != null) TThemeSwitch(themeToggleCallback!),
           if (additionalAppBarButtons != null) ...additionalAppBarButtons!,
           if (settingsLink != null)
             // Only add settings action if we pass the function in
@@ -102,15 +103,12 @@ class CommonScaffold extends StatelessWidget {
                 decoration: BoxDecoration(
                   border: Border(
                     top: BorderSide(
-                      color: Theme.of(context).dividerColor.withOpacity(0.5),
+                      color: Theme.of(context).dividerColor.withAlpha(127),
                     ),
                   ),
                   color: Theme.of(context).scaffoldBackgroundColor,
                 ),
-                child: Padding(
-                  padding: padding,
-                  child: footer!.widget,
-                ),
+                child: Padding(padding: padding, child: footer!.widget),
               ),
             ),
         ],

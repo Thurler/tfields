@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:tfields/logger.dart';
 
 /// The common app settings, holding common flags that control how it behaves
-class CommonSettings {
+class TCommonSettings {
   /// The current log level threshold for logged messages
-  LogLevel logLevel = LogLevel.info;
+  TLogLevel logLevel = TLogLevel.info;
 
   /// Whether to check for updates at startup
   bool checkUpdates = true;
@@ -13,18 +13,18 @@ class CommonSettings {
   ThemeMode themeMode = ThemeMode.system;
 
   /// Copy settings from another instance
-  CommonSettings.from(CommonSettings other) :
+  TCommonSettings.from(TCommonSettings other) :
     logLevel = other.logLevel,
     checkUpdates = other.checkUpdates,
     themeMode = other.themeMode;
 
   /// Initialize settings with their default values
-  CommonSettings.fromDefault();
+  TCommonSettings.fromDefault();
 
   /// Initialize settings from a serialized JSON map
-  CommonSettings.fromJson(Map<String, dynamic> jsonContents) {
+  TCommonSettings.fromJson(Map<String, dynamic> jsonContents) {
     if (jsonContents.containsKey('logLevel')) {
-      logLevel = LogLevel.fromName(jsonContents['logLevel']);
+      logLevel = TLogLevel.fromName(jsonContents['logLevel']);
     }
     if (jsonContents.containsKey('checkUpdates')) {
       checkUpdates = jsonContents['checkUpdates'];

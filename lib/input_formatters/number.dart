@@ -7,7 +7,7 @@ import 'package:tfields/extensions/string.dart';
 /// Base class for numeric input formatters that restricts text input to valid
 /// numbers and provides min/max validation and comma separation formatting
 @immutable
-abstract class NumberInputFormatter<T extends Comparable<T>>
+abstract class TNumberInputFormatter<T extends Comparable<T>>
     extends TextInputFormatter {
   /// Minimum allowed value (inclusive)
   final T? minValue;
@@ -34,7 +34,7 @@ abstract class NumberInputFormatter<T extends Comparable<T>>
   /// [minValue] and [maxValue] are optional constraints (inclusive bounds).
   /// [commaSeparate] is an optional function to format numbers with comma
   /// separators.
-  const NumberInputFormatter({
+  const TNumberInputFormatter({
     required this.tryParse,
     this.snapToMinOnEmpty = false,
     this.snapToMaxWhenOver = false,
@@ -100,9 +100,9 @@ abstract class NumberInputFormatter<T extends Comparable<T>>
 }
 
 /// Private wrapper class that makes int values comparable for use with
-/// NumberInputFormatter
+/// TNumberInputFormatter
 ///
-/// This is needed because NumberInputFormatter requires a Comparable<T> type
+/// This is needed because TNumberInputFormatter requires a Comparable<T> type
 class _ComparableInt implements Comparable<_ComparableInt> {
   /// The wrapped int value
   final int _value;
@@ -118,9 +118,9 @@ class _ComparableInt implements Comparable<_ComparableInt> {
 }
 
 /// Private wrapper class that makes double values comparable for use with
-/// NumberInputFormatter
+/// TNumberInputFormatter
 ///
-/// This is needed because NumberInputFormatter requires a Comparable<T> type
+/// This is needed because TNumberInputFormatter requires a Comparable<T> type
 class _ComparableDouble implements Comparable<_ComparableDouble> {
   /// The wrapped double value
   final double _value;
@@ -140,14 +140,14 @@ class _ComparableDouble implements Comparable<_ComparableDouble> {
 /// Restricts input to valid integers and enforces min/max constraints.
 /// Can optionally format numbers with comma separators (e.g. 1,234,567).
 @immutable
-class IntInputFormatter extends NumberInputFormatter<_ComparableInt> {
+class TIntInputFormatter extends TNumberInputFormatter<_ComparableInt> {
   /// Creates a new formatter for integer input
   ///
   /// [minValue] sets the minimum allowed value (inclusive, optional)
   /// [maxValue] sets the maximum allowed value (inclusive, optional)
   /// [commaSeparate] when true, formats numbers with comma separators
   /// (e.g. 1,234,567)
-  IntInputFormatter({
+  TIntInputFormatter({
     int? minValue,
     int? maxValue,
     bool commaSeparate = false,
@@ -171,14 +171,14 @@ class IntInputFormatter extends NumberInputFormatter<_ComparableInt> {
 /// Can optionally format numbers with comma separators while preserving
 /// decimal precision.
 @immutable
-class DoubleInputFormatter extends NumberInputFormatter<_ComparableDouble> {
+class TDoubleInputFormatter extends TNumberInputFormatter<_ComparableDouble> {
   /// Creates a new formatter for double input
   ///
   /// [minValue] sets the minimum allowed value (inclusive, optional)
   /// [maxValue] sets the maximum allowed value (inclusive, optional)
   /// [commaSeparate] when true, formats numbers with comma separators
   /// (e.g. 1,234,567.89)
-  DoubleInputFormatter({
+  TDoubleInputFormatter({
     double? minValue,
     double? maxValue,
     bool commaSeparate = false,
@@ -202,13 +202,13 @@ class DoubleInputFormatter extends NumberInputFormatter<_ComparableDouble> {
 /// Restricts input to valid BigInt values and enforces min/max constraints.
 /// Can optionally format numbers with comma separators.
 @immutable
-class BigIntInputFormatter extends NumberInputFormatter<BigInt> {
+class TBigIntInputFormatter extends TNumberInputFormatter<BigInt> {
   /// Creates a new formatter for BigInt input
   ///
   /// [minValue] sets the minimum allowed value (inclusive, optional)
   /// [maxValue] sets the maximum allowed value (inclusive, optional)
   /// [commaSeparate] when true, formats numbers with comma separators
-  BigIntInputFormatter({
+  TBigIntInputFormatter({
     bool commaSeparate = false,
     super.minValue,
     super.maxValue,

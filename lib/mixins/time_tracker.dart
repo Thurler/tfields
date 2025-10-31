@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 /// Mixing this into a State allows that state to keep track of time - a Timer
 /// can be started, stopped and resumed to keep track of how many seconds have
 /// passed since it was started
-mixin TimeTracker<T extends StatefulWidget> on State<T> {
+mixin TTimeTracker<T extends StatefulWidget> on State<T> {
   Timer? _timer;
   int elapsedSeconds = 0;
 

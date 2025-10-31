@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:tfields/mixins/settings_reader.dart';
+import 'package:tfields/mixins/settings.dart';
 import 'package:tfields/settings.dart';
 
 /// The log level associated with a message, it can be one of:
@@ -14,7 +14,7 @@ import 'package:tfields/settings.dart';
 /// - Error: usually associated with errors that can't be handled gracefully by
 /// the application, usually impeding normal operation in some way
 /// - None: nothing is logged, good luck debugging
-enum LogLevel {
+enum TLogLevel {
   debug('Debug (everything is logged)'),
   info('Info (major actions and higher are logged)'),
   warning('Warning (warnings and higher are logged)'),
@@ -24,52 +24,52 @@ enum LogLevel {
   /// The pretty text to be displayed in the settings dropdown
   final String dropdownText;
 
-  const LogLevel(this.dropdownText);
+  const TLogLevel(this.dropdownText);
 
   /// Instantiate a LogLevel based on its enum name
-  factory LogLevel.fromName(String name) =>
-      LogLevel.values.firstWhere((LogLevel l) => l.name == name);
+  factory TLogLevel.fromName(String name) =>
+      TLogLevel.values.firstWhere((TLogLevel l) => l.name == name);
 }
 
 /// A singleton class that handles the writing of log messages into the log file
 ///
 /// The log file is always overwritten when the software is reopened
-class Logger with SettingsReader<CommonSettings>, CommonSettingsReader {
+class TLogger
+    with TSettingsJsonReader<TCommonSettings>, TCommonSettingsDeserializer {
   /// The singleton object itself
-  static final Logger _logger = Logger._internal();
+  static final TLogger _logger = TLogger._internal();
 
   /// The log file's filename
   static const String filename = './applicationlog.txt';
 
-  /// The current log level required to log a message
-  LogLevel logLevel = LogLevel.info;
-
   /// The IO Sink that will buffer the messages
   late IOSink sink;
+
+  /// The current log level required to log a message
+  TLogLevel get logLevel => settings.logLevel;
 
   /// Helper function to format the current timestamp
   String get _currentTimestamp => DateTime.now().toLocal().toIso8601String();
 
-  factory Logger() {
+  factory TLogger() {
     return _logger;
   }
 
-  Logger._internal() {
+  TLogger._internal() {
     // Make sure settingsare loaded so we have a log level to work with
-    loadSettings();
-    logLevel = settings.logLevel;
+    readSettings();
     // Always reset the log file on startup
     File logFile = File(filename);
     sink = logFile.openWrite();
   }
 
   /// Helper function to standardize log message formatting
-  String _buildLogLine(LogLevel level, dynamic message) {
+  String _buildLogLine(TLogLevel level, dynamic message) {
     return '$_currentTimestamp | ${level.name.toUpperCase()} | $message';
   }
 
   /// Buffer a log message into the IO sink, without flushing it
-  void logBuffer(LogLevel level, dynamic message) {
+  void logBuffer(TLogLevel level, dynamic message) {
     if (level.index >= logLevel.index) {
       sink.writeln(_buildLogLine(level, message));
       // Also log the message in the terminal if we're in debug mode
@@ -80,7 +80,7 @@ class Logger with SettingsReader<CommonSettings>, CommonSettingsReader {
   }
 
   /// Log a message into the IO sink, flushing it immediately
-  Future<void> log(LogLevel level, dynamic message) async {
+  Future<void> log(TLogLevel level, dynamic message) async {
     logBuffer(level, message);
     return flush();
   }

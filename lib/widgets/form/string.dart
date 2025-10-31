@@ -1,118 +1,126 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:tfields/widgets/button.dart';
 import 'package:tfields/widgets/form/base.dart';
-import 'package:tfields/widgets/spaced_row.dart';
+import 'package:tfields/widgets/icons.dart';
+import 'package:tfields/widgets/input_decoration.dart';
 
-/// A shorthand for a String Form's state
-typedef StringFormKey = GlobalKey<TFormStringState<TFormString>>;
+typedef TStringFormKey = GlobalKey<TFormStringState>;
 
-/// The String Form's field widget, composed of a simple TextFormField,
-/// decorated with a hint and suffix icons
-class TFormStringField extends TFormField {
-  final bool enabled;
-  final String hintText;
-  final TextEditingController controller;
-  final List<TextInputFormatter>? formatters;
-  final List<Widget> icons;
-
-  const TFormStringField({
-    required this.enabled,
-    required this.hintText,
-    required this.controller,
-    this.formatters,
-    this.icons = const <Widget>[],
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      enabled: enabled,
-      controller: controller,
-      style: const TextStyle(fontSize: 18),
-      inputFormatters: formatters,
-      decoration: InputDecoration(
-        hintText: hintText,
-        hintStyle: TextStyle(
-          fontSize: 14,
-          color: Theme.of(context).textTheme.displayMedium?.color?.withOpacity(
-            0.5,
-          ),
-        ),
-        contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-        suffixIcon: icons.isNotEmpty
-          ? TSpacedRow(
-              mainAxisSize: MainAxisSize.min,
-              spacer: const SizedBox(width: 2),
-              children: icons,
-            )
-          : null,
-      ),
-    );
-  }
-}
-
-/// The Dropdown Form's stateful widget, which expands a regular Form by adding
-/// a list of formatters to mask the input, and a hint text used when the value
-/// is empty
+/// A specialization of the generic Form that allows the user to input a String
 class TFormString extends TForm<String> {
+  /// The formatters that will be applied to the TextEditingController
   final List<TextInputFormatter> formatters;
+
+  /// The hint that will be displayed when the current value is empty
   final String hintText;
+
+  /// Whether multiple lines are accepted or not
+  final bool isMultiline;
+
+  /// A callback that will be called whenever the user hits the "Enter" key
+  final void Function()? submitCallback;
 
   const TFormString({
     required super.enabled,
     required super.title,
-    required super.subtitle,
     required super.initialValue,
+    this.isMultiline = false,
     this.hintText = '',
     this.formatters = const <TextInputFormatter>[],
+    this.submitCallback,
+    super.readonly,
+    super.subtitle = '',
     super.errorMessage = '',
+    super.prefixIcon,
+    super.suffixIcon,
+    super.decoratorIcon,
     super.validationCallback,
     super.onValueChanged,
     super.key,
   });
 
+  TFormString.searchBar({
+    required super.enabled,
+    required super.title,
+    required super.initialValue,
+    this.hintText = '',
+    this.formatters = const <TextInputFormatter>[],
+    this.submitCallback,
+    super.readonly,
+    super.subtitle = '',
+    super.errorMessage = '',
+    super.decoratorIcon,
+    super.validationCallback,
+    super.onValueChanged,
+    super.key,
+  }) :
+    isMultiline = false,
+    super(
+      prefixIcon: const Icon(Icons.search),
+      suffixIcon: TButton.iconOnly(
+        icon: const TIcon(icon: Icons.send),
+        text: 'Search',
+        onPressed: submitCallback,
+      ),
+    );
+
   @override
-  State<TFormString> createState() => TFormStringState<TFormString>();
+  TFormStringState createState() => TFormStringState();
 }
 
-/// The String Form's state, which only really handles the text controller's
-/// value callbacks and maps them to the form's callbacks
-class TFormStringState<T extends TFormString> extends TFormState<String, T> {
-  final TextEditingController controller = TextEditingController();
-  late List<TextInputFormatter> formatters;
+/// The StringForm's internal state
+class TFormStringState extends TFormState<String, TFormString> {
+  /// The controller that the user will interact with
+  final TextEditingController _controller = TextEditingController();
 
   @override
-  set value(String newValue) {
-    controller.text = newValue;
+  set value(String? newValue) {
+    // We override the value setter to make sure we copy the value into the
+    // controller, mirroring the internal state with the controller
+    _controller.text = newValue ?? '';
     super.value = newValue;
   }
 
   @override
   void initState() {
     super.initState();
-    formatters = widget.formatters;
-    controller.text = widget.initialValue;
-    controller.addListener(() {
-      // Call the super setter here to avoid infinite recursion, I guess
-      super.value = controller.text;
-      widget.onValueChanged?.call(controller.text);
+    // Copy the initial state from the widget
+    _controller.text = widget.initialValue ?? '';
+    // Add a listener to the controller's input, so that its changes are
+    // propagated to the form's callbacks
+    _controller.addListener(() {
+      // We explicitly call super.value here to avoid a recursion with the
+      // custom setter above, since that changes the controller's value, which
+      // would just call this again infinitely
+      super.value = _controller.text;
+      widget.onValueChanged?.call(_controller.text);
     });
   }
 
   @override
-  TFormField get field => TFormStringField(
-    enabled: enabled,
-    hintText: widget.hintText,
-    controller: controller,
-    formatters: formatters,
-  );
-
-  // Parse the current value as an int, removing helper commas
-  @override
-  int get intValue => int.parse(value.replaceAll(',', ''));
-
-  // Parse the current value as a big int, removing helper commas
-  @override
-  BigInt get bigIntValue => BigInt.parse(value.replaceAll(',', ''));
+  Widget build(BuildContext context) {
+    return TextFormField(
+      enabled: enabled,
+      controller: _controller,
+      inputFormatters: widget.formatters,
+      onFieldSubmitted:
+          enabled && !readonly ? (_) => widget.submitCallback?.call() : null,
+      readOnly: readonly,
+      keyboardType:
+          widget.isMultiline ? TextInputType.multiline : TextInputType.text,
+      maxLines: widget.isMultiline ? null : 1,
+      decoration: TInputDecoration(
+        enabled: enabled,
+        labelText: title,
+        helperText: subtitle,
+        hintText: widget.hintText,
+        icon: widget.decoratorIcon,
+        prefixIcon: widget.prefixIcon,
+        suffixIcon: widget.suffixIcon,
+      ),
+      autovalidateMode: AutovalidateMode.always,
+      validator: (_) => errorMessage.isNotEmpty ? errorMessage : null,
+    );
+  }
 }

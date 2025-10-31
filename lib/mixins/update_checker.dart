@@ -4,7 +4,7 @@ import 'package:tfields/update_checker.dart';
 /// interactions with the application's automatic update process. It provides
 /// a function to query for updates, and forces the mixed class to implement a
 /// callback to receive the update check complete event
-mixin UpdateChecker<U extends UpdateCheck> {
+mixin TUpdateChecker<U extends TUpdateCheck> {
   /// The singleton instance of the the update checker class
   U get updateChecker;
 

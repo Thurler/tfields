@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:tfields/extensions/iterable.dart';
 import 'package:tfields/widgets/clickable.dart';
-import 'package:tfields/widgets/spaced_row.dart';
 
 /// The widget that displays the automatic update check status
-class UpdateStatus extends StatelessWidget {
+class TUpdateStatus extends StatelessWidget {
   /// Whether updates have been checked for or not
   final bool hasCheckedForUpdates;
 
@@ -19,7 +19,7 @@ class UpdateStatus extends StatelessWidget {
   /// Callback to call when the update link is clicked on
   final void Function() onUpdateTap;
 
-  const UpdateStatus({
+  const TUpdateStatus({
     required this.hasCheckedForUpdates,
     required this.updateCheckSucceeded,
     required this.hasUpdate,
@@ -55,13 +55,14 @@ class UpdateStatus extends StatelessWidget {
 
     return TClickable(
       onTap: clickable ? onUpdateTap : null,
-      child: TSpacedRow(
+      child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        spacer: const SizedBox(width: 5),
         children: <Widget>[
           icon,
-          Text(text, style: Theme.of(context).textTheme.bodyMedium),
-        ],
+          Flexible(
+            child: Text(text, style: Theme.of(context).textTheme.bodyMedium),
+          ),
+        ].separateWith(const SizedBox(width: 5)),
       ),
     );
   }

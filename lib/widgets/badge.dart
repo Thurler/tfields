@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tfields/widgets/spaced_row.dart';
+import 'package:tfields/extensions/iterable.dart';
 
 class TBadge extends StatelessWidget {
   final String text;
@@ -29,23 +29,33 @@ class TBadge extends StatelessWidget {
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-        child: TSpacedRow(
-          spacer: const SizedBox(width: 5),
+        child: Row(
           children: <Widget>[
             if (icon != null)
-              // Flex 0 allows the text to occupy all the width with its single
-              // flex defined
               Flexible(
                 flex: 0,
                 child: Icon(icon, color: iconColor, size: iconSize),
               ),
-            Text(
-              text,
-              style: styleOverride ?? Theme.of(context).textTheme.titleSmall,
+            Flexible(
+              child: Text(
+                text,
+                style: styleOverride ?? Theme.of(context).textTheme.titleSmall,
+              ),
             ),
-          ],
+          ].separateWith(const SizedBox(width: 5)),
         ),
       ),
     );
   }
+}
+
+/// A badge that will be displayed alongside an icon / button
+class TIconBadge {
+  /// The color used by the badge. Defaults to a solid red if not defined
+  final Color? color;
+
+  /// An optional text to be shown inside the badge
+  final String? label;
+
+  const TIconBadge({this.label, this.color});
 }
