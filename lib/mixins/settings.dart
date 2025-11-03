@@ -42,7 +42,7 @@ abstract interface class TSettingsReader<S extends TCommonSettings>
 abstract interface class TSettingsWriter<S extends TCommonSettings>
     implements TSettingsReader<S> {
   /// The function that writes the current settings to disk
-  void writeSettings();
+  bool writeSettings();
 
   /// The function that handles any error thrown during the save procedure
   void handleWriteError(Object exception, StackTrace stackTrace);
@@ -84,12 +84,14 @@ mixin TSettingsJsonReader<S extends TCommonSettings>
 mixin TSettingsJsonWriter<S extends TCommonSettings>
     implements TSettingsWriter<S> {
   @override
-  void writeSettings() {
+  bool writeSettings() {
     try {
       File settingsFile = File('./settings.json');
       settingsFile.writeAsStringSync('${json.encode(settings.toJson())}\n');
+      return true;
     } catch (e, s) {
       handleWriteError(e, s);
+      return false;
     }
   }
 }

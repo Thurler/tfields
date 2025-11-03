@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tfields/extensions/iterable.dart';
 import 'package:tfields/widgets/button.dart';
 import 'package:tfields/widgets/expansion_tile.dart';
-import 'package:tfields/widgets/form/group.dart';
+import 'package:tfields/widgets/form/group/group.dart';
 
 /// An interface for T Form subgroups, a collection of fields that will be
 /// displayed together

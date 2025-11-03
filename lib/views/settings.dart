@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -9,53 +9,36 @@ import 'package:tfields/mixins/loggable.dart';
 import 'package:tfields/mixins/settings.dart';
 import 'package:tfields/settings.dart';
 import 'package:tfields/widgets/common_scaffold.dart';
-import 'package:tfields/widgets/form/base.dart';
-import 'package:tfields/widgets/form/dropdown.dart';
-import 'package:tfields/widgets/form/switch.dart';
-import 'package:tfields/widgets/rounded_border.dart';
+import 'package:tfields/widgets/form/group/common_settings.dart';
+import 'package:tfields/widgets/form/group/group.dart';
 
 /// The widget that allows the user to change app settingss
-abstract class TAbstractSettingsWidget<S extends TCommonSettings>
-    extends StatefulWidget {
+abstract class TAbstractSettingsWidget<S extends TCommonSettings,
+    F extends TFormField> extends StatefulWidget {
   final String title;
   const TAbstractSettingsWidget({required this.title, super.key});
 }
 
 /// The state consists only of the form elements, so we mix DiscardableChanges
 /// in to easily handle the changes in that state for us
-abstract class TAbstractSettingsState<S extends TCommonSettings,
-        T extends TAbstractSettingsWidget<S>> extends State<T>
+abstract class TAbstractSettingsState<
+        S extends TCommonSettings,
+        F extends TFormField,
+        T extends TAbstractSettingsWidget<S, F>> extends State<T>
     with
         TLoggable,
         TSettingsAware<T, S>,
+        TSettingsJsonWriter<S>,
         TDialogDisplayer<T>,
         TDiscardableChanges<T> {
   /// The dialog message to use on unhandled exceptions
   String get unhandledExceptionMessage;
 
-  /// The log level options, mapped to their dropdown text values
-  final List<String> _options = TLogLevel.values.map(
-    (TLogLevel level) => level.dropdownText,
-  ).toList();
-
-  /// The log level dropdown form...
-  late TFormDropdown _logLevelForm;
-
-  /// ...and its key, used to access the form's inner state
-  final DropdownFormKey _logLevelFormKey = DropdownFormKey();
-
-  /// The update check bool switch form...
-  late TFormSwitch _checkUpdatesForm;
-
-  /// ...and its key, used to access the form's inner state
-  final SwitchFormKey _checkUpdatesFormKey = SwitchFormKey();
+  /// The form for editing Settings data
+  TSettingsGroup<S, F> get settingsForm;
 
   @override
-  @mustCallSuper
-  bool get hasChanges =>
-      // Simply aply a logical OR to the form hasChanges flags
-      (_logLevelFormKey.currentState?.hasChanges ?? false) ||
-      (_checkUpdatesFormKey.currentState?.hasChanges ?? false);
+  bool get hasChanges => settingsForm.hasChanges;
 
   /// Handle the weird case where we can't save the settings file to disk
   Future<void> _handleFileSystemException(FileSystemException e) {
@@ -68,101 +51,47 @@ abstract class TAbstractSettingsState<S extends TCommonSettings,
   }
 
   @mustCallSuper
-  void updateSettingsWithForm() {
-    // Get the log level from the dropdown value, and save it to settings
-    String chosenLogLevel = _logLevelFormKey.currentState!.value;
-    settings.logLevel = TLogLevel.values[_options.indexOf(chosenLogLevel)];
-    // Similarly to the remaining settings
-    settings.checkUpdates = _checkUpdatesFormKey.currentState!.value;
-  }
-
-  @mustCallSuper
-  void resetFormValues() {
-    // Reset initial value to remove the has changes flag
-    _logLevelFormKey.currentState!.resetInitialValue();
-    _checkUpdatesFormKey.currentState!.resetInitialValue();
-    setState(() {});
+  void updateSettingsWithForm(S newSettings) {
+    settings.logLevel = newSettings.logLevel;
+    settings.checkUpdates = newSettings.checkUpdates;
   }
 
   @override
   Future<void> saveChanges() async {
-    updateSettingsWithForm();
+    // Request a form validation and check for errors
+    if (!settingsForm.validate()) {
+      unawaited(showWarning('The provided information is not valid'));
+      setState(() {});
+      return;
+    }
+    // Make a new settings entity and copy its values over to the existing one
+    S newSettings = settingsForm.makeEntity(null);
+    updateSettingsWithForm(newSettings);
     // Try to save the new settings to disk - if it fails, we don't exit out
     // of settings, keep the user here even though we've already changed the
     // internal settings
-    try {
-      File settingsFile = File('./settings.json');
-      settingsFile.writeAsStringSync('${json.encode(settings.toJson())}\n');
-    } on FileSystemException catch (e) {
-      await _handleFileSystemException(e);
-      return;
-    } catch (e, s) {
-      await showUnexpectedException(e, s, body: unhandledExceptionMessage);
-      return;
-    }
-    await log(
-      TLogLevel.info,
-      'Applying log level ${settings.logLevel.name}',
-    );
+    writeSettings();
+    await log(TLogLevel.info, 'Applying log level ${settings.logLevel.name}');
     await log(TLogLevel.info, 'Saved settings changes');
     logLevel = settings.logLevel;
-    resetFormValues();
-  }
-
-  /// Callback for the log level dropdown, used only to log what was changed
-  Future<void> _changeLogLevel(String? chosen) async {
-    if (chosen == null) {
-      return;
-    }
-    TLogLevel chosenLevel = TLogLevel.values[_options.indexOf(chosen)];
-    await log(
-      TLogLevel.debug,
-      'Log level changed to ${chosenLevel.name}',
-    );
-    // Refresh has changes flag
-    setState(() {});
-  }
-
-  /// Callback for the update check switch, used only to log what was changed
-  Future<void> _changeUpdateCheck(bool? chosen) async {
-    if (chosen == null) {
-      return;
-    }
-    await log(
-      TLogLevel.debug,
-      'Auto update checks ${chosen ? 'enabled' : 'disabled'}',
-    );
-    // Refresh has changes flag
-    setState(() {});
+    settingsForm.saveValues();
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _logLevelForm = TFormDropdown(
-      enabled: true,
-      title: 'Log level',
-      subtitle: 'Specifies severity of information to be logged',
-      hintText: 'Select a log level',
-      options: _options,
-      initialValue: _options[settings.logLevel.index],
-      onValueChanged: _changeLogLevel,
-      key: _logLevelFormKey,
-    );
-    _checkUpdatesForm = TFormSwitch(
-      enabled: true,
-      title: 'Check for updates on startup',
-      subtitle: 'A message is displayed if an update is available',
-      offText: "Don't check for updates",
-      onText: 'Check for updates',
-      onValueChanged: _changeUpdateCheck,
-      initialValue: settings.checkUpdates,
-      key: _checkUpdatesFormKey,
-    );
+  Future<void> handleWriteError(Object exception, StackTrace stackTrace) async {
+    if (exception is FileSystemException) {
+      return _handleFileSystemException(exception);
+    } else {
+      return showUnexpectedException(
+        exception,
+        stackTrace,
+        body: unhandledExceptionMessage,
+      );
+    }
   }
 
-  /// The additional forms that will be rendered alongside the common options
-  List<Widget> get additionalForms;
+  /// The function that builds the actual form for the settings type
+  TFormGroupWidget<TSettingsGroup<S, F>> buildForm(BuildContext context);
 
   @override
   Widget build(BuildContext context) {
@@ -172,19 +101,7 @@ abstract class TAbstractSettingsState<S extends TCommonSettings,
       child: TCommonScaffold(
         title: widget.title,
         floatingActionButton: saveButton,
-        children: <Widget>[
-          TRoundedBorder(
-            color: TFormTitle.subtitleColor,
-            childPadding: const EdgeInsets.only(right: 15),
-            child: _logLevelForm,
-          ),
-          TRoundedBorder(
-            color: TFormTitle.subtitleColor,
-            childPadding: const EdgeInsets.only(right: 15),
-            child: _checkUpdatesForm,
-          ),
-          ...additionalForms,
-        ],
+        children: <Widget>[buildForm(context)],
       ),
     );
   }

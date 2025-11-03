@@ -12,6 +12,13 @@ class TCommonSettings {
   /// Which brightness color theme to use
   ThemeMode themeMode = ThemeMode.system;
 
+  /// Make an instance from scratch, passing in all parameters
+  TCommonSettings({
+    required this.logLevel,
+    required this.checkUpdates,
+    required this.themeMode,
+  });
+
   /// Copy settings from another instance
   TCommonSettings.from(TCommonSettings other) :
     logLevel = other.logLevel,

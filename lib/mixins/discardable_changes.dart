@@ -20,8 +20,7 @@ import 'package:tfields/widgets/save_button.dart';
 /// onPopInvoked to the onPopInvokedWithResult argument
 ///
 /// The State is STILL responsible for properly handling the changes!
-mixin TDiscardableChanges<T extends StatefulWidget>
-    on TLoggable, TDialogDisplayer<T> {
+mixin TDiscardableChanges<T extends StatefulWidget> on TDialogDisplayer<T> {
   /// Whether the user forced a pop, will skip the dialog check
   bool _forcedPop = false;
 
@@ -57,7 +56,9 @@ mixin TDiscardableChanges<T extends StatefulWidget>
     NavigatorState state = Navigator.of(context);
     bool canDiscard = await showUnsavedChangesDialog();
     if (canDiscard) {
-      await log(TLogLevel.info, 'Discarding changes');
+      if (this is TLoggable) {
+        await (this as TLoggable).log(TLogLevel.info, 'Discarding changes');
+      }
       if (state.mounted) {
         _forcedPop = true;
         Navigator.of(context).pop();
