@@ -325,6 +325,7 @@ class MainState extends State<MainWidget>
           '${settings.checkUpdates ? 'enabled' : 'disabled'} | The current '
           'custom value in settings is: "${settings.customValue}"',
           style: const TextStyle(fontSize: 16),
+          textAlign: TextAlign.center,
         ),
         TGridRow(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -341,6 +342,7 @@ class MainState extends State<MainWidget>
                 initialValue: null,
                 options:
                     TLogLevel.values.sublist(0, TLogLevel.values.length - 1),
+                sortLogic: TDropdownSortLogic.object,
                 toDropdownText: (TLogLevel level) => level.dropdownText,
                 onValueChanged: (TLogLevel? value) => setState(() {
                   if (value != null) {

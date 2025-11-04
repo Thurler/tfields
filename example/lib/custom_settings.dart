@@ -166,7 +166,4 @@ class CustomSettingsState extends TAbstractSettingsState<CustomSettings,
   @override
   CustomSettingsGroupWidget buildForm(BuildContext context) =>
       CustomSettingsGroupWidget(form: _customSettingsGroup);
-
-  @override
-  CustomSettings readSettings() => settings;
 }
