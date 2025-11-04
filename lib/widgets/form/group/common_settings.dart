@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tfields/logger.dart';
 import 'package:tfields/settings.dart';
+import 'package:tfields/widgets/form/dropdown.dart';
 import 'package:tfields/widgets/form/group/group.dart';
 import 'package:tfields/widgets/grid/item.dart';
 import 'package:tfields/widgets/grid/row.dart';
@@ -34,6 +35,7 @@ abstract class TSettingsGroup<S extends TCommonSettings, F extends TFormField>
       subtitle: 'Specifies severity of information to be logged',
       hintText: 'Select a log level',
       options: TLogLevel.values,
+      sortLogic: TDropdownSortLogic.object,
       initialValue: initialData?.logLevel,
       toDropdownText: (TLogLevel level) => level.dropdownText,
     );
