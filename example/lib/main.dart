@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tfields/extensions/datetime.dart';
 import 'package:tfields/logger.dart';
-import 'package:tfields/mixins/alert.dart';
+import 'package:tfields/mixins/dialog_displayer.dart';
 import 'package:tfields/mixins/loggable.dart';
-import 'package:tfields/mixins/settings_reader.dart';
+import 'package:tfields/mixins/settings.dart';
 import 'package:tfields/mixins/time_tracker.dart';
 import 'package:tfields/mixins/update_checker.dart';
 import 'package:tfields/theme_provider.dart';
@@ -15,16 +15,17 @@ import 'package:tfields/widgets/appbar_button.dart';
 import 'package:tfields/widgets/button.dart';
 import 'package:tfields/widgets/clickable.dart';
 import 'package:tfields/widgets/common_scaffold.dart';
-import 'package:tfields/widgets/dialog.dart';
 import 'package:tfields/widgets/form/dropdown.dart';
 import 'package:tfields/widgets/form/string.dart';
+import 'package:tfields/widgets/grid/item.dart';
+import 'package:tfields/widgets/grid/row.dart';
+import 'package:tfields/widgets/grid/size.dart';
+import 'package:tfields/widgets/icons.dart';
 import 'package:tfields/widgets/rounded_border.dart';
-import 'package:tfields/widgets/spaced_row.dart';
 import 'package:tfields/widgets/switch.dart';
 import 'package:tfields/widgets/title_divider.dart';
 import 'package:tfields/widgets/update_status.dart';
 import 'package:tfields_example/custom_settings.dart';
-import 'package:tfields_example/form_showcase.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -44,7 +45,7 @@ void main() {
   // therefore we'll need the CustomSettingsThemeProvider with our settings
   // overrides and additions
   runApp(
-    ThemedApp(
+    TThemedApp(
       themeBuilder: (Color color, _) => CustomSettingsThemeProvider(color),
       title: 'TFields Demo',
       seedColor: Colors.green,
@@ -54,7 +55,7 @@ void main() {
 }
 
 /// Extend the basic UpdateCheck with the latest github releases endpoint
-class MainUpdateCheck extends UpdateCheck {
+class MainUpdateCheck extends TUpdateCheck {
   @override
   String get githubEndpoint =>
       'https://api.github.com/repos/thurler/thlaby2-save-editor/releases/latest';
@@ -72,12 +73,12 @@ class MainWidget extends StatefulWidget {
 
 class MainState extends State<MainWidget>
     with
-        Loggable, // This state can write to the logs
-        SettingsReader<CustomSettings>, // This state can read the settings
-        CustomSettingsReader, // Specifies it's the custom settings in our app
-        AlertHandler<MainWidget>, // This state can generate alerts
-        TimeTracker<MainWidget>, // This state can keep track of elapsed time
-        UpdateChecker<MainUpdateCheck> // This state will check for updates
+        TLoggable, // This state can write to the logs
+        TSettingsJsonReader<CustomSettings>, // This state can read the settings
+        CustomSettingsDeserializer, // Needed to read the app-specific settings
+        TDialogDisplayer<MainWidget>, // This state can show dialogs
+        TTimeTracker<MainWidget>, // This state can keep track of elapsed time
+        TUpdateChecker<MainUpdateCheck> // This state will check for updates
 {
   /// Trigger the update check
   Future<void> _callUpdateCheck() async {
@@ -103,50 +104,48 @@ class MainState extends State<MainWidget>
       ),
     );
     // After we pop from it, make sure we reload the settings
-    loadSettings();
+    readSettings();
     setState(() {
-      _selectedLogLevelTest = settings.logLevel.name;
+      _selectedLogLevelTest = settings.logLevel;
     });
   }
 
   /// Navigate away to the form showcase widget
   Future<void> _navigateToFormShowcase() async {
-    await Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) => const FormShowcase(),
-      ),
-    );
+    //await Navigator.of(context).push(
+    //  MaterialPageRoute<void>(
+    //    builder: (_) => const FormShowcase(),
+    //  ),
+    //);
   }
+
+  /// Keep track of the switch's current state
+  bool _currentSwitchValue = true;
 
   /// Simple callback to update switch value
   void _toggleSwitch({required bool newValue}) => setState(() {
     _currentSwitchValue = newValue;
   });
 
+  /// The date the reset button was last pressed
   DateTime? _lastReset;
 
-  /// Keep track of the switch's current state
-  bool _currentSwitchValue = true;
-
-  /// Keep track of whether the tclickable text is being hovered over or not
-  bool _hoveringOverText = false;
-
   /// Simple text editing controller for log test
-  final TextEditingController _logTestController = TextEditingController();
+  final TStringFormKey _logTestKey = TStringFormKey();
 
   /// Simple dropdown option tracker for log test
-  String _selectedLogLevelTest = '';
+  TLogLevel _selectedLogLevelTest = TLogLevel.info;
 
   @override
   void initState() {
     super.initState();
-    // Calling loadSettings on initState is MANDATORY for SettingsReader, so
+    // Calling readSettings on initState is MANDATORY for SettingsReader, so
     // that we guarantee the late settings variable is initialized for all
     // logic
-    loadSettings();
+    readSettings();
     // After loading the settings, we can confidently call on the settings
     // variable, which will be loaded with the user's settings
-    _selectedLogLevelTest = settings.logLevel.name;
+    _selectedLogLevelTest = settings.logLevel;
     // Asynchronous calls in initState should either make sure they're done
     // after the first frame is rendered (like this) or make sure they take
     // long enough to not call setState before the first frame is rendered
@@ -163,15 +162,15 @@ class MainState extends State<MainWidget>
     // The CommonScaffold standardizes the way widgets are presented to the
     // user, while conveniently wrapping the children in a ListView for easy
     // scrolling
-    return CommonScaffold(
+    return TCommonScaffold(
       title: 'TFields Demo',
       // Because we want this app to be able to toggle between light/dark modes,
       // we must provide a themeToggleCallback to redraw it wherever the user is
       // allowed to toggle between the modes
-      themeToggleCallback: Provider.of<ThemeProvider>(context).changeTheme,
+      themeToggleCallback: Provider.of<TThemeProvider>(context).changeTheme,
       // Because settings are standardized, the CommonScaffold already provides
-      // a a convenient way to link to settings in the top right corner, just
-      // pass in a function to actually Navigate to it
+      // a convenient way to link to settings in the top right corner, just pass
+      // in a function to actually Navigate to it
       settingsLink: _navigateToSettings,
       // Additional TAppBarButtons can also be provided to sit next to the
       // settings button, though there's nothing protecting them from
@@ -180,9 +179,7 @@ class MainState extends State<MainWidget>
         TAppBarButton(
           text: 'Something',
           icon: Icons.question_mark,
-          onTap: () async => showCommonDialog(
-            TDialog.success(titleText: 'Wow!'),
-          ),
+          onTap: () => showSuccess('Wow!'),
         ),
       ],
       // A footer that acts separate from the ListView, and will always be
@@ -211,27 +208,28 @@ class MainState extends State<MainWidget>
         // Only display the update status if we actually have checkUpdates
         // enabled in the settings
         if (settings.checkUpdates)
-          UpdateStatus(
+          TUpdateStatus(
             hasCheckedForUpdates: updateChecker.hasCheckedForUpdates,
             updateCheckSucceeded: updateChecker.updateCheckSucceeded,
             hasUpdate: updateChecker.hasUpdate,
             latestVersion: updateChecker.latestVersion,
             onUpdateTap: updateChecker.openLatestVersion,
           ),
-        const TTitleDivider(titleText: 'Time Tracker / TSpacedRow / TButton'),
+        const TTitleDivider(titleText: 'Time Tracker / TGridRow / TButton'),
         // The intrinsic height here caps the double.infinity height of the
         // vertical dividers, limiting to the height of the associated butons
         IntrinsicHeight(
-          // The TSpacedRow will wrap every child in a Expanded/Flexible to make
-          // sure everything stays responsive, but it's smart enough to not
-          // double wrap them if the child is already a Flex. If you need fine
-          // control over a TSpacedRow's children's flex, you can just wrap them
-          // yourself and have everything work the same
-          child: TSpacedRow(
+          // The TGridRow will force you to wrap the row's children in a
+          // TGridItem class, that tells the row how that item behaves in a
+          // responsive screen environment. More details in the appropriate
+          // section
+          child: TGridRow(
+            smFlexLimit: 1,
+            mainAxisAlignment: MainAxisAlignment.center,
             // A TSpacedRow's spacer widget can be as complex as necessary, it
             // will be replicated between each child widget, so it's perfect
             // for blank spaces or dividers
-            spacer: const Padding(
+            horizontalSpacer: const Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),
               child: SizedBox(
                 width: 1,
@@ -239,14 +237,12 @@ class MainState extends State<MainWidget>
                 child: ColoredBox(color: Colors.grey),
               ),
             ),
-            // By setting MainAxisSize to min, we effectively wrap the row in a
-            // IntrinsicWidth, preventing it from expanding to fill the entire
-            // available width. This does not matter if the children are set to
-            // expand to fill the available width, though - then each child must
-            // be wrapped in its own IntrinsicWidth
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Flexible(
+            // Here since we have a child with infinite height (the divider), we
+            // must set this flag to true so that each row is set to its
+            // intrinsic height
+            forceIntrinsicHeight: true,
+            children: <TGridItem>[
+              TGridItem(
                 child: Text(
                   _lastReset != null
                     ? 'The timer was reset '
@@ -255,29 +251,30 @@ class MainState extends State<MainWidget>
                   style: const TextStyle(fontSize: 16),
                 ),
               ),
-              Flexible(
-                // A flex of zero means this widget will only take up as much
-                // space as necessary, leaving the non-zero flex widgets to
-                // share the remainder width
-                flex: 0,
-                child: TButton(
+              TGridItem(
+                child: TButton.elevated(
                   // Setting usesMaxWidth to false has the same effect as
-                  // wrapping the button in a IntrinsicWidth widget, similar to
-                  // what was mentioned above for the whole TSpacedRow
+                  // wrapping the button in a IntrinsicWidth widget. This is
+                  // already the default behavior
+                  // ignore: avoid_redundant_argument_values
                   usesMaxWidth: false,
                   text: timerIsActive ? 'Pause' : 'Resume',
-                  icon: timerIsActive ? Icons.pause : Icons.play_arrow,
+                  icon: TIcon(
+                    icon: timerIsActive ? Icons.pause : Icons.play_arrow,
+                  ),
                   // We can stop and resume the timer freely without resetting
                   // it by calling stopTimer / resumeTimer
                   onPressed: timerIsActive ? stopTimer : resumeTimer,
                 ),
               ),
-              Flexible(
-                flex: 0,
-                child: TButton(
-                  usesMaxWidth: false,
+              TGridItem.fixedSize(
+                // A flex of zero means this widget will only take up as much
+                // space as necessary, leaving the non-zero flex widgets to
+                // share the remainder width
+                size: const TGridSize.zero(),
+                child: TButton.elevated(
                   text: 'Restart',
-                  icon: Icons.refresh,
+                  icon: const TIcon(icon: Icons.refresh),
                   // Calling startTimer, however, will reset the number of
                   // elapsed seconds the state has been keeping track of
                   onPressed: () {
@@ -290,49 +287,31 @@ class MainState extends State<MainWidget>
           ),
         ),
         const TTitleDivider(titleText: 'Alert Handler / TDialog'),
-        TSpacedRow(
-          // Calling TSpacedRow with expanded true will make sure every child
-          // takes up as much space as possible, evenly distributing the width
-          // between them - every one of them has the same flex
-          expanded: true,
-          spacer: const SizedBox(width: 20),
+        Wrap(
+          spacing: 20,
+          runSpacing: 20,
+          alignment: WrapAlignment.center,
           children: <Widget>[
-            TButton(
+            TButton.elevated(
               text: 'Success dialog',
               // A call to showCommonDialog completes when the user dismisses
               // the alert, though the return can also be ignored to just
               // display the message and move on with execution
-              onPressed: () async => showCommonDialog(
-                // These named constructors provide pre-built common dialogs,
-                // but the nameless constructor is also available if you need
-                // to fine tune the behavior
-                TDialog.success(titleText: 'A success message!'),
-              ),
+              onPressed: () => showSuccess('A success message!'),
             ),
-            TButton(
+            TButton.elevated(
               text: 'Warning dialog',
-              onPressed: () async => showCommonDialog(
-                TDialog.warning(
-                  titleText: 'A warning message!',
-                  bodyText: "The warning's body",
-                  confirmText: 'OK',
-                ),
-              ),
+              onPressed: () =>
+                  showWarning('A warning message!', body: "The warning's body"),
             ),
-            TButton(
+            TButton.elevated(
               text: 'Bool warning dialog',
               // A showBoolDialog completes when the user dismisses the alert,
               // but it also returns whether the user clicked on the OK or the
               // CANCEL button - if neither was clicked, it will collapse the
               // value to false
-              onPressed: () async => showBoolDialog(
-                TDialog.boolWarning(
-                  titleText: 'A warning message with options!',
-                  bodyText: 'A warning body',
-                  confirmText: 'Confirm text',
-                  cancelText: 'Cancel text',
-                ),
-              ),
+              onPressed: () =>
+                  showConfirmation('A warning message with options!'),
             ),
           ],
         ),
@@ -347,56 +326,65 @@ class MainState extends State<MainWidget>
           'custom value in settings is: "${settings.customValue}"',
           style: const TextStyle(fontSize: 16),
         ),
-        TSpacedRow(
-          spacer: const SizedBox(width: 20),
-          children: <Widget>[
+        TGridRow(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          smFlexLimit: 1,
+          mdFlexLimit: 2,
+          children: <TGridItem>[
             // The form fields can be used independently from the stateful TForm
-            // if you need to manage the form state yourself - these are just
-            // stateless widgets of the "right side" of a TForm
-            TFormDropdownField(
-              enabled: true,
-              hintText: 'Select a log level...',
-              value: _selectedLogLevelTest,
-              // We omit the "none" option here as it's not a valid LogLevel
-              // for a message - the whole point of it is that no message can
-              // have that LogLevel
-              options: LogLevel.values.sublist(
-                0,
-                LogLevel.values.length - 1,
-              ).map(
-                (LogLevel l) => l.name,
-              ).toList(),
-              updateValue: (String? value) => setState(() {
-                if (value != null) {
-                  _selectedLogLevelTest = value;
-                }
-              }),
+            // if you need to manage the form state yourself
+            TGridItem(
+              child: TFormDropdown<TLogLevel>(
+                enabled: true,
+                title: 'Log level to test',
+                hintText: 'Select a log level',
+                initialValue: null,
+                options:
+                    TLogLevel.values.sublist(0, TLogLevel.values.length - 1),
+                toDropdownText: (TLogLevel level) => level.dropdownText,
+                onValueChanged: (TLogLevel? value) => setState(() {
+                  if (value != null) {
+                    _selectedLogLevelTest = value;
+                  }
+                }),
+              ),
             ),
-            TFormStringField(
-              enabled: true,
-              hintText: 'Type in a message...',
-              controller: _logTestController,
+            // But if you want to access the state directly, just pass in a key
+            // of the appropriate type so you can access it later
+            TGridItem(
+              child: TFormString(
+                key: _logTestKey,
+                enabled: true,
+                title: 'Message to log',
+                hintText: 'Type in a message',
+                initialValue: '',
+              ),
             ),
-            TButton(
-              text: 'Log the message',
-              icon: Icons.edit,
-              // Logging a message is as simple as calling the log function with
-              // a LogLevel and the string to be logged - the mixin will already
-              // handle writing to disk and whether the message should be logged
-              // or not according to the user's settings. Other functions like
-              // logBuffer and logFlush can also be used to finely control when
-              // log messages are flushed to disk
-              onPressed: () async => log(
-                LogLevel.fromName(_selectedLogLevelTest),
-                _logTestController.text,
+            TGridItem(
+              child: TButton.elevated(
+                usesMaxWidth: true,
+                text: 'Log the message',
+                icon: const TIcon(icon: Icons.edit),
+                // Logging a message is as simple as calling the log function
+                // with a LogLevel and the string to be logged - the mixin will
+                // already handle writing to disk and whether the message should
+                // be logged or not according to the user's settings. Other
+                // functions like logBuffer and logFlush can also be used to
+                // finely control when log messages are flushed to disk
+                onPressed: () async => log(
+                  _selectedLogLevelTest,
+                  _logTestKey.currentState?.value ?? '',
+                ),
               ),
             ),
           ],
         ),
         const TTitleDivider(titleText: 'TRoundedBorder / TClickable / TSwitch'),
-        TSpacedRow(
-          mainAxisSize: MainAxisSize.min,
-          spacer: const SizedBox(width: 20),
+        Wrap(
+          spacing: 20,
+          runSpacing: 20,
+          alignment: WrapAlignment.center,
+          crossAxisAlignment: WrapCrossAlignment.center,
           children: <Widget>[
             // A TClickable is simply an easy way to make any widget clickable
             // to trigger a specific function. It will already handle the mouse
@@ -409,6 +397,7 @@ class MainState extends State<MainWidget>
               ),
             ),
             TSwitch(
+              expanded: false,
               value: _currentSwitchValue,
               onChanged: (bool value) => _toggleSwitch(newValue: value),
               title: 'Switches can have titles',
@@ -439,9 +428,9 @@ class MainState extends State<MainWidget>
           ],
         ),
         const TTitleDivider(titleText: 'Discardable Changes / TForm'),
-        TButton(
+        TButton.elevated(
           text: 'Open form showcase',
-          icon: Icons.open_in_new,
+          icon: const TIcon(icon: Icons.open_in_new),
           onPressed: _navigateToFormShowcase,
         ),
       ],
