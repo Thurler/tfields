@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:tfields/extensions/iterable.dart';
+import 'package:tfields/mixins/standard_colorer.dart';
 import 'package:tfields/widgets/clickable.dart';
 
 /// The widget that displays the automatic update check status
-class TUpdateStatus extends StatelessWidget {
+class TUpdateStatus extends StatelessWidget with TStandardColorer {
   /// Whether updates have been checked for or not
   final bool hasCheckedForUpdates;
 
@@ -42,14 +43,14 @@ class TUpdateStatus extends StatelessWidget {
       );
       text = 'Looking for updates...';
     } else if (!updateCheckSucceeded) {
-      icon = const Icon(Icons.cancel_outlined, color: Colors.red);
+      icon = Icon(Icons.cancel_outlined, color: errorColor(context));
       text = 'Error when searching for updates';
     } else if (hasUpdate) {
-      icon = const Icon(Icons.warning, color: Colors.red);
+      icon = Icon(Icons.warning, color: errorColor(context));
       text = 'New version $latestVersion available, click here to download it';
       clickable = true;
     } else {
-      icon = const Icon(Icons.check_circle_outlined, color: Colors.green);
+      icon = Icon(Icons.check_circle_outlined, color: successColor(context));
       text = 'You are using the latest version!';
     }
 
