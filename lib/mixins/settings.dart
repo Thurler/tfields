@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:tfields/settings.dart';
 
 /// The interface that unifies how regular classes and widgets deserialize the
@@ -93,37 +91,5 @@ mixin TSettingsJsonWriter<S extends TCommonSettings>
       handleWriteError(e, s);
       return false;
     }
-  }
-}
-
-/// A mixin for StatefulWidgets that need to know the current set of settings
-/// outside of their build logic, and don't want to read the json file
-mixin TSettingsAware<T extends StatefulWidget, S extends TCommonSettings>
-    on State<T> implements TSettingsReader<S> {
-  late S? _settings;
-
-  @override
-  S get settings => _settings ?? settingsFromDefault();
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _settings =
-        Provider.of<TSettingsProvider<S>>(context, listen: false).settings;
-  }
-}
-
-/// A provider of a concrete set of settings - setting new values will notify
-/// all widgets that consume this provider, and redraw them automatically
-mixin TSettingsProvider<S extends TCommonSettings>
-    implements ChangeNotifier, TSettingsReader<S> {
-  S? _settings;
-
-  @override
-  S get settings => _settings ?? settingsFromDefault();
-
-  void setSettings(S? settings) {
-    _settings = settings;
-    notifyListeners();
   }
 }

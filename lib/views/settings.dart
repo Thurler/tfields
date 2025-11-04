@@ -27,7 +27,7 @@ abstract class TAbstractSettingsState<
         T extends TAbstractSettingsWidget<S, F>> extends State<T>
     with
         TLoggable,
-        TSettingsAware<T, S>,
+        TSettingsJsonReader<S>,
         TSettingsJsonWriter<S>,
         TDialogDisplayer<T>,
         TDiscardableChanges<T> {
