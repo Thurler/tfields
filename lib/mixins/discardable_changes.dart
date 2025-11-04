@@ -43,6 +43,7 @@ mixin TDiscardableChanges<T extends StatefulWidget> on TDialogDisplayer<T> {
     body: 'Are you sure you want to go back and discard your changes?',
     confirmText: 'Yes, discard them',
     cancelText: 'No, keep me here',
+    fixedBodyWidth: 500,
   ).showBool(context);
 
   /// The function invoked when pop is called in the Navigator. If there are no
