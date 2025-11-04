@@ -4,7 +4,7 @@ import 'package:tfields/widgets/clickable.dart';
 /// A wrapper for a DecoratedBox with rounded borders in all corners
 class TRoundedBorder extends StatelessWidget {
   /// The border's color
-  final Color color;
+  final Color? color;
 
   /// The border's width
   final double width;
@@ -17,9 +17,9 @@ class TRoundedBorder extends StatelessWidget {
 
   const TRoundedBorder({
     required this.child,
-    required this.color,
-    this.width = 1.0,
     this.childPadding = EdgeInsets.zero,
+    this.width = 1,
+    this.color,
     super.key,
   });
 
@@ -27,13 +27,13 @@ class TRoundedBorder extends StatelessWidget {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: color, width: width),
+        borderRadius: BorderRadius.circular(3),
+        border: Border.all(
+          color: color ?? Theme.of(context).colorScheme.onSurface,
+          width: width,
+        ),
       ),
-      child: Padding(
-        padding: childPadding,
-        child: child,
-      ),
+      child: Padding(padding: childPadding, child: child),
     );
   }
 }
@@ -45,17 +45,19 @@ class TClickableRoundedBorder extends StatefulWidget {
   /// The padding to apply when drawing the child
   final EdgeInsets childPadding;
 
-  /// How wide the border will be when not highlighted
+  /// How wide the border will be when not highlighted - defaults to 1
   final double normalWidth;
 
-  /// How wide the border will be when highlighted
+  /// How wide the border will be when highlighted - defaults to 3
   final double highlightedWidth;
 
-  /// Which color the border will be when not highlighted
-  final Color normalColor;
+  /// Which color the border will be when not highlighted - defaults to the
+  /// regular surface color
+  final Color? normalColor;
 
-  /// Which color the border will be when highlighted
-  final Color highlightedColor;
+  /// Which color the border will be when highlighted - defaults to the primary
+  /// color scheme color
+  final Color? highlightedColor;
 
   /// The callback for when the widget area is clicked on
   final void Function()? onTap;
@@ -69,27 +71,27 @@ class TClickableRoundedBorder extends StatefulWidget {
 
   const TClickableRoundedBorder({
     required this.stateUpdateCallback,
-    required this.highlightedWidth,
-    required this.normalWidth,
-    required this.highlightedColor,
-    required this.normalColor,
     required this.child,
     this.childPadding = EdgeInsets.zero,
+    this.highlightedWidth = 3,
+    this.normalWidth = 1,
+    this.highlightedColor,
+    this.normalColor,
     this.onTap,
     super.key,
   });
 
   @override
   State<TClickableRoundedBorder> createState() =>
-      TClickableRoundedBorderState();
+      _TClickableRoundedBorderState();
 }
 
-class TClickableRoundedBorderState extends State<TClickableRoundedBorder> {
-  bool highlighted = false;
+class _TClickableRoundedBorderState extends State<TClickableRoundedBorder> {
+  bool _highlighted = false;
 
   void _changeHighlight({required bool newValue}) {
     setState(() {
-      highlighted = newValue;
+      _highlighted = newValue;
     });
     widget.stateUpdateCallback();
   }
@@ -108,8 +110,10 @@ class TClickableRoundedBorderState extends State<TClickableRoundedBorder> {
         // By piggybacking on a TClickable's onEnter and onExit events,
         // you can also highlight the border whenever the user's mouse
         // enters and leaves the TRoundedBorder's region
-        color: highlighted ? widget.highlightedColor : widget.normalColor,
-        width: highlighted ? widget.highlightedWidth : widget.normalWidth,
+        color: _highlighted
+          ? (widget.highlightedColor ?? Theme.of(context).colorScheme.primary)
+          : widget.normalColor,
+        width: _highlighted ? widget.highlightedWidth : widget.normalWidth,
         child: widget.child,
       ),
     );

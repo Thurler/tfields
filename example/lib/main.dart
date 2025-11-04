@@ -412,10 +412,6 @@ class MainState extends State<MainWidget>
             // of whether the mouse is inside its region or not, to highlight
             // when the user is interacting with it
             TClickableRoundedBorder(
-              highlightedColor: Colors.green,
-              highlightedWidth: 3,
-              normalColor: Colors.grey,
-              normalWidth: 1,
               onTap: () => _toggleSwitch(newValue: !_currentSwitchValue),
               stateUpdateCallback: () => setState(() {}),
               childPadding: const EdgeInsets.symmetric(
