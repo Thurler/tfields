@@ -81,40 +81,6 @@ class TButtonIconAndLabelBuilder {
     );
   }
 
-  TButton play({
-    bool forceDefaultIconColor = false,
-    IconAlignment iconAlignment = IconAlignment.start,
-    String? textOverride,
-    void Function()? onPressed,
-    Key? key,
-  }) {
-    return _TButtonIconAndLabel.fromPreset(
-      icon: TPresetIcon.play,
-      forceDefaultIconColor: forceDefaultIconColor,
-      iconAlignment: iconAlignment,
-      onPressed: onPressed,
-      textOverride: textOverride,
-      key: key,
-    );
-  }
-
-  TButton pause({
-    bool forceDefaultIconColor = false,
-    IconAlignment iconAlignment = IconAlignment.start,
-    String? textOverride,
-    void Function()? onPressed,
-    Key? key,
-  }) {
-    return _TButtonIconAndLabel.fromPreset(
-      icon: TPresetIcon.pause,
-      forceDefaultIconColor: forceDefaultIconColor,
-      iconAlignment: iconAlignment,
-      onPressed: onPressed,
-      textOverride: textOverride,
-      key: key,
-    );
-  }
-
   TButton close({
     bool forceDefaultIconColor = false,
     IconAlignment iconAlignment = IconAlignment.start,
@@ -192,6 +158,23 @@ class TButtonIconAndLabelBuilder {
   }) {
     return _TButtonIconAndLabel.fromPreset(
       icon: TPresetIcon.add,
+      forceDefaultIconColor: forceDefaultIconColor,
+      iconAlignment: iconAlignment,
+      onPressed: onPressed,
+      textOverride: textOverride,
+      key: key,
+    );
+  }
+
+  TButton refresh({
+    bool forceDefaultIconColor = false,
+    IconAlignment iconAlignment = IconAlignment.start,
+    String? textOverride,
+    void Function()? onPressed,
+    Key? key,
+  }) {
+    return _TButtonIconAndLabel.fromPreset(
+      icon: TPresetIcon.refresh,
       forceDefaultIconColor: forceDefaultIconColor,
       iconAlignment: iconAlignment,
       onPressed: onPressed,

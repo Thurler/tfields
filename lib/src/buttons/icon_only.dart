@@ -91,44 +91,6 @@ class TButtonIconOnlyBuilder {
     );
   }
 
-  TButton play({
-    bool forceDefaultIconColor = false,
-    bool showBorder = false,
-    String? textOverride,
-    void Function()? onPressed,
-    TIconBadge? badge,
-    Key? key,
-  }) {
-    return _TButtonIconOnly.fromPreset(
-      icon: TPresetIcon.play,
-      forceDefaultIconColor: forceDefaultIconColor,
-      textOverride: textOverride,
-      onPressed: onPressed,
-      showBorder: showBorder,
-      badge: badge,
-      key: key,
-    );
-  }
-
-  TButton pause({
-    bool forceDefaultIconColor = false,
-    bool showBorder = false,
-    String? textOverride,
-    void Function()? onPressed,
-    TIconBadge? badge,
-    Key? key,
-  }) {
-    return _TButtonIconOnly.fromPreset(
-      icon: TPresetIcon.pause,
-      forceDefaultIconColor: forceDefaultIconColor,
-      textOverride: textOverride,
-      onPressed: onPressed,
-      showBorder: showBorder,
-      badge: badge,
-      key: key,
-    );
-  }
-
   TButton close({
     bool forceDefaultIconColor = false,
     bool showBorder = false,

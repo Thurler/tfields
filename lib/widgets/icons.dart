@@ -18,17 +18,13 @@ enum TPresetIcon implements TIconInterface {
   download(Icons.download, 'Download', null, null),
   upload(Icons.upload, 'Upload', null, null),
   filter(Icons.filter_list, 'Filter', null, null),
-  play(Icons.play_arrow, 'Play', null, null),
-  pause(Icons.pause, 'Pause', null, null),
+  add(Icons.add, 'Add', null, null),
+  edit(Icons.edit, 'Edit', null, null),
   close(Icons.close, 'Close', null, null),
   cancel(Icons.clear, 'Cancel', null, null),
   save(Icons.save, 'Save', null, null),
-  delete(Icons.delete, 'Delete', Colors.red, Colors.red),
-  add(Icons.add, 'Add', null, null),
-  edit(Icons.edit, 'Edit', null, null),
-  list(Icons.list, 'List', null, null),
   refresh(Icons.refresh, 'Refresh', null, null),
-  tooltip(Icons.info_outline, 'Tooltip', null, null);
+  delete(Icons.delete_forever, 'Delete', Colors.red, Colors.red);
 
   @override
   final IconData icon;

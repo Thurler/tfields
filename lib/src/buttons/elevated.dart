@@ -118,44 +118,6 @@ class TButtonElevatedBuilder {
     );
   }
 
-  TButton play({
-    String? textOverride,
-    void Function()? onPressed,
-    IconAlignment iconAlignment = IconAlignment.start,
-    bool usesMaxWidth = false,
-    TextStyle? textStyle,
-    Key? key,
-  }) {
-    return _TButtonElevated.fromPreset(
-      icon: TPresetIcon.play,
-      textOverride: textOverride,
-      onPressed: onPressed,
-      usesMaxWidth: usesMaxWidth,
-      iconAlignment: iconAlignment,
-      textStyle: textStyle,
-      key: key,
-    );
-  }
-
-  TButton pause({
-    String? textOverride,
-    void Function()? onPressed,
-    IconAlignment iconAlignment = IconAlignment.start,
-    bool usesMaxWidth = false,
-    TextStyle? textStyle,
-    Key? key,
-  }) {
-    return _TButtonElevated.fromPreset(
-      icon: TPresetIcon.pause,
-      textOverride: textOverride,
-      onPressed: onPressed,
-      usesMaxWidth: usesMaxWidth,
-      iconAlignment: iconAlignment,
-      textStyle: textStyle,
-      key: key,
-    );
-  }
-
   TButton close({
     String? textOverride,
     void Function()? onPressed,
@@ -242,6 +204,25 @@ class TButtonElevatedBuilder {
   }) {
     return _TButtonElevated.fromPreset(
       icon: TPresetIcon.add,
+      textOverride: textOverride,
+      onPressed: onPressed,
+      usesMaxWidth: usesMaxWidth,
+      iconAlignment: iconAlignment,
+      textStyle: textStyle,
+      key: key,
+    );
+  }
+
+  TButton refresh({
+    String? textOverride,
+    void Function()? onPressed,
+    IconAlignment iconAlignment = IconAlignment.start,
+    bool usesMaxWidth = false,
+    TextStyle? textStyle,
+    Key? key,
+  }) {
+    return _TButtonElevated.fromPreset(
+      icon: TPresetIcon.refresh,
       textOverride: textOverride,
       onPressed: onPressed,
       usesMaxWidth: usesMaxWidth,
