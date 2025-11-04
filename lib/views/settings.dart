@@ -40,16 +40,6 @@ abstract class TAbstractSettingsState<
   @override
   bool get hasChanges => settingsForm.hasChanges;
 
-  /// Handle the weird case where we can't save the settings file to disk
-  Future<void> _handleFileSystemException(FileSystemException e) {
-    return showException(
-      'An error occured when saving the settings!',
-      logMessage: 'FileSystem Exception when saving settings: ${e.message}',
-      body: 'Make sure your user has permission to write a file in the folder '
-          'this app is in.',
-    );
-  }
-
   @mustCallSuper
   void updateSettingsWithForm(S newSettings) {
     settings.logLevel = newSettings.logLevel;
@@ -79,8 +69,15 @@ abstract class TAbstractSettingsState<
 
   @override
   Future<void> handleWriteError(Object exception, StackTrace stackTrace) async {
+    // Handle the weird case where we can't save the settings file to disk
     if (exception is FileSystemException) {
-      return _handleFileSystemException(exception);
+      return showException(
+        'An error occured when saving the settings!',
+        logMessage: 'FileSystem Exception when saving settings: '
+            '${exception.message}',
+        body: 'Make sure your user has permission to write a file in the '
+            'folder this app is in.',
+      );
     } else {
       return showUnexpectedException(
         exception,
