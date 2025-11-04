@@ -96,20 +96,20 @@ class TClickableRoundedBorderState extends State<TClickableRoundedBorder> {
 
   @override
   Widget build(BuildContext context) {
-    return TRoundedBorder(
-      childPadding: widget.childPadding,
-      // By piggybacking on a TClickable's onEnter and onExit events,
-      // you can also highlight the border whenever the user's mouse
-      // enters and leaves the TRoundedBorder's region
-      color: highlighted ? widget.highlightedColor : widget.normalColor,
-      width: highlighted ? widget.highlightedWidth : widget.normalWidth,
-      child: TClickable(
-        // These callbacks are only really useful for web and desktop
-        // environments, since mobile users have no mouse cursor to
-        // enter and leave the Widget's region
-        onEnter: (_) => _changeHighlight(newValue: true),
-        onExit: (_) => _changeHighlight(newValue: false),
-        onTap: widget.onTap,
+    return TClickable(
+      onTap: widget.onTap,
+      // These callbacks are only really useful for web and desktop
+      // environments, since mobile users have no mouse cursor to
+      // enter and leave the Widget's region
+      onEnter: (_) => _changeHighlight(newValue: true),
+      onExit: (_) => _changeHighlight(newValue: false),
+      child: TRoundedBorder(
+        childPadding: widget.childPadding,
+        // By piggybacking on a TClickable's onEnter and onExit events,
+        // you can also highlight the border whenever the user's mouse
+        // enters and leaves the TRoundedBorder's region
+        color: highlighted ? widget.highlightedColor : widget.normalColor,
+        width: highlighted ? widget.highlightedWidth : widget.normalWidth,
         child: widget.child,
       ),
     );
