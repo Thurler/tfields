@@ -119,6 +119,9 @@ class MainState extends State<MainWidget>
     //);
   }
 
+  /// Navigate away to the grid row showcase widget
+  Future<void> _navigateToGridRowShowcase() async {}
+
   /// Keep track of the switch's current state
   bool _currentSwitchValue = true;
 
@@ -218,6 +221,8 @@ class MainState extends State<MainWidget>
         const TTitleDivider(
           titleText: 'TButton.iconOnly / TButton.iconAndLabel',
         ),
+        // The iconOnly constructors will display the icon by itself, with a
+        // tooltip text on hover. Shortcuts are available for all preset icons
         Wrap(
           alignment: WrapAlignment.center,
           spacing: 20,
@@ -240,6 +245,8 @@ class MainState extends State<MainWidget>
             TButton.iconOnly.delete(onPressed: () {}),
           ],
         ),
+        // The iconOnly constructors also have a showBorder argument, to add a
+        // circular border around the icon
         Wrap(
           alignment: WrapAlignment.center,
           spacing: 20,
@@ -263,6 +270,9 @@ class MainState extends State<MainWidget>
             TButton.iconOnly.delete(onPressed: () {}, showBorder: true),
           ],
         ),
+        // The iconAndLabel constructors will display the icon next to the text,
+        // making the whole area clickable. Shortcuts are available for all
+        // preset icons
         Wrap(
           alignment: WrapAlignment.center,
           spacing: 20,
@@ -355,6 +365,18 @@ class MainState extends State<MainWidget>
                   },
                 ),
               ),
+              TGridItem.fixedSize(
+                // A size of fill means the widget will always occupy its own
+                // row in the final rendering, isolating it from the other
+                // children. This can also be achieved by passing a negative
+                // flex value
+                size: const TGridSize.fill(),
+                child: TButton.elevated(
+                  text: 'Open TGridRow showcase',
+                  icon: const TIcon(icon: Icons.open_in_new),
+                  onPressed: _navigateToGridRowShowcase,
+                ),
+              ),
             ],
           ),
         ),
@@ -402,7 +424,7 @@ class MainState extends State<MainWidget>
         TGridRow(
           crossAxisAlignment: CrossAxisAlignment.start,
           smFlexLimit: 1,
-          mdFlexLimit: 2,
+          lgFlexLimit: 2,
           children: <TGridItem>[
             // The form fields can be used independently from the stateful TForm
             // if you need to manage the form state yourself
