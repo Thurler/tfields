@@ -65,6 +65,8 @@ abstract class TAbstractSettingsState<
     await log(TLogLevel.info, 'Saved settings changes');
     logLevel = settings.logLevel;
     settingsForm.saveValues();
+    // Make sure to redraw the state to get rid of the hasChanges flag
+    setState(() {});
   }
 
   @override
