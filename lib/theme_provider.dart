@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:tfields/mixins/settings.dart';
 import 'package:tfields/settings.dart';
 
+/// A type declaration to simplify declaration of the ThemeProvider build
+/// function
 typedef TThemeBuilder = TThemeProvider Function(
   Color seedColor,
   BuildContext context,
@@ -12,21 +14,25 @@ typedef TThemeBuilder = TThemeProvider Function(
 /// through the ChangeNotifier mixin, that allows others to listen in on calls
 /// to change the current theme in the app
 class TThemeProvider with ChangeNotifier {
+  /// The theme's primary seed color
   final Color seedColor;
 
+  /// The theme's current mode - defaults to matching system mode
   ThemeMode themeMode = ThemeMode.system;
 
   TThemeProvider(this.seedColor);
 
-  late final ColorScheme lightScheme = ColorScheme.fromSeed(
-    seedColor: seedColor,
-  );
+  /// The ColorScheme used in light mode
+  late final ColorScheme lightScheme =
+      ColorScheme.fromSeed(seedColor: seedColor);
 
+  /// The ColorScheme used in dark mode
   late final ColorScheme darkScheme = ColorScheme.fromSeed(
     seedColor: seedColor,
     brightness: Brightness.dark,
   );
 
+  /// The ThemeData used in light mode
   late final ThemeData light = ThemeData(
     colorScheme: lightScheme,
     // This will make the scrollbar always visible
@@ -39,6 +45,7 @@ class TThemeProvider with ChangeNotifier {
     useMaterial3: true,
   );
 
+  /// The ThemeData used in dark mode
   late final ThemeData dark = ThemeData(
     brightness: Brightness.dark,
     colorScheme: darkScheme,
@@ -52,6 +59,7 @@ class TThemeProvider with ChangeNotifier {
     useMaterial3: true,
   );
 
+  /// The function that toggles different ThemeModes for the application
   @mustCallSuper
   void changeTheme(ThemeMode newMode) {
     themeMode = newMode;
