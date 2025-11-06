@@ -667,7 +667,7 @@ class MainState extends State<MainWidget>
             ),
           ],
         ),
-        const TTitleDivider(titleText: 'TExpansionTile'),
+        const TTitleDivider(titleText: 'TChipList / TExpansionTile'),
         // An ExpansionTile will collapse its children into a simple bar that
         // can be toggled open to reveal the contents. It can draw a widget as
         // the leading widget before the title, and can choose to maintain the
