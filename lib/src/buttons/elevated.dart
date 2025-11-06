@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meta/meta.dart';
 import 'package:tfields/extensions/iterable.dart';
 import 'package:tfields/widgets/button.dart';
 import 'package:tfields/widgets/circular_progress_icon.dart';
@@ -11,9 +12,22 @@ import 'package:tfields/widgets/icons.dart';
 /// `TButton.elevated()` calls the regular constructor
 /// `TButton.elevated.delete()` calls the preset icon constructor with
 /// the delete icon
+@internal
 class TButtonElevatedBuilder {
   const TButtonElevatedBuilder();
 
+  /// Creates an elevated button with optional icon and text.
+  ///
+  /// The [text] parameter provides the button's label (required).
+  /// The [icon] parameter specifies an optional icon to display.
+  /// Set [usesMaxWidth] to true to make the button expand to fill available
+  /// width.
+  /// The [iconAlignment] determines whether the icon appears at the start or
+  /// end of the button.
+  /// The [textStyle] allows customization of the text appearance.
+  /// The [iconOverride] can be used to provide a custom widget in place of the
+  /// icon (e.g., a loading indicator).
+  /// The [onPressed] callback is triggered when the button is tapped.
   TButton call({
     required String text,
     void Function()? onPressed,
@@ -61,6 +75,10 @@ class TButtonElevatedBuilder {
     );
   }
 
+  /// Creates a download elevated button with preset icon and default text.
+  ///
+  /// See [call] for parameter descriptions. The [textOverride] parameter can be
+  /// used to override the default download text.
   TButton download({
     String? textOverride,
     void Function()? onPressed,
@@ -80,6 +98,10 @@ class TButtonElevatedBuilder {
     );
   }
 
+  /// Creates a upload elevated button with preset icon and default text.
+  ///
+  /// See [call] for parameter descriptions. The [textOverride] parameter can be
+  /// used to override the default upload text.
   TButton upload({
     String? textOverride,
     void Function()? onPressed,
@@ -99,6 +121,10 @@ class TButtonElevatedBuilder {
     );
   }
 
+  /// Creates a filter elevated button with preset icon and default text.
+  ///
+  /// See [call] for parameter descriptions. The [textOverride] parameter can be
+  /// used to override the default filter text.
   TButton filter({
     String? textOverride,
     void Function()? onPressed,
@@ -118,6 +144,10 @@ class TButtonElevatedBuilder {
     );
   }
 
+  /// Creates a close elevated button with preset icon and default text.
+  ///
+  /// See [call] for parameter descriptions. The [textOverride] parameter can be
+  /// used to override the default close text.
   TButton close({
     String? textOverride,
     void Function()? onPressed,
@@ -137,6 +167,10 @@ class TButtonElevatedBuilder {
     );
   }
 
+  /// Creates a cancel elevated button with preset icon and default text.
+  ///
+  /// See [call] for parameter descriptions. The [textOverride] parameter can be
+  /// used to override the default cancel text.
   TButton cancel({
     String? textOverride,
     void Function()? onPressed,
@@ -156,6 +190,10 @@ class TButtonElevatedBuilder {
     );
   }
 
+  /// Creates a save elevated button with preset icon and default text.
+  ///
+  /// See [call] for parameter descriptions. The [textOverride] parameter can be
+  /// used to override the default save text.
   TButton save({
     String? textOverride,
     void Function()? onPressed,
@@ -175,6 +213,10 @@ class TButtonElevatedBuilder {
     );
   }
 
+  /// Creates a delete elevated button with preset icon and default text.
+  ///
+  /// See [call] for parameter descriptions. The [textOverride] parameter can be
+  /// used to override the default delete text.
   TButton delete({
     String? textOverride,
     void Function()? onPressed,
@@ -194,6 +236,10 @@ class TButtonElevatedBuilder {
     );
   }
 
+  /// Creates a add elevated button with preset icon and default text.
+  ///
+  /// See [call] for parameter descriptions. The [textOverride] parameter can be
+  /// used to override the default add text.
   TButton add({
     String? textOverride,
     void Function()? onPressed,
@@ -213,6 +259,10 @@ class TButtonElevatedBuilder {
     );
   }
 
+  /// Creates a refresh elevated button with preset icon and default text.
+  ///
+  /// See [call] for parameter descriptions. The [textOverride] parameter can be
+  /// used to override the default refresh text.
   TButton refresh({
     String? textOverride,
     void Function()? onPressed,
@@ -232,6 +282,10 @@ class TButtonElevatedBuilder {
     );
   }
 
+  /// Creates a edit elevated button with preset icon and default text.
+  ///
+  /// See [call] for parameter descriptions. The [textOverride] parameter can be
+  /// used to override the default edit text.
   TButton edit({
     String? textOverride,
     void Function()? onPressed,
@@ -252,10 +306,24 @@ class TButtonElevatedBuilder {
   }
 }
 
+/// Internal implementation of an elevated button widget.
+///
+/// This widget displays an ElevatedButton with optional icon and customizable
+/// text styling. The button can expand to fill available width via
+/// [usesMaxWidth]. The icon position can be customized via [iconAlignment].
+/// Supports custom icon widgets via [iconOverride], useful for displaying
+/// loading indicators or other custom widgets in place of icons.
 class _TButtonElevated extends TButton {
+  /// Whether the button should expand to fill available width.
   final bool usesMaxWidth;
+
+  /// Custom widget to display in place of the icon (e.g., loading indicator).
   final Widget? iconOverride;
+
+  /// Custom text style for the button label.
   final TextStyle? textStyle;
+
+  /// Determines whether the icon is positioned at the start or end of the label
   final IconAlignment iconAlignment;
 
   const _TButtonElevated({
@@ -269,6 +337,12 @@ class _TButtonElevated extends TButton {
     super.key,
   }) : super();
 
+  /// Creates a form submit button that displays loading state.
+  ///
+  /// When [saving] is true, the button is disabled, displays [savingText], and
+  /// shows a loading indicator. When [saving] is false, the button is enabled,
+  /// displays [saveText], and shows a check circle icon. This provides a
+  /// standard UX pattern for form submission buttons.
   const _TButtonElevated.formSubmit({
     required String saveText,
     required String savingText,
@@ -286,6 +360,10 @@ class _TButtonElevated extends TButton {
       icon: saving ? null : const TIcon(icon: Icons.check_circle),
     );
 
+  /// Creates an elevated button from a preset icon.
+  ///
+  /// Uses the default text from the [TPresetIcon] unless [textOverride] is
+  /// provided.
   _TButtonElevated.fromPreset({
     required TPresetIcon super.icon,
     this.iconAlignment = IconAlignment.start,

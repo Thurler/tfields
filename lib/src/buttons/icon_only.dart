@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meta/meta.dart';
 import 'package:tfields/mixins/standard_colorer.dart';
 import 'package:tfields/widgets/badge.dart';
 import 'package:tfields/widgets/button.dart';
@@ -11,9 +12,19 @@ import 'package:tfields/widgets/icons.dart';
 /// `TButton.iconOnly()` calls the regular constructor
 /// `TButton.iconOnly.delete()` calls the preset icon constructor with
 /// the delete icon
+@internal
 class TButtonIconOnlyBuilder {
   const TButtonIconOnlyBuilder();
 
+  /// Creates an icon-only button with a custom icon.
+  ///
+  /// The [icon] parameter specifies which icon to display.
+  /// Set [forceDefaultIconColor] to true to use the default icon color instead
+  /// of theme-based coloring.
+  /// Set [showBorder] to true to display a circular border around the button.
+  /// The [onPressed] callback is triggered when the button is tapped.
+  /// The [text] parameter provides a tooltip for the button.
+  /// The [badge] parameter adds a notification badge to the icon.
   TButton call({
     required TIconInterface icon,
     bool forceDefaultIconColor = false,
@@ -34,6 +45,10 @@ class TButtonIconOnlyBuilder {
     );
   }
 
+  /// Creates a download icon button with preset icon and default text.
+  ///
+  /// See [call] for parameter descriptions. The [textOverride] parameter can be
+  /// used to override the default download text.
   TButton download({
     bool forceDefaultIconColor = false,
     bool showBorder = false,
@@ -53,6 +68,10 @@ class TButtonIconOnlyBuilder {
     );
   }
 
+  /// Creates a upload icon button with preset icon and default text.
+  ///
+  /// See [call] for parameter descriptions. The [textOverride] parameter can be
+  /// used to override the default upload text.
   TButton upload({
     bool forceDefaultIconColor = false,
     bool showBorder = false,
@@ -72,6 +91,10 @@ class TButtonIconOnlyBuilder {
     );
   }
 
+  /// Creates a filter icon button with preset icon and default text.
+  ///
+  /// See [call] for parameter descriptions. The [textOverride] parameter can be
+  /// used to override the default filter text.
   TButton filter({
     bool forceDefaultIconColor = false,
     bool showBorder = false,
@@ -91,6 +114,10 @@ class TButtonIconOnlyBuilder {
     );
   }
 
+  /// Creates a close icon button with preset icon and default text.
+  ///
+  /// See [call] for parameter descriptions. The [textOverride] parameter can be
+  /// used to override the default close text.
   TButton close({
     bool forceDefaultIconColor = false,
     bool showBorder = false,
@@ -110,6 +137,10 @@ class TButtonIconOnlyBuilder {
     );
   }
 
+  /// Creates a cancel icon button with preset icon and default text.
+  ///
+  /// See [call] for parameter descriptions. The [textOverride] parameter can be
+  /// used to override the default cancel text.
   TButton cancel({
     bool forceDefaultIconColor = false,
     bool showBorder = false,
@@ -129,6 +160,10 @@ class TButtonIconOnlyBuilder {
     );
   }
 
+  /// Creates a save icon button with preset icon and default text.
+  ///
+  /// See [call] for parameter descriptions. The [textOverride] parameter can be
+  /// used to override the default save text.
   TButton save({
     bool forceDefaultIconColor = false,
     bool showBorder = false,
@@ -148,6 +183,10 @@ class TButtonIconOnlyBuilder {
     );
   }
 
+  /// Creates a delete icon button with preset icon and default text.
+  ///
+  /// See [call] for parameter descriptions. The [textOverride] parameter can be
+  /// used to override the default delete text.
   TButton delete({
     bool forceDefaultIconColor = false,
     bool showBorder = false,
@@ -167,6 +206,10 @@ class TButtonIconOnlyBuilder {
     );
   }
 
+  /// Creates a add icon button with preset icon and default text.
+  ///
+  /// See [call] for parameter descriptions. The [textOverride] parameter can be
+  /// used to override the default add text.
   TButton add({
     bool forceDefaultIconColor = false,
     bool showBorder = false,
@@ -186,6 +229,10 @@ class TButtonIconOnlyBuilder {
     );
   }
 
+  /// Creates a edit icon button with preset icon and default text.
+  ///
+  /// See [call] for parameter descriptions. The [textOverride] parameter can be
+  /// used to override the default edit text.
   TButton edit({
     bool forceDefaultIconColor = false,
     bool showBorder = false,
@@ -205,6 +252,10 @@ class TButtonIconOnlyBuilder {
     );
   }
 
+  /// Creates a refresh icon button with preset icon and default text.
+  ///
+  /// See [call] for parameter descriptions. The [textOverride] parameter can be
+  /// used to override the default refresh text.
   TButton refresh({
     bool forceDefaultIconColor = false,
     bool showBorder = false,
@@ -223,12 +274,26 @@ class TButtonIconOnlyBuilder {
   }
 }
 
+/// Internal implementation of an icon-only button widget.
+///
+/// This widget displays a circular icon button with optional border and badge.
+/// It uses [TStandardColorer] mixin to apply consistent coloring based on
+/// context. The button is customized with hover, highlight, and splash alpha
+/// colors when a border is shown.
 class _TButtonIconOnly extends TButton with TStandardColorer {
+  /// Alpha value for hover state (30% opacity).
   static final int hoverAlpha = (255 * 0.3).toInt();
+
+  /// Alpha value for highlight state (30% opacity).
   static final int highlightAlpha = (255 * 0.3).toInt();
+
+  /// Alpha value for splash effect (30% opacity).
   static final int splashAlpha = (255 * 0.3).toInt();
 
+  /// Whether to display a circular border around the button.
   final bool showBorder;
+
+  /// Optional badge to display on the icon (e.g., notification count).
   final TIconBadge? badge;
 
   const _TButtonIconOnly({
@@ -241,6 +306,10 @@ class _TButtonIconOnly extends TButton with TStandardColorer {
     super.key,
   }) : super();
 
+  /// Creates an icon-only button from a preset icon.
+  ///
+  /// Uses the default text from the [TPresetIcon] unless [textOverride] is
+  /// provided.
   _TButtonIconOnly.fromPreset({
     required TPresetIcon super.icon,
     String? textOverride,

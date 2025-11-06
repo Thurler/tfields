@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meta/meta.dart';
 import 'package:tfields/widgets/button.dart';
 import 'package:tfields/widgets/icons.dart';
 
@@ -9,9 +10,19 @@ import 'package:tfields/widgets/icons.dart';
 /// `TButton.iconAndLabel()` calls the regular constructor
 /// `TButton.iconAndLabel.delete()` calls the preset icon constructor with
 /// the delete icon
+@internal
 class TButtonIconAndLabelBuilder {
   const TButtonIconAndLabelBuilder();
 
+  /// Creates a button with both an icon and a text label.
+  ///
+  /// The [icon] parameter specifies which icon to display.
+  /// The [text] parameter provides the button's label.
+  /// Set [forceDefaultIconColor] to true to use the default icon color instead
+  /// of theme-based coloring.
+  /// The [iconAlignment] determines whether the icon appears at the start or
+  /// end of the button.
+  /// The [onPressed] callback is triggered when the button is tapped.
   TButton call({
     required TIconInterface icon,
     required String text,
@@ -30,6 +41,10 @@ class TButtonIconAndLabelBuilder {
     );
   }
 
+  /// Creates a download button with preset icon and default text.
+  ///
+  /// See [call] for parameter descriptions. The [textOverride] parameter can be
+  /// used to override the default download text.
   TButton download({
     bool forceDefaultIconColor = false,
     IconAlignment iconAlignment = IconAlignment.start,
@@ -47,6 +62,10 @@ class TButtonIconAndLabelBuilder {
     );
   }
 
+  /// Creates a upload button with preset icon and default text.
+  ///
+  /// See [call] for parameter descriptions. The [textOverride] parameter can be
+  /// used to override the default upload text.
   TButton upload({
     bool forceDefaultIconColor = false,
     IconAlignment iconAlignment = IconAlignment.start,
@@ -64,6 +83,10 @@ class TButtonIconAndLabelBuilder {
     );
   }
 
+  /// Creates a filter button with preset icon and default text.
+  ///
+  /// See [call] for parameter descriptions. The [textOverride] parameter can be
+  /// used to override the default filter text.
   TButton filter({
     bool forceDefaultIconColor = false,
     IconAlignment iconAlignment = IconAlignment.start,
@@ -81,6 +104,10 @@ class TButtonIconAndLabelBuilder {
     );
   }
 
+  /// Creates a close button with preset icon and default text.
+  ///
+  /// See [call] for parameter descriptions. The [textOverride] parameter can be
+  /// used to override the default close text.
   TButton close({
     bool forceDefaultIconColor = false,
     IconAlignment iconAlignment = IconAlignment.start,
@@ -98,6 +125,10 @@ class TButtonIconAndLabelBuilder {
     );
   }
 
+  /// Creates a cancel button with preset icon and default text.
+  ///
+  /// See [call] for parameter descriptions. The [textOverride] parameter can be
+  /// used to override the default cancel text.
   TButton cancel({
     bool forceDefaultIconColor = false,
     IconAlignment iconAlignment = IconAlignment.start,
@@ -115,6 +146,10 @@ class TButtonIconAndLabelBuilder {
     );
   }
 
+  /// Creates a save button with preset icon and default text.
+  ///
+  /// See [call] for parameter descriptions. The [textOverride] parameter can be
+  /// used to override the default save text.
   TButton save({
     bool forceDefaultIconColor = false,
     IconAlignment iconAlignment = IconAlignment.start,
@@ -132,6 +167,10 @@ class TButtonIconAndLabelBuilder {
     );
   }
 
+  /// Creates a delete button with preset icon and default text.
+  ///
+  /// See [call] for parameter descriptions. The [textOverride] parameter can be
+  /// used to override the default delete text.
   TButton delete({
     bool forceDefaultIconColor = false,
     IconAlignment iconAlignment = IconAlignment.start,
@@ -149,6 +188,10 @@ class TButtonIconAndLabelBuilder {
     );
   }
 
+  /// Creates a add button with preset icon and default text.
+  ///
+  /// See [call] for parameter descriptions. The [textOverride] parameter can be
+  /// used to override the default add text.
   TButton add({
     bool forceDefaultIconColor = false,
     IconAlignment iconAlignment = IconAlignment.start,
@@ -166,6 +209,10 @@ class TButtonIconAndLabelBuilder {
     );
   }
 
+  /// Creates a refresh button with preset icon and default text.
+  ///
+  /// See [call] for parameter descriptions. The [textOverride] parameter can be
+  /// used to override the default refresh text.
   TButton refresh({
     bool forceDefaultIconColor = false,
     IconAlignment iconAlignment = IconAlignment.start,
@@ -183,6 +230,10 @@ class TButtonIconAndLabelBuilder {
     );
   }
 
+  /// Creates a edit button with preset icon and default text.
+  ///
+  /// See [call] for parameter descriptions. The [textOverride] parameter can be
+  /// used to override the default edit text.
   TButton edit({
     bool forceDefaultIconColor = false,
     IconAlignment iconAlignment = IconAlignment.start,
@@ -201,7 +252,14 @@ class TButtonIconAndLabelBuilder {
   }
 }
 
+/// Internal implementation of a button with both icon and text label.
+///
+/// This widget displays a TextButton with an icon and label. The icon position
+/// can be customized via [iconAlignment]. The button supports theme-based
+/// coloring and will use a colored background if a color is determined from
+/// the context.
 class _TButtonIconAndLabel extends TButton {
+  /// Determines whether the icon is positioned at the start or end of the label
   final IconAlignment iconAlignment;
 
   const _TButtonIconAndLabel({
@@ -213,6 +271,10 @@ class _TButtonIconAndLabel extends TButton {
     super.key,
   }) : super();
 
+  /// Creates a button with icon and label from a preset icon.
+  ///
+  /// Uses the default text from the [TPresetIcon] unless [textOverride] is
+  /// provided.
   _TButtonIconAndLabel.fromPreset({
     required TPresetIcon super.icon,
     this.iconAlignment = IconAlignment.start,
