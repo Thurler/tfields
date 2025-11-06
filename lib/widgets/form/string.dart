@@ -40,6 +40,8 @@ class TFormString extends TForm<String> {
     super.key,
   });
 
+  /// Standardizes the prefix icon into a search icon and the suffix icon into a
+  /// send icon that triggers [submitCallback]
   TFormString.searchBar({
     required super.enabled,
     required super.title,
