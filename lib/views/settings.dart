@@ -15,7 +15,9 @@ import 'package:tfields/widgets/form/group/group.dart';
 /// The widget that allows the user to change app settingss
 abstract class TAbstractSettingsWidget<S extends TCommonSettings,
     F extends TFormField> extends StatefulWidget {
+  /// The title to be used in the Scaffold
   final String title;
+
   const TAbstractSettingsWidget({required this.title, super.key});
 }
 
@@ -40,6 +42,10 @@ abstract class TAbstractSettingsState<
   @override
   bool get hasChanges => settingsForm.hasChanges;
 
+  /// This function updates the current settings that are loaded in the
+  /// application with the new settings that is being saved. Classes that use
+  /// customized settings **must** override this method to update the customized
+  /// fields, otherwise they must be reloaded manually from the saved file
   @mustCallSuper
   void updateSettingsWithForm(S newSettings) {
     settings.logLevel = newSettings.logLevel;
