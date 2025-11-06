@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meta/meta.dart';
 import 'package:tfields/widgets/button.dart';
 import 'package:tfields/widgets/icon_text.dart';
 import 'package:tfields/widgets/icons.dart';
@@ -6,6 +7,7 @@ import 'package:tfields/widgets/width_fraction.dart';
 
 /// A dialog's body, comprising of a simple selectabletext that spans no more
 /// than 2/3 of the viewport's width
+@internal
 class TDialogBody extends StatelessWidget {
   /// The text to be displayed
   final String text;
@@ -35,6 +37,7 @@ class TDialogBody extends StatelessWidget {
 }
 
 /// A dialog's action button, that will pop the scope once clicked
+@internal
 class TDialogAction extends StatelessWidget {
   /// The text to be displayed
   final String text;
@@ -90,6 +93,7 @@ class TDialogAction extends StatelessWidget {
 
 /// A generic AlertDialog wrapper that receives a DialogTitle, DialogBody, and
 /// Confirm/Cancel actions
+@internal
 class TAlertDialog extends StatelessWidget {
   /// The title widget
   final TIconText title;
