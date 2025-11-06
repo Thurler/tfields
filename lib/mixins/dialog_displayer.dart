@@ -25,9 +25,9 @@ mixin TDialogDisplayer<T extends StatefulWidget> on State<T> {
   }
 
   /// Show a simple loading dialog, if the widget is still mounted
-  Future<void> showLoading(String message) async {
+  Future<void> showLoading(String message, {String? body}) async {
     if (mounted) {
-      return TDialog.loading(title: message).show(context);
+      return TDialog.loading(title: message, body: body).show(context);
     }
   }
 
