@@ -13,9 +13,6 @@ class TFormStringListChip extends TFormList<String> {
   /// The formatters that will be applied to the TextEditingController
   final List<TextInputFormatter> formatters;
 
-  /// Whether multiple lines are accepted or not
-  final bool isMultiline;
-
   /// A callback that will be called whenever the user hits the "Enter" key with
   /// no text inputted
   final void Function()? submitCallback;
@@ -24,7 +21,6 @@ class TFormStringListChip extends TFormList<String> {
     required super.enabled,
     required super.title,
     required super.initialValue,
-    this.isMultiline = false,
     this.formatters = const <TextInputFormatter>[],
     this.submitCallback,
     super.subtitle = '',
@@ -94,6 +90,29 @@ class TFormStringListChipState
   /// Whether the form has chips submitted or not
   bool get hasChips => value?.isNotEmpty ?? false;
 
+  /// Whether the scrollbar is currently visible or not
+  bool get _scrollIsVisible =>
+      _scrollController.hasClients &&
+      _scrollController.position.maxScrollExtent > 0;
+
+  @override
+  void addElement(String newValue) {
+    // This will make sure the scrollbar height is auto-adjusted after insertion
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {});
+    });
+    super.addElement(newValue);
+  }
+
+  @override
+  void deleteElement(int index) {
+    // This will make sure the scrollbar height is auto-adjusted after deletion
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {});
+    });
+    super.deleteElement(index);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -111,22 +130,16 @@ class TFormStringListChipState
 
   @override
   Widget build(BuildContext context) {
-    TextStyle helperStyle =
-        Theme.of(context).textTheme.bodySmall ?? const TextStyle();
-    Color errorColor = Theme.of(context).colorScheme.error;
     // We handle the decoration manually to set up the horizontal scroll
     return InputDecorator(
       decoration: TInputDecoration(
         enabled: enabled,
         isDense: true,
         labelText: title,
+        helperText: subtitle,
+        errorText: errorMessage.isNotEmpty ? errorMessage : null,
         icon: widget.decoratorIcon,
         suffixIcon: widget.suffixIcon,
-        // Need to manually andle subtitle/error message and style
-        helperText: errorMessage.isNotEmpty ? errorMessage : subtitle,
-        helperStyle: errorMessage.isNotEmpty
-          ? helperStyle.copyWith(color: errorColor)
-          : helperStyle,
       ),
       isEmpty:
           !hasChips && _controller.text.isEmpty && !_textFormFocus.hasFocus,
@@ -141,7 +154,9 @@ class TFormStringListChipState
             controller: _scrollController,
             child: SingleChildScrollView(
               controller: _scrollController,
-              padding: const EdgeInsets.fromLTRB(0, 5, 0, 10),
+              padding: _scrollIsVisible
+                ? const EdgeInsets.fromLTRB(0, 5, 0, 15)
+                : const EdgeInsets.symmetric(vertical: 5),
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: <Widget>[
@@ -182,10 +197,6 @@ class TFormStringListChipState
                           ? (_) => _handleSubmit()
                           : null,
                         readOnly: readonly,
-                        keyboardType: widget.isMultiline
-                          ? TextInputType.multiline
-                          : TextInputType.text,
-                        maxLines: widget.isMultiline ? null : 1,
                         textInputAction: TextInputAction.none,
                       ),
                     ),

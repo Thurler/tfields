@@ -57,6 +57,16 @@ class TChipList<T> extends StatelessWidget {
     super.key,
   });
 
+  const TChipList.noDelete({
+    required this.title,
+    required this.noChipsText,
+    required this.content,
+    required this.dataToString,
+    this.sortLogic = TChipSortLogic.text,
+    this.icon,
+    super.key,
+  }) : removeText = '', deleteCallback = null;
+
   @override
   Widget build(BuildContext context) {
     List<T> items = content.toList();
@@ -137,15 +147,29 @@ class StatefulChipList<T> extends StatefulWidget {
   /// The function to convert the displayed data into a String
   final String Function(T) dataToString;
 
+  /// Defines how sorting should be performed in the chip elements. Defaults
+  /// to ordering by the text value provided by the `dataToString` function
+  final TChipSortLogic sortLogic;
+
   const StatefulChipList({
     required this.title,
     required this.noChipsText,
     required this.removeText,
     required this.dataToString,
+    this.sortLogic = TChipSortLogic.text,
     this.icon,
     this.deleteCallback,
     super.key,
   });
+
+  const StatefulChipList.noDelete({
+    required this.title,
+    required this.noChipsText,
+    required this.dataToString,
+    this.sortLogic = TChipSortLogic.text,
+    this.icon,
+    super.key,
+  }) : removeText = '', deleteCallback = null;
 
   @override
   State<StatefulWidget> createState() => StatefulChipListState<T>();
@@ -182,6 +206,7 @@ class StatefulChipListState<T> extends State<StatefulChipList<T>> {
       noChipsText: widget.noChipsText,
       removeText: widget.removeText,
       dataToString: widget.dataToString,
+      sortLogic: widget.sortLogic,
       icon: widget.icon,
       deleteCallback: _deleteData,
       content: _data.toList(),

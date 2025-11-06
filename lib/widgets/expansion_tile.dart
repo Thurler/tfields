@@ -25,12 +25,16 @@ class TExpansionTile extends StatelessWidget {
   /// collapses. Defaults to TRUE
   final bool maintainState;
 
+  /// The cross-axis alignment to use for the expansion tile's children
+  final CrossAxisAlignment crossAxisAlignment;
+
   const TExpansionTile({
     required this.title,
     required this.children,
     this.subtitle = '',
     this.maintainState = true,
     this.initiallyExpanded = false,
+    this.crossAxisAlignment = CrossAxisAlignment.center,
     this.leading,
     this.titleSuffix,
     super.key,
@@ -43,6 +47,7 @@ class TExpansionTile extends StatelessWidget {
     this.subtitle = '',
     this.maintainState = true,
     this.initiallyExpanded = false,
+    this.crossAxisAlignment = CrossAxisAlignment.center,
     this.leading,
     super.key,
   }) : titleSuffix = validationErrorText.isNotEmpty
@@ -87,7 +92,10 @@ class TExpansionTile extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
-          child: Column(children: children),
+          child: Column(
+            crossAxisAlignment: crossAxisAlignment,
+            children: children,
+          ),
         ),
       ],
     );

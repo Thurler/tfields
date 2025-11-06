@@ -13,6 +13,12 @@ mixin TTimeTracker<T extends StatefulWidget> on State<T> {
 
   Duration get elapsedDuration => Duration(seconds: elapsedSeconds);
 
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
   /// Start the timer, resetting the number of elapsed seconds to zero
   void startTimer() {
     elapsedSeconds = 0;

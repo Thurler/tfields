@@ -11,9 +11,9 @@ import 'package:tfields/widgets/icons.dart';
 /// confirming a deletion on handling a request's possible response states
 mixin TDialogDisplayer<T extends StatefulWidget> on State<T> {
   /// Show a simple success dialog, if the widget is still mounted
-  Future<void> showSuccess(String message) async {
+  Future<void> showSuccess(String message, {String? body}) async {
     if (mounted) {
-      return TDialog.success(title: message).show(context);
+      return TDialog.success(title: message, body: body).show(context);
     }
   }
 

@@ -25,10 +25,10 @@ class TProgressChecklistItem {
 
 /// A list of items that have a progress associated with them, displayed in a
 /// column with aligned icons
-class ProgressChecklist extends StatelessWidget with TStandardColorer {
+class TProgressChecklist extends StatelessWidget with TStandardColorer {
   final List<TProgressChecklistItem> items;
 
-  const ProgressChecklist({required this.items, super.key});
+  const TProgressChecklist({required this.items, super.key});
 
   @override
   Widget build(BuildContext context) {

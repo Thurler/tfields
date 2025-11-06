@@ -7,7 +7,7 @@ class TInputDecoration extends InputDecoration {
     super.enabled,
     super.labelText,
     super.helperText,
-    super.helperStyle,
+    super.errorText,
     super.hintText,
     super.prefixIcon,
     super.suffixIcon,

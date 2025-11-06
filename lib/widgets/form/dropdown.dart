@@ -177,7 +177,7 @@ class TFormDropdownState<T> extends TFormState<T, TFormDropdown<T>> {
     switch (widget.sortLogic) {
       // Sort by the object's own comparison function
       case TDropdownSortLogic.object: {
-        if (items.isNotEmpty && items.first is Comparable<T>) {
+        if (items.isNotEmpty && items.first is Comparable) {
           items.sort();
         }
       }
@@ -240,7 +240,7 @@ class TFormDropdownState<T> extends TFormState<T, TFormDropdown<T>> {
         ),
       Axis.vertical => Column(
           children: <Widget>[dropdown, widget.otherOptionForm!].separateWith(
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
           ),
         ),
       null => dropdown,
