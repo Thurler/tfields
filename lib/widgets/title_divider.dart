@@ -19,12 +19,14 @@ class TTitleDivider extends StatelessWidget {
     super.key,
   }) : leftMargin = null, rightMargin = null;
 
+  /// Forces the title to align to the left
   const TTitleDivider.left({
     required this.titleText,
     double this.leftMargin = 20,
     super.key,
   }) : rightMargin = null;
 
+  /// Forces the title to align to the right
   const TTitleDivider.right({
     required this.titleText,
     double this.rightMargin = 20,

@@ -22,9 +22,18 @@ import 'package:tfields/widgets/icons.dart';
 /// - `TButton.iconOnly()` gives you full control over the icon
 /// - `TButton.iconOnly.delete()` will use the preset delete icon
 abstract class TButton extends StatelessWidget {
+  /// The icon to be displayed alongside the button
   final TIconInterface? icon;
+
+  /// The text that will be displayed inside the button, either as part of the
+  /// widget or as a tooltip, depending on the type of button
   final String? text;
+
+  /// The callback to call when the button is pressed
   final void Function()? onPressed;
+
+  /// Whether the default icon color from the theme should override the
+  /// AnlixIcon color
   final bool forceDefaultIconColor;
 
   static TButtonIconOnlyBuilder get iconOnly => const TButtonIconOnlyBuilder();
@@ -34,12 +43,15 @@ abstract class TButton extends StatelessWidget {
 
   static TButtonElevatedBuilder get elevated => const TButtonElevatedBuilder();
 
+  /// The icon color used when the theme is set to light mode
   Color? get colorLight =>
       forceDefaultIconColor || icon == null ? null : icon!.colorLight;
 
+  /// The icon color used when the theme is set to dark mode
   Color? get colorDark =>
       forceDefaultIconColor || icon == null ? null : icon!.colorDark;
 
+  /// Fetches the icon color to use in the provided context
   Color? colorFromContext(BuildContext context) =>
       switch (Theme.of(context).brightness) {
     Brightness.light => colorLight,
