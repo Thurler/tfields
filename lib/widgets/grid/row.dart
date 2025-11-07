@@ -24,11 +24,22 @@ class TGridRowLimits {
     int? xxl,
   }) : _xs = xs, _sm = sm, _md = md, _lg = lg, _xl = xl, _xxl = xxl;
 
+  /// The flex limit for XXL screen size
   int? get xxl => _xxl;
+
+  /// The flex limit for XL screen size
   int? get xl => _xl ?? _xxl;
+
+  /// The flex limit for LG screen size
   int? get lg => _lg ?? _xl ?? _xxl;
+
+  /// The flex limit for MD screen size
   int? get md => _md ?? _lg ?? _xl ?? _xxl;
+
+  /// The flex limit for SM screen size
   int? get sm => _sm ?? _md ?? _lg ?? _xl ?? _xxl;
+
+  /// The flex limit for XS screen size
   int? get xs => _xs ?? _sm ?? _md ?? _lg ?? _xl ?? _xxl;
 }
 
