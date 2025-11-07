@@ -6,6 +6,7 @@ import 'package:tfields/widgets/icon_text.dart';
 
 /// The mixin that binds a ResponsiveTable's Column's functionalities
 mixin TResponsiveColumn on Enum {
+  /// Function to build the column header widget
   Widget build(BuildContext context);
 }
 
