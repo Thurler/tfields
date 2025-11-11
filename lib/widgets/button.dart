@@ -32,8 +32,8 @@ abstract class TButton extends StatelessWidget {
   /// The callback to call when the button is pressed
   final void Function()? onPressed;
 
-  /// Whether the default icon color from the theme should override the
-  /// AnlixIcon color
+  /// Whether the default icon color from the theme should override the TIcon's
+  /// color
   final bool forceDefaultIconColor;
 
   static TButtonIconOnlyBuilder get iconOnly => const TButtonIconOnlyBuilder();
