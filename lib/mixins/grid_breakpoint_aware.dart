@@ -5,6 +5,7 @@ import 'package:tfields/widgets/grid/breakpoint.dart';
 /// TGridBreakpoint, provided it has access to the BuildContext to fetch the
 /// viewport width
 mixin TGridBreakpointAware {
+  /// Returns the current GridBreakpoint based on the context's screen width
   TGridBreakpoint getBreakpoint(BuildContext context) =>
       TGridBreakpoint.fromWidth(context);
 }
