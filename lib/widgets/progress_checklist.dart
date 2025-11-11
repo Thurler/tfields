@@ -17,7 +17,10 @@ enum TProgressStatus {
 
 /// An item from a ProgressChecklist
 class TProgressChecklistItem {
+  /// The progress status for this item
   TProgressStatus status;
+
+  /// The text that will be displayed when rendering this item
   String text;
 
   TProgressChecklistItem({required this.status, required this.text});
@@ -26,6 +29,7 @@ class TProgressChecklistItem {
 /// A list of items that have a progress associated with them, displayed in a
 /// column with aligned icons
 class TProgressChecklist extends StatelessWidget with TStandardColorer {
+  /// The checklist items that will be rendered
   final List<TProgressChecklistItem> items;
 
   const TProgressChecklist({required this.items, super.key});
