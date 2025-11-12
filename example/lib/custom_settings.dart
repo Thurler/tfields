@@ -1,14 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:tfields/mixins/settings.dart';
 import 'package:tfields/settings.dart';
-import 'package:tfields/theme_provider.dart';
-import 'package:tfields/views/settings.dart';
-import 'package:tfields/widgets/form/group/common_settings.dart';
-import 'package:tfields/widgets/form/group/group.dart';
-import 'package:tfields/widgets/grid/item.dart';
-import 'package:tfields/widgets/grid/row.dart';
+import 'package:tfields/widgets.dart';
 
 /// We extend the CommonSettings class with the new attributes we want our
 /// application to have - make sure we override the constructors and
