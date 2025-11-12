@@ -1,56 +1,14 @@
-import 'package:flutter/material.dart';
-import 'package:tfields/logger.dart';
+/// The framework for storing and accessing app settings in a standardized way
+///
+/// Applications sometimes require user customization that is stored locally,
+/// and the software needs to interact with this external source of data. This
+/// library provides a strict way to read/write to that external source, as well
+/// as standardize how Widgets and other classes should interact with the state
+/// of those settings
+library settings;
 
-/// The common app settings, holding common flags that control how it behaves
-class TCommonSettings {
-  /// The current log level threshold for logged messages
-  TLogLevel logLevel = TLogLevel.info;
-
-  /// Whether to check for updates at startup
-  bool checkUpdates = true;
-
-  /// Which brightness color theme to use
-  ThemeMode themeMode = ThemeMode.system;
-
-  /// Make an instance from scratch, passing in all parameters
-  TCommonSettings({
-    required this.logLevel,
-    required this.checkUpdates,
-    required this.themeMode,
-  });
-
-  /// Copy settings from another instance
-  TCommonSettings.from(TCommonSettings other) :
-    logLevel = other.logLevel,
-    checkUpdates = other.checkUpdates,
-    themeMode = other.themeMode;
-
-  /// Initialize settings with their default values
-  TCommonSettings.fromDefault();
-
-  /// Initialize settings from a serialized JSON map
-  TCommonSettings.fromJson(Map<String, dynamic> jsonContents) {
-    if (jsonContents.containsKey('logLevel')) {
-      logLevel = TLogLevel.fromName(jsonContents['logLevel']);
-    }
-    if (jsonContents.containsKey('checkUpdates')) {
-      checkUpdates = jsonContents['checkUpdates'];
-    }
-    if (jsonContents.containsKey('themeMode')) {
-      themeMode = switch (jsonContents['themeMode']) {
-        'system' => ThemeMode.system,
-        'light' => ThemeMode.light,
-        'dark' => ThemeMode.dark,
-        _ => ThemeMode.system,
-      };
-    }
-  }
-
-  /// Serialize settings into a JSON map
-  @mustCallSuper
-  Map<String, dynamic> toJson() => <String, dynamic>{
-    'logLevel': logLevel.name,
-    'checkUpdates': checkUpdates,
-    'themeMode': themeMode.name,
-  };
-}
+export 'src/mixins/settings.dart';
+export 'src/settings.dart';
+export 'src/theme_provider.dart' show TSettingsThemeProvider;
+export 'src/views/settings.dart';
+export 'src/widgets/form/group/common_settings.dart';
