@@ -1,10 +1,9 @@
 Release Notes
 =============
 
-- Initial version based on what was commonly used between three apps
-- Custom Iterable extension
-- Logger and Update Checking functionality
-- Settings functionality integrated with logger and update checking
-- Alert, Time tracker and Discardable changes mixins
-- Boolean, Dropdown, String and ListString Forms
-- Several other basic UI widgets
+- Re-organized exported libraries to be more idiomatic with Flutter standards
+- More type extensions for numbers and strings
+- Standardized light/dark mode integration
+- Widgets to control responsiveness according to a grid-based system
+- Several more basic UI widgets
+- Reformatted example app to better showcase all the functionalities
