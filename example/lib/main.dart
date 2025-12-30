@@ -10,6 +10,7 @@ import 'package:tfields/theme.dart';
 import 'package:tfields/update_check.dart';
 import 'package:tfields/widgets.dart';
 import 'package:tfields_example/custom_settings.dart';
+import 'package:tfields_example/grid_row.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -117,7 +118,13 @@ class MainState extends State<MainWidget>
   }
 
   /// Navigate away to the grid row showcase widget
-  Future<void> _navigateToGridRowShowcase() async {}
+  Future<void> _navigateToGridRowShowcase() async {
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => const TGridRowShowcase(),
+      ),
+    );
+  }
 
   /// Keep track of the switch's current state
   bool _currentSwitchValue = true;
