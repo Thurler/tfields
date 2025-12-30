@@ -12,6 +12,7 @@ import 'package:tfields/widgets.dart';
 import 'package:tfields_example/custom_settings.dart';
 import 'package:tfields_example/forms.dart';
 import 'package:tfields_example/grid_row.dart';
+import 'package:tfields_example/responsive_table.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -114,6 +115,15 @@ class MainState extends State<MainWidget>
     await Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (_) => const FormsExampleView(),
+      ),
+    );
+  }
+
+  /// Navigate away to the table showcase widget
+  Future<void> _navigateToTableShowcase() async {
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => const TableExampleView(),
       ),
     );
   }
@@ -726,6 +736,12 @@ class MainState extends State<MainWidget>
           ],
         ),
         const TTitleDivider(titleText: 'TResponsiveTable / TPaginatedTable'),
+        TButton.elevated(
+          usesMaxWidth: true,
+          text: 'Open table showcase',
+          icon: const TIcon(icon: Icons.open_in_new),
+          onPressed: _navigateToTableShowcase,
+        ),
         const TTitleDivider(
           titleText: 'TDiscardableChanges / TForm / TSaveButton',
         ),
