@@ -10,6 +10,7 @@ import 'package:tfields/theme.dart';
 import 'package:tfields/update_check.dart';
 import 'package:tfields/widgets.dart';
 import 'package:tfields_example/custom_settings.dart';
+import 'package:tfields_example/forms.dart';
 import 'package:tfields_example/grid_row.dart';
 
 void main() {
@@ -110,11 +111,11 @@ class MainState extends State<MainWidget>
 
   /// Navigate away to the form showcase widget
   Future<void> _navigateToFormShowcase() async {
-    //await Navigator.of(context).push(
-    //  MaterialPageRoute<void>(
-    //    builder: (_) => const FormShowcase(),
-    //  ),
-    //);
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => const FormsExampleView(),
+      ),
+    );
   }
 
   /// Navigate away to the grid row showcase widget
@@ -729,6 +730,7 @@ class MainState extends State<MainWidget>
           titleText: 'TDiscardableChanges / TForm / TSaveButton',
         ),
         TButton.elevated(
+          usesMaxWidth: true,
           text: 'Open form showcase',
           icon: const TIcon(icon: Icons.open_in_new),
           onPressed: _navigateToFormShowcase,

@@ -12,7 +12,7 @@ class _GridExample extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        Text(title, style: Theme.of(context).textTheme.titleLarge),
+        SelectableText(title, style: Theme.of(context).textTheme.titleLarge),
         ...rows.separateWith(const Divider()),
       ].separateWith(const SizedBox(height: 20)),
     );
@@ -185,14 +185,14 @@ class TGridRowShowcase extends StatelessWidget with TGridBreakpointAware {
         // values can also be assigned: zero means the item will not take up
         // space, and negative values will force that item to take up the whole
         // row
-        ///
+        //
         // You can also specify these values per breakpoint size, to have
         // complete control over the item structure at all screen sizes
-        ///
+        //
         // Note that unlike the row flex limit, item flex sizes propagate UP,
         // so specifying MD will copy its value up to LG, XL and XXL, leaving
         // SM and XS with default values
-        ///
+        //
         // The exception to that are negative flexes, which also propagate DOWN
         _GridExample(
           title: 'Automatic TGridRow with customized flex',
