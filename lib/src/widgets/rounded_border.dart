@@ -41,7 +41,7 @@ class TRoundedBorder extends StatelessWidget {
 /// A TRoundedBorder that keeps track of whether it is being highlighted or not,
 /// while also providing clickable functionality thanks to requiring a
 /// TClickable to have MouseRegion logic
-class TClickableRoundedBorder extends THoverWidget {
+class TClickableRoundedBorder extends StatefulWidget with THoverWidget {
   /// The padding to apply when drawing the child
   final EdgeInsets childPadding;
 
@@ -62,16 +62,25 @@ class TClickableRoundedBorder extends THoverWidget {
   /// Thw widget's child, that will be rendered inside the clickable area
   final Widget child;
 
+  @override
+  final bool hoverEnabled;
+
+  @override
+  final void Function() hoverUpdateCallback;
+
+  @override
+  final void Function()? onHoverTap;
+
   const TClickableRoundedBorder({
     required this.child,
-    required super.stateUpdateCallback,
-    required super.enabled,
+    required this.hoverUpdateCallback,
+    required this.hoverEnabled,
     this.childPadding = EdgeInsets.zero,
     this.highlightedWidth = 3,
     this.normalWidth = 1,
     this.highlightedColor,
     this.normalColor,
-    super.onTap,
+    this.onHoverTap,
     super.key,
   });
 
@@ -80,8 +89,8 @@ class TClickableRoundedBorder extends THoverWidget {
       _TClickableRoundedBorderState();
 }
 
-class _TClickableRoundedBorderState
-    extends THoverState<TClickableRoundedBorder> {
+class _TClickableRoundedBorderState extends State<TClickableRoundedBorder>
+    with THoverState<TClickableRoundedBorder> {
   @override
   Widget buildChild(BuildContext context) {
     return TRoundedBorder(
