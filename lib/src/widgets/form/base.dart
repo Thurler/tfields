@@ -143,7 +143,7 @@ abstract class TFormState<Value, AForm extends TForm<Value>>
   /// This saves the current value as the new initialValue, effectively
   /// resetting the hasChanges check
   void resetInitialValue() {
-    initialValue = value;
+    initialValue = copyValue(value);
   }
 
   /// This saves the current value as the new initialValue, effectively
@@ -153,6 +153,10 @@ abstract class TFormState<Value, AForm extends TForm<Value>>
     return value;
   }
 
+  /// This makes a copy of a value, so that types that aren't copied on
+  /// assignment can override the assignment behavior
+  Value? copyValue(Value? source) => source;
+
   @override
   void initState() {
     super.initState();
@@ -161,7 +165,7 @@ abstract class TFormState<Value, AForm extends TForm<Value>>
     _readonly = widget.readonly;
     _title = widget.title;
     _subtitle = widget.subtitle;
-    value = widget.initialValue;
+    value = copyValue(widget.initialValue);
     initialValue = widget.initialValue;
     // And then force a validation to make sure invalid initial values are
     // already loaded with the appropriate error message

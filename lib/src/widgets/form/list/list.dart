@@ -53,16 +53,14 @@ abstract class TFormListState<Value, AForm extends TFormList<Value>>
 
   @override
   set value(List<Value>? newValue) {
-    // Make a shallow copy - do we ever need a deep one? If yes, should caller
-    // be responsible for it?
-    super.value = newValue?.toList();
+    super.value = copyValue(newValue);
     validate();
   }
 
+  // Make a shallow copy - do we ever need a deep one? If yes, should caller
+  // be responsible for it?
   @override
-  void resetInitialValue() {
-    initialValue = value?.toList(); // Shallow copy again - need a deep one?
-  }
+  List<Value>? copyValue(List<Value>? source) => source?.toList();
 
   /// This is used to update an item directly, as opposed to the entire list
   ///
@@ -109,11 +107,5 @@ abstract class TFormListState<Value, AForm extends TFormList<Value>>
     validate();
     widget.onValueDeleted?.call(data);
     widget.onValueChanged?.call(value);
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    value = widget.initialValue?.toList(); // Another shallow copy - you get it
   }
 }
