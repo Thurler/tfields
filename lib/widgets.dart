@@ -37,6 +37,7 @@ export 'src/widgets/grid/column.dart';
 export 'src/widgets/grid/item.dart';
 export 'src/widgets/grid/row.dart';
 export 'src/widgets/grid/size.dart';
+export 'src/widgets/hover.dart';
 export 'src/widgets/icon_text.dart';
 export 'src/widgets/icons.dart';
 export 'src/widgets/input_decoration.dart';
