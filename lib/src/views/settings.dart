@@ -111,3 +111,41 @@ abstract class TAbstractSettingsState<
     );
   }
 }
+
+/// We also extend the AbstractSettingsWidget with our common settings class, so
+/// apps without custom settings will be production-ready
+class TCommonSettingsWidget
+    extends TAbstractSettingsWidget<TCommonSettings, TCommonSettingsFormField> {
+  const TCommonSettingsWidget({required super.title, super.key});
+
+  @override
+  State<TCommonSettingsWidget> createState() => _TCommonSettingsState();
+}
+
+class _TCommonSettingsState extends TAbstractSettingsState<
+    TCommonSettings,
+    TCommonSettingsFormField,
+    TCommonSettingsWidget> with TCommonSettingsDeserializer {
+  /// The common settings form group
+  late final TCommonSettingsGroup _commonSettingsGroup;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _commonSettingsGroup = TCommonSettingsGroup(
+      enabled: true,
+      setState: setState,
+      initialData: settings,
+    );
+  }
+
+  @override
+  String get unhandledExceptionMessage => 'Exception reading the settings file';
+
+  @override
+  TCommonSettingsGroup get settingsForm => _commonSettingsGroup;
+
+  @override
+  TCommonSettingsGroupWidget buildForm(BuildContext context) =>
+      TCommonSettingsGroupWidget(form: _commonSettingsGroup);
+}
