@@ -23,6 +23,9 @@ mixin THoverWidget on StatefulWidget {
 mixin THoverState<W extends THoverWidget> on State<W> {
   bool _highlighted = false;
 
+  /// Whether the hover detection is currently enabled or not
+  bool get hoverEnabled => widget.hoverEnabled;
+
   /// Whether this widget is being hovered over or not
   bool get isHighlighted => _highlighted;
 
@@ -38,7 +41,7 @@ mixin THoverState<W extends THoverWidget> on State<W> {
   @nonVirtual
   Widget build(BuildContext context) {
     return TClickable(
-      enabled: widget.hoverEnabled,
+      enabled: hoverEnabled,
       onTap: onHoverTap,
       // These callbacks are only really useful for web and desktop
       // environments, since mobile users have no mouse cursor to
