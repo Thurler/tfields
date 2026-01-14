@@ -74,6 +74,7 @@ class TFormDropdownListChip<T> extends TFormList<T> {
     super.suffixIcon,
     super.validationCallback,
     super.onValueChanged,
+    super.saveWithErrorOptions,
     super.key,
   }) :
     otherOptionForm = null,
@@ -107,6 +108,7 @@ class TFormDropdownListChip<T> extends TFormList<T> {
     super.suffixIcon,
     super.validationCallback,
     super.onValueChanged,
+    super.saveWithErrorOptions,
     super.key,
   }) : otherOptionEnabled = true;
 

@@ -84,6 +84,7 @@ abstract class TFormNumber<I> extends TForm<I> {
     super.errorMessage = '',
     super.validationCallback,
     super.onValueChanged,
+    super.saveWithErrorOptions,
     super.key,
   }) : userUnsigned = unsigned;
 
@@ -134,6 +135,7 @@ class TFormInteger extends TFormNumber<int> {
     super.errorMessage,
     super.validationCallback,
     super.onValueChanged,
+    super.saveWithErrorOptions,
     super.key,
   }) : super(
     tryParse: int.tryParse,
@@ -169,6 +171,7 @@ class TFormBigInteger extends TFormNumber<BigInt> {
     super.errorMessage,
     super.validationCallback,
     super.onValueChanged,
+    super.saveWithErrorOptions,
     super.key,
   }) : super(
     tryParse: BigInt.tryParse,
@@ -204,6 +207,7 @@ class TFormDouble extends TFormNumber<double> {
     super.errorMessage,
     super.validationCallback,
     super.onValueChanged,
+    super.saveWithErrorOptions,
     super.key,
   }) : super(
     tryParse: double.tryParse,

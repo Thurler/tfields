@@ -25,6 +25,7 @@ abstract class TFormList<Value> extends TForm<List<Value>> {
     super.suffixIcon,
     super.decoratorIcon,
     super.onValueChanged,
+    super.saveWithErrorOptions,
     super.key,
   });
 }

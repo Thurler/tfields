@@ -37,6 +37,7 @@ class TFormString extends TForm<String> {
     super.decoratorIcon,
     super.validationCallback,
     super.onValueChanged,
+    super.saveWithErrorOptions,
     super.key,
   });
 
@@ -55,6 +56,7 @@ class TFormString extends TForm<String> {
     super.decoratorIcon,
     super.validationCallback,
     super.onValueChanged,
+    super.saveWithErrorOptions,
     super.key,
   }) :
     isMultiline = false,
