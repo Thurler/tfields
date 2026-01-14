@@ -95,6 +95,8 @@ class TFormWrapper extends StatelessWidget {
   Widget build(BuildContext context) => form;
 }
 
+typedef GroupSetState = void Function(void Function());
+
 /// A collection of Forms that the user can interact with as a group, to avoid
 /// having to handle the instances and keys by themselves. Usually used to
 /// represent an entity's attributes, and then use the form values to build an
@@ -111,7 +113,7 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
 
   /// A reference to the caller's setState function, if they are Stateful and
   /// want to update their state whenever the form's state updates
-  final void Function(void Function())? _setState;
+  final GroupSetState? _setState;
 
   /// Whether this group is enabled or not - will propagate this to the inner
   /// forms so they are all enabled/disabled together
@@ -132,7 +134,7 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
 
   TFormGroup({
     required bool enabled,
-    required void Function(void Function())? setState,
+    required GroupSetState? setState,
   }) : _enabled = enabled, _setState = setState;
 
   /// The function that makes an entity out of the current forms' states
@@ -866,7 +868,7 @@ typedef TFormCompatibleGroup<Value> = TFormGroup<Value, Object?, TFormField>;
 typedef TFormCompatibleGroupBuilder<Value> = TFormCompatibleGroup<Value>
     Function({
   required bool enabled,
-  required void Function(void Function())? setState,
+  required GroupSetState? setState,
   Value? initialData,
 });
 
@@ -893,7 +895,7 @@ class TGroupForm<Value> extends TForm<Value> {
 
   TGroupForm({
     required TFormCompatibleGroupBuilder<Value> groupBuilder,
-    required void Function(void Function())? setState,
+    required GroupSetState? setState,
     required this.groupWidgetBuilder,
     required super.enabled,
     required super.initialValue,
