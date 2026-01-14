@@ -823,9 +823,10 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
   bool validate() {
     hasRequestedValidation = true;
     for (TGenericFormKey key in _formKeys.values) {
-      key.currentState?.validate();
       if (key is TGroupFormKey) {
         key.currentState?.manualValidate();
+      } else {
+        key.currentState?.validate();
       }
     }
     return !hasErrors;
