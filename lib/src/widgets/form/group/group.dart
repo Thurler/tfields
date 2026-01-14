@@ -864,38 +864,35 @@ abstract class TFormGroupWidget<
   }) : onSubmit = null, showSubmit = false, saving = false;
 }
 
-typedef TFormCompatibleGroup<Value> = TFormGroup<Value, Object?, TFormField>;
+typedef GenericGroupForm<Value> = TFormGroup<Value, Object?, TFormField>;
 
-typedef TFormCompatibleGroupBuilder<Value> = TFormCompatibleGroup<Value>
+typedef TFormGroupBuilder<Value, Group extends GenericGroupForm<Value>> = Group
     Function({
   required bool enabled,
   required GroupSetState? setState,
   Value? initialData,
 });
 
-typedef TFormCompatibleGroupWidget<Value>
-    = TFormGroupWidget<TFormCompatibleGroup<Value>>;
-
-typedef TFormCompatibleGroupWidgetBuilder<Value>
-    = TFormCompatibleGroupWidget<Value> Function(
-  TFormCompatibleGroup<Value> form,
-);
+typedef TFormGroupWidgetBuilder<Value, Group extends GenericGroupForm<Value>>
+    = TFormGroupWidget<Group> Function(Group form);
 
 /// A key type for the standalone form that encapsulates the Group when it's
 /// being handled as a regular TForm
-typedef TGroupFormKey<Value> = GlobalKey<TGroupFormState<Value>>;
+typedef TGroupFormKey<Value, Group extends GenericGroupForm<Value>>
+    = GlobalKey<TGroupFormState<Value, Group>>;
 
 /// A version of this group that acts as its own standalone form, for when we
 /// need it to act as a single entity in a another form, for example
-class TGroupForm<Value> extends TForm<Value> {
+class TGroupForm<Value, Group extends GenericGroupForm<Value>>
+    extends TForm<Value> {
   /// The group instance
-  final TFormCompatibleGroup<Value> group;
+  final Group group;
 
   /// A builder that returns the Widget associated with the Group
-  final TFormCompatibleGroupWidgetBuilder<Value> groupWidgetBuilder;
+  final TFormGroupWidgetBuilder<Value, Group> groupWidgetBuilder;
 
   TGroupForm({
-    required TFormCompatibleGroupBuilder<Value> groupBuilder,
+    required TFormGroupBuilder<Value, Group> groupBuilder,
     required GroupSetState? setState,
     required this.groupWidgetBuilder,
     required super.enabled,
@@ -910,11 +907,13 @@ class TGroupForm<Value> extends TForm<Value> {
     super(title: '');
 
   @override
-  TGroupFormState<Value> createState() => TGroupFormState<Value>();
+  TGroupFormState<Value, Group> createState() =>
+      TGroupFormState<Value, Group>();
 }
 
 /// And the state associated with the GroupForm above
-class TGroupFormState<Value> extends TFormState<Value, TGroupForm<Value>> {
+class TGroupFormState<Value, Group extends GenericGroupForm<Value>>
+    extends TFormState<Value, TGroupForm<Value, Group>> {
   /// A copy of validation function that must be manually called
   void manualValidate() => widget.group.validate();
 
