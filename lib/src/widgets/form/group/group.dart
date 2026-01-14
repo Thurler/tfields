@@ -802,6 +802,14 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
     );
   }
 
+  /// Removes a form and its key associated with the given [formName]. Usually
+  /// used when the form needs to be reinitialized with new data, or when the
+  /// entire group structure will be reworked
+  void removeForm(Field formName) {
+    _formKeys.remove(formName);
+    _forms.remove(formName);
+  }
+
   /// A logical OR for each form's individual hasChanges flag
   bool get hasChanges => _formKeys.values.any(
     (TGenericFormKey key) => key.currentState?.hasChanges ?? false,
