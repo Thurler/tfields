@@ -20,6 +20,7 @@ abstract class TFormDateTime extends TForm<DateTime> {
     super.onValueChanged,
     super.decoratorIcon,
     super.validationCallback,
+    super.saveWithErrorOptions,
     super.key,
   });
 
@@ -34,6 +35,7 @@ abstract class TFormDateTime extends TForm<DateTime> {
     ValueChanged<DateTime?>? onValueChanged,
     Widget? decoratorIcon,
     String Function(DateTime?)? validationCallback,
+    TFormSaveWithErrorOptions<DateTime>? saveWithErrorOptions,
     TFormKey<DateTime>? key,
   }) {
     return _TFormDateOnly(
@@ -46,6 +48,7 @@ abstract class TFormDateTime extends TForm<DateTime> {
       onValueChanged: onValueChanged,
       decoratorIcon: decoratorIcon,
       validationCallback: validationCallback,
+      saveWithErrorOptions: saveWithErrorOptions,
       key: key,
     );
   }
@@ -61,6 +64,7 @@ abstract class TFormDateTime extends TForm<DateTime> {
     ValueChanged<DateTime?>? onValueChanged,
     Widget? decoratorIcon,
     String Function(DateTime?)? validationCallback,
+    TFormSaveWithErrorOptions<DateTime>? saveWithErrorOptions,
     TFormKey<DateTime>? key,
   }) {
     return _TFormTimeOnly(
@@ -73,6 +77,7 @@ abstract class TFormDateTime extends TForm<DateTime> {
       onValueChanged: onValueChanged,
       decoratorIcon: decoratorIcon,
       validationCallback: validationCallback,
+      saveWithErrorOptions: saveWithErrorOptions,
       key: key,
     );
   }
@@ -89,6 +94,7 @@ abstract class TFormDateTime extends TForm<DateTime> {
     ValueChanged<DateTime?>? onValueChanged,
     Widget? decoratorIcon,
     String Function(DateTime?)? validationCallback,
+    TFormSaveWithErrorOptions<DateTime>? saveWithErrorOptions,
     TFormKey<DateTime>? key,
   }) {
     return _TFormDateAndTime(
@@ -101,6 +107,7 @@ abstract class TFormDateTime extends TForm<DateTime> {
       onValueChanged: onValueChanged,
       decoratorIcon: decoratorIcon,
       validationCallback: validationCallback,
+      saveWithErrorOptions: saveWithErrorOptions,
       key: key,
     );
   }
@@ -137,6 +144,7 @@ class _TFormDateOnly extends TFormDateTime {
     super.onValueChanged,
     super.decoratorIcon,
     super.validationCallback,
+    super.saveWithErrorOptions,
     super.key,
   });
 
@@ -185,6 +193,7 @@ class _TFormTimeOnly extends TFormDateTime {
     super.onValueChanged,
     super.decoratorIcon,
     super.validationCallback,
+    super.saveWithErrorOptions,
     super.key,
   });
 
@@ -240,6 +249,7 @@ class _TFormDateAndTime extends TFormDateTime {
     super.onValueChanged,
     super.decoratorIcon,
     super.validationCallback,
+    super.saveWithErrorOptions,
     super.key,
   });
 

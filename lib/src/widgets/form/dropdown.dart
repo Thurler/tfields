@@ -71,6 +71,7 @@ class TFormDropdown<T> extends TForm<T> {
     super.onValueChanged,
     super.subtitle,
     super.errorMessage,
+    super.saveWithErrorOptions,
     super.key,
   }) :
     otherOptionForm = null,
@@ -101,6 +102,7 @@ class TFormDropdown<T> extends TForm<T> {
     super.onValueChanged,
     super.subtitle,
     super.errorMessage,
+    super.saveWithErrorOptions,
     super.key,
   }) : otherOptionEnabled = true;
 

@@ -59,14 +59,19 @@ mixin TDialogDisplayer<T extends StatefulWidget> on State<T> {
   }
 
   /// Show a simple confirm dialog, if the widget is still mounted
-  Future<bool> showConfirmation(String message) async {
+  Future<bool> showConfirmation(
+    String message, {
+    String? title,
+    String? confirmText,
+    String? cancelText,
+  }) async {
     if (mounted) {
       return TDialog.warningChoice(
         fixedBodyWidth: 500,
-        title: 'Warning!',
+        title: title ?? 'Warning!',
         body: message,
-        confirmText: 'OK',
-        cancelText: 'Cancel',
+        confirmText: confirmText ?? 'OK',
+        cancelText: cancelText ?? 'Cancel',
       ).showBool(context);
     } else {
       return false;
@@ -74,14 +79,19 @@ mixin TDialogDisplayer<T extends StatefulWidget> on State<T> {
   }
 
   /// Show a simple delete confirm dialog, if the widget is still mounted
-  Future<bool> showDeleteConfirm(String message) async {
+  Future<bool> showDeleteConfirm(
+    String message, {
+    String? title,
+    String? confirmText,
+    String? cancelText,
+  }) async {
     if (mounted) {
       return TDialog.warningChoice(
         fixedBodyWidth: 500,
-        title: 'Warning!',
+        title: title ?? 'Warning!',
         body: message,
-        confirmText: 'Delete',
-        cancelText: 'Cancel',
+        confirmText: confirmText ?? 'Delete',
+        cancelText: cancelText ?? 'Cancel',
         confirmIconOverride: TPresetIcon.delete.icon,
       ).showBool(context);
     } else {

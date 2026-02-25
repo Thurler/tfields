@@ -95,6 +95,8 @@ class TFormWrapper extends StatelessWidget {
   Widget build(BuildContext context) => form;
 }
 
+typedef GroupSetState = void Function(void Function());
+
 /// A collection of Forms that the user can interact with as a group, to avoid
 /// having to handle the instances and keys by themselves. Usually used to
 /// represent an entity's attributes, and then use the form values to build an
@@ -111,7 +113,7 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
 
   /// A reference to the caller's setState function, if they are Stateful and
   /// want to update their state whenever the form's state updates
-  final void Function(void Function())? _setState;
+  final GroupSetState? _setState;
 
   /// Whether this group is enabled or not - will propagate this to the inner
   /// forms so they are all enabled/disabled together
@@ -132,7 +134,7 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
 
   TFormGroup({
     required bool enabled,
-    required void Function(void Function())? setState,
+    required GroupSetState? setState,
   }) : _enabled = enabled, _setState = setState;
 
   /// The function that makes an entity out of the current forms' states
@@ -170,6 +172,7 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
     Widget? decoratorIcon,
     Widget? prefixIcon,
     Widget? suffixIcon,
+    TFormSaveWithErrorOptions<String>? saveWithErrorOptions,
     bool? enabledOverride,
   }) {
     TStringFormKey key = TStringFormKey();
@@ -191,6 +194,7 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
         suffixIcon: suffixIcon,
         submitCallback: submitCallback,
         validationCallback: validationCallback,
+        saveWithErrorOptions: saveWithErrorOptions,
         onValueChanged: (String? v) {
           onValueChanged?.call(v);
           onGroupValueChanged();
@@ -213,6 +217,7 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
     VoidCallback? submitCallback,
     List<TextInputFormatter> formatters = const <TextInputFormatter>[],
     Widget? decoratorIcon,
+    TFormSaveWithErrorOptions<String>? saveWithErrorOptions,
     bool? enabledOverride,
   }) {
     TStringFormKey key = TStringFormKey();
@@ -231,6 +236,7 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
         decoratorIcon: decoratorIcon,
         submitCallback: submitCallback,
         validationCallback: validationCallback,
+        saveWithErrorOptions: saveWithErrorOptions,
         onValueChanged: (String? v) {
           onValueChanged?.call(v);
           onGroupValueChanged();
@@ -255,6 +261,7 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
     List<TextInputFormatter> formatters = const <TextInputFormatter>[],
     Widget? decoratorIcon,
     Widget? suffixIcon,
+    TFormSaveWithErrorOptions<List<String>>? saveWithErrorOptions,
     bool? enabledOverride,
   }) {
     TStringListChipFormKey key = TStringListChipFormKey();
@@ -275,6 +282,7 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
         validationCallback: validationCallback,
         onValueAdded: onValueAdded,
         onValueDeleted: onValueDeleted,
+        saveWithErrorOptions: saveWithErrorOptions,
         onValueChanged: (List<String>? v) {
           onValueChanged?.call(v);
           onGroupValueChanged();
@@ -303,6 +311,7 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
     Widget? decoratorIcon,
     Widget? prefixIcon,
     Widget? suffixIcon,
+    TFormSaveWithErrorOptions<int>? saveWithErrorOptions,
     bool? enabledOverride,
   }) {
     TIntegerFormKey key = TIntegerFormKey();
@@ -327,6 +336,7 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
         suffixIcon: suffixIcon,
         submitCallback: submitCallback,
         validationCallback: validationCallback,
+        saveWithErrorOptions: saveWithErrorOptions,
         onValueChanged: (int? v) {
           onValueChanged?.call(v);
           onGroupValueChanged();
@@ -355,6 +365,7 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
     Widget? decoratorIcon,
     Widget? prefixIcon,
     Widget? suffixIcon,
+    TFormSaveWithErrorOptions<BigInt>? saveWithErrorOptions,
     bool? enabledOverride,
   }) {
     TBigIntegerFormKey key = TBigIntegerFormKey();
@@ -379,6 +390,7 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
         suffixIcon: suffixIcon,
         submitCallback: submitCallback,
         validationCallback: validationCallback,
+        saveWithErrorOptions: saveWithErrorOptions,
         onValueChanged: (BigInt? v) {
           onValueChanged?.call(v);
           onGroupValueChanged();
@@ -407,6 +419,7 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
     Widget? decoratorIcon,
     Widget? prefixIcon,
     Widget? suffixIcon,
+    TFormSaveWithErrorOptions<double>? saveWithErrorOptions,
     bool? enabledOverride,
   }) {
     TDoubleFormKey key = TDoubleFormKey();
@@ -431,6 +444,7 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
         suffixIcon: suffixIcon,
         submitCallback: submitCallback,
         validationCallback: validationCallback,
+        saveWithErrorOptions: saveWithErrorOptions,
         onValueChanged: (double? v) {
           onValueChanged?.call(v);
           onGroupValueChanged();
@@ -456,6 +470,7 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
     Widget? decoratorIcon,
     Widget? prefixIcon,
     Widget? suffixIcon,
+    TFormSaveWithErrorOptions<V>? saveWithErrorOptions,
     bool? enabledOverride,
   }) {
     TDropdownFormKey<V> key = TDropdownFormKey<V>();
@@ -477,6 +492,7 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
         validationCallback: validationCallback,
+        saveWithErrorOptions: saveWithErrorOptions,
         onValueChanged: (V? v) {
           onValueChanged?.call(v);
           onGroupValueChanged();
@@ -506,6 +522,7 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
     Widget? decoratorIcon,
     Widget? prefixIcon,
     Widget? suffixIcon,
+    TFormSaveWithErrorOptions<V>? saveWithErrorOptions,
     bool? enabledOverride,
   }) {
     TDropdownFormKey<V> key = TDropdownFormKey<V>();
@@ -531,6 +548,7 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
         validationCallback: validationCallback,
+        saveWithErrorOptions: saveWithErrorOptions,
         onValueChanged: (V? v) {
           onValueChanged?.call(v);
           onGroupValueChanged();
@@ -561,6 +579,7 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
     Widget? decoratorIcon,
     Widget? prefixIcon,
     Widget? suffixIcon,
+    TFormSaveWithErrorOptions<List<V>>? saveWithErrorOptions,
     bool? enabledOverride,
   }) {
     TDropdownListChipFormKey<V> key = TDropdownListChipFormKey<V>();
@@ -587,6 +606,7 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
         validationCallback: validationCallback,
         onValueAdded: onValueAdded,
         onValueDeleted: onValueDeleted,
+        saveWithErrorOptions: saveWithErrorOptions,
         onValueChanged: (List<V>? v) {
           onValueChanged?.call(v);
           onGroupValueChanged();
@@ -621,6 +641,7 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
     Widget? decoratorIcon,
     Widget? prefixIcon,
     Widget? suffixIcon,
+    TFormSaveWithErrorOptions<List<V>>? saveWithErrorOptions,
     bool? enabledOverride,
   }) {
     TDropdownListChipFormKey<V> key = TDropdownListChipFormKey<V>();
@@ -651,6 +672,7 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
         validationCallback: validationCallback,
         onValueAdded: onValueAdded,
         onValueDeleted: onValueDeleted,
+        saveWithErrorOptions: saveWithErrorOptions,
         onValueChanged: (List<V>? v) {
           onValueChanged?.call(v);
           onGroupValueChanged();
@@ -673,6 +695,7 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
     ValueChanged<bool?>? onValueChanged,
     Widget? decoratorIcon,
     Widget? suffixIcon,
+    TFormSaveWithErrorOptions<bool>? saveWithErrorOptions,
     bool? enabledOverride,
   }) {
     TCheckboxFormKey key = TCheckboxFormKey();
@@ -690,6 +713,7 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
         decoratorIcon: decoratorIcon,
         suffixIcon: suffixIcon,
         validationCallback: validationCallback,
+        saveWithErrorOptions: saveWithErrorOptions,
         onValueChanged: (bool? v) {
           onValueChanged?.call(v);
           onGroupValueChanged();
@@ -709,6 +733,7 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
     Widget? decoratorIcon,
     ValueChanged<DateTime?>? onValueChanged,
     String Function(DateTime?)? validationCallback,
+    TFormSaveWithErrorOptions<DateTime>? saveWithErrorOptions,
     bool? enabledOverride,
   }) {
     TDateTimeFormKey key = TDateTimeFormKey();
@@ -724,6 +749,7 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
         initialValue: initialValue,
         decoratorIcon: decoratorIcon,
         validationCallback: validationCallback,
+        saveWithErrorOptions: saveWithErrorOptions,
         onValueChanged: (DateTime? v) {
           onValueChanged?.call(v);
           onGroupValueChanged();
@@ -743,6 +769,7 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
     Widget? decoratorIcon,
     ValueChanged<DateTime?>? onValueChanged,
     String Function(DateTime?)? validationCallback,
+    TFormSaveWithErrorOptions<DateTime>? saveWithErrorOptions,
     bool? enabledOverride,
   }) {
     TDateTimeFormKey key = TDateTimeFormKey();
@@ -758,6 +785,7 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
         initialValue: initialValue,
         decoratorIcon: decoratorIcon,
         validationCallback: validationCallback,
+        saveWithErrorOptions: saveWithErrorOptions,
         onValueChanged: (DateTime? v) {
           onValueChanged?.call(v);
           onGroupValueChanged();
@@ -777,6 +805,7 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
     Widget? decoratorIcon,
     ValueChanged<DateTime?>? onValueChanged,
     String Function(DateTime?)? validationCallback,
+    TFormSaveWithErrorOptions<DateTime>? saveWithErrorOptions,
     bool? enabledOverride,
   }) {
     TDateTimeFormKey key = TDateTimeFormKey();
@@ -792,12 +821,21 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
         initialValue: initialValue,
         decoratorIcon: decoratorIcon,
         validationCallback: validationCallback,
+        saveWithErrorOptions: saveWithErrorOptions,
         onValueChanged: (DateTime? v) {
           onValueChanged?.call(v);
           onGroupValueChanged();
         },
       ),
     );
+  }
+
+  /// Removes a form and its key associated with the given [formName]. Usually
+  /// used when the form needs to be reinitialized with new data, or when the
+  /// entire group structure will be reworked
+  void removeForm(Field formName) {
+    _formKeys.remove(formName);
+    _forms.remove(formName);
   }
 
   /// A logical OR for each form's individual hasChanges flag
@@ -810,6 +848,11 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
     (TGenericFormKey key) => key.currentState?.hasErrors ?? false,
   );
 
+  /// A list of the save warning messages for each form's individual message
+  List<String> get errorSaveWarningMessages => _formKeys.values.map(
+    (TGenericFormKey key) => key.currentState?.errorSaveWarningMessage,
+  ).nonNulls.toList();
+
   /// Resets all form's initial values, effectively saving the new values
   void saveValues() {
     for (TGenericFormKey key in _formKeys.values) {
@@ -821,9 +864,10 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
   bool validate() {
     hasRequestedValidation = true;
     for (TGenericFormKey key in _formKeys.values) {
-      key.currentState?.validate();
       if (key is TGroupFormKey) {
         key.currentState?.manualValidate();
+      } else {
+        key.currentState?.validate();
       }
     }
     return !hasErrors;
@@ -861,39 +905,36 @@ abstract class TFormGroupWidget<
   }) : onSubmit = null, showSubmit = false, saving = false;
 }
 
-typedef TFormCompatibleGroup<Value> = TFormGroup<Value, Object?, TFormField>;
+typedef GenericGroupForm<Value> = TFormGroup<Value, Object?, TFormField>;
 
-typedef TFormCompatibleGroupBuilder<Value> = TFormCompatibleGroup<Value>
+typedef TFormGroupBuilder<Value, Group extends GenericGroupForm<Value>> = Group
     Function({
   required bool enabled,
-  required void Function(void Function())? setState,
+  required GroupSetState? setState,
   Value? initialData,
 });
 
-typedef TFormCompatibleGroupWidget<Value>
-    = TFormGroupWidget<TFormCompatibleGroup<Value>>;
-
-typedef TFormCompatibleGroupWidgetBuilder<Value>
-    = TFormCompatibleGroupWidget<Value> Function(
-  TFormCompatibleGroup<Value> form,
-);
+typedef TFormGroupWidgetBuilder<Value, Group extends GenericGroupForm<Value>>
+    = TFormGroupWidget<Group> Function(Group form);
 
 /// A key type for the standalone form that encapsulates the Group when it's
 /// being handled as a regular TForm
-typedef TGroupFormKey<Value> = GlobalKey<TGroupFormState<Value>>;
+typedef TGroupFormKey<Value, Group extends GenericGroupForm<Value>>
+    = GlobalKey<TGroupFormState<Value, Group>>;
 
 /// A version of this group that acts as its own standalone form, for when we
 /// need it to act as a single entity in a another form, for example
-class TGroupForm<Value> extends TForm<Value> {
+class TGroupForm<Value, Group extends GenericGroupForm<Value>>
+    extends TForm<Value> {
   /// The group instance
-  final TFormCompatibleGroup<Value> group;
+  final Group group;
 
   /// A builder that returns the Widget associated with the Group
-  final TFormCompatibleGroupWidgetBuilder<Value> groupWidgetBuilder;
+  final TFormGroupWidgetBuilder<Value, Group> groupWidgetBuilder;
 
   TGroupForm({
-    required TFormCompatibleGroupBuilder<Value> groupBuilder,
-    required void Function(void Function())? setState,
+    required TFormGroupBuilder<Value, Group> groupBuilder,
+    required GroupSetState? setState,
     required this.groupWidgetBuilder,
     required super.enabled,
     required super.initialValue,
@@ -907,11 +948,13 @@ class TGroupForm<Value> extends TForm<Value> {
     super(title: '');
 
   @override
-  TGroupFormState<Value> createState() => TGroupFormState<Value>();
+  TGroupFormState<Value, Group> createState() =>
+      TGroupFormState<Value, Group>();
 }
 
 /// And the state associated with the GroupForm above
-class TGroupFormState<Value> extends TFormState<Value, TGroupForm<Value>> {
+class TGroupFormState<Value, Group extends GenericGroupForm<Value>>
+    extends TFormState<Value, TGroupForm<Value, Group>> {
   /// A copy of validation function that must be manually called
   void manualValidate() => widget.group.validate();
 
@@ -934,12 +977,22 @@ class TGroupFormState<Value> extends TFormState<Value, TGroupForm<Value>> {
   bool get hasErrors => widget.group.hasErrors;
 
   @override
+  String get errorSaveWarningMessage =>
+      widget.group.errorSaveWarningMessages.join('\n');
+
+  @override
   Value? get value {
     try {
       return widget.group.makeEntity(null);
     } catch (err) {
       return null;
     }
+  }
+
+  @override
+  Value? saveValue() {
+    widget.group.saveValues();
+    return super.saveValue();
   }
 
   @override

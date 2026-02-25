@@ -23,6 +23,7 @@ class TFormCheckbox extends TForm<bool> {
     super.subtitle,
     super.errorMessage,
     super.suffixIcon,
+    super.saveWithErrorOptions,
     super.key,
   });
 

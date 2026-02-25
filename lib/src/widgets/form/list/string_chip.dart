@@ -32,6 +32,7 @@ class TFormStringListChip extends TFormList<String> {
     super.decoratorIcon,
     super.validationCallback,
     super.onValueChanged,
+    super.saveWithErrorOptions,
     super.key,
   });
 
