@@ -29,6 +29,7 @@ class TButtonIconAndLabelBuilder {
     bool forceDefaultIconColor = false,
     IconAlignment iconAlignment = IconAlignment.start,
     void Function()? onPressed,
+    TextStyle? textStyle,
     Key? key,
   }) {
     return _TButtonIconAndLabel(
@@ -36,6 +37,7 @@ class TButtonIconAndLabelBuilder {
       onPressed: onPressed,
       forceDefaultIconColor: forceDefaultIconColor,
       iconAlignment: iconAlignment,
+      textStyle: textStyle,
       text: text,
       key: key,
     );
@@ -262,10 +264,14 @@ class _TButtonIconAndLabel extends TButton {
   /// Determines whether the icon is positioned at the start or end of the label
   final IconAlignment iconAlignment;
 
+  /// The style that will be applied to the text rendered inside the label
+  final TextStyle? textStyle;
+
   const _TButtonIconAndLabel({
     required TIconInterface super.icon,
     required String super.text,
     this.iconAlignment = IconAlignment.start,
+    this.textStyle,
     super.onPressed,
     super.forceDefaultIconColor,
     super.key,
@@ -282,7 +288,7 @@ class _TButtonIconAndLabel extends TButton {
     super.onPressed,
     super.forceDefaultIconColor,
     super.key,
-  }) : super(text: textOverride ?? icon.text);
+  }) : textStyle = null, super(text: textOverride ?? icon.text);
 
   @override
   Widget build(BuildContext context) {
@@ -294,12 +300,14 @@ class _TButtonIconAndLabel extends TButton {
         backgroundColor:
             color == null ? null : WidgetStateProperty.all<Color>(color),
         foregroundColor: WidgetStateProperty.all<Color>(
-          color == null ? Theme.of(context).colorScheme.primary : Colors.white,
+          color == null
+            ? Theme.of(context).colorScheme.primary
+            : (textStyle?.color ?? Colors.white),
         ),
       ),
       onPressed: onPressed,
       icon: Icon(icon!.icon),
-      label: Text(text!),
+      label: Text(text!, style: textStyle),
     );
   }
 }
