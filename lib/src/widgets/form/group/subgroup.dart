@@ -87,6 +87,9 @@ abstract class TFormSubgroupListWidget<Subgroup extends TGenericSubgroup,
             // These properties are read straight from the subgroup
             title: subgroup.title,
             initiallyExpanded: subgroup.initiallyExpanded,
+            // If we have changes, we add a information text saying so
+            informationText:
+                form.subgroupHasChanges(subgroup) ? 'Has changes' : '',
             // We fallback to a default string if no custom text is provided
             validationErrorText: form.subgroupHasErrors(subgroup)
               ? validationErrorText.isNotEmpty
