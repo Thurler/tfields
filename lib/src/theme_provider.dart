@@ -106,11 +106,18 @@ class TThemedApp extends StatelessWidget {
   /// A function that properly builds the Theme used in the MaterialApp
   final TThemeBuilder themeBuilder;
 
+  /// The builder function that will be passed along to the MaterialApp
+  final Widget Function(
+    BuildContext context,
+    Widget? widget,
+  )? materialAppBuilder;
+
   const TThemedApp({
     required this.title,
     required this.home,
     required this.seedColor,
     required this.themeBuilder,
+    this.materialAppBuilder,
     super.key,
   });
 
@@ -126,6 +133,7 @@ class TThemedApp extends StatelessWidget {
           themeMode: themeProvider.themeMode,
           debugShowCheckedModeBanner: false,
           home: home,
+          builder: materialAppBuilder,
         ),
       ),
     );
