@@ -28,6 +28,10 @@ class TExpansionTile extends StatelessWidget {
   /// The cross-axis alignment to use for the expansion tile's children
   final CrossAxisAlignment crossAxisAlignment;
 
+  /// A minimum height to reserve for the title widget, usually used so that it
+  /// will not get resized when the suffix is rendered / hidden on demand
+  final double? titleMinHeight;
+
   const TExpansionTile({
     required this.title,
     required this.children,
@@ -35,24 +39,55 @@ class TExpansionTile extends StatelessWidget {
     this.maintainState = true,
     this.initiallyExpanded = false,
     this.crossAxisAlignment = CrossAxisAlignment.center,
+    this.titleMinHeight,
     this.leading,
     this.titleSuffix,
     super.key,
   });
 
-  TExpansionTile.withValidationErrorChip({
+  TExpansionTile.withInformationChip({
     required this.title,
     required this.children,
-    required String validationErrorText,
+    required String informationText,
     this.subtitle = '',
     this.maintainState = true,
     this.initiallyExpanded = false,
     this.crossAxisAlignment = CrossAxisAlignment.center,
     this.leading,
     super.key,
-  }) : titleSuffix = validationErrorText.isNotEmpty
-    ? _ValidationErrorChip(validationErrorText)
-    : null;
+  }) :
+    titleMinHeight = 35,
+    titleSuffix =
+        informationText.isNotEmpty ? _InformationChip(informationText) : null;
+
+  TExpansionTile.withValidationErrorChip({
+    required this.title,
+    required this.children,
+    required String validationErrorText,
+    String informationText = '',
+    this.subtitle = '',
+    this.maintainState = true,
+    this.initiallyExpanded = false,
+    this.crossAxisAlignment = CrossAxisAlignment.center,
+    this.leading,
+    super.key,
+  }) :
+    titleMinHeight = 35,
+    titleSuffix = switch (null) {
+      _ when (validationErrorText.isNotEmpty && informationText.isNotEmpty) =>
+        Wrap(
+          spacing: 10,
+          runSpacing: 10,
+          children: <Widget>[
+            _ValidationErrorChip(validationErrorText),
+            _InformationChip(informationText),
+          ],
+        ),
+      _ when validationErrorText.isNotEmpty =>
+        _ValidationErrorChip(validationErrorText),
+      _ when informationText.isNotEmpty => _InformationChip(informationText),
+      _ => null,
+    };
 
   @override
   Widget build(BuildContext context) {
@@ -72,18 +107,21 @@ class TExpansionTile extends StatelessWidget {
         borderRadius: const BorderRadius.all(Radius.circular(5)),
       ),
       leading: leading,
-      title: Row(
-        children: <Widget>[
-          Flexible(
-            child: Text(
-              title,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                fontWeight: FontWeight.bold,
+      title: ConstrainedBox(
+        constraints: BoxConstraints(minHeight: titleMinHeight ?? 0),
+        child: Row(
+          children: <Widget>[
+            Flexible(
+              child: Text(
+                title,
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ),
-          if (titleSuffix != null) titleSuffix!,
-        ].separateWith(const SizedBox(width: 10)),
+            if (titleSuffix != null) titleSuffix!,
+          ].separateWith(const SizedBox(width: 10)),
+        ),
       ),
       children: <Widget>[
         ColoredBox(
@@ -98,6 +136,29 @@ class TExpansionTile extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _InformationChip extends StatelessWidget {
+  final String informationText;
+
+  const _InformationChip(this.informationText);
+
+  @override
+  Widget build(BuildContext context) {
+    return Chip(
+      avatar: Icon(
+        Icons.info,
+        color: Theme.of(context).colorScheme.onPrimaryContainer,
+      ),
+      label: Text(
+        informationText,
+        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+          color: Theme.of(context).colorScheme.onPrimaryContainer,
+        ),
+      ),
+      backgroundColor: Theme.of(context).colorScheme.primaryContainer,
     );
   }
 }
