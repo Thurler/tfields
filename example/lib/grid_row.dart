@@ -190,7 +190,7 @@ class TGridRowShowcase extends StatelessWidget with TGridBreakpointAware {
         // complete control over the item structure at all screen sizes
         //
         // Note that unlike the row flex limit, item flex sizes propagate UP,
-        // so specifying MD will copy its value up to LG, XL and XXL, leaving
+        // so specifying MD will copy its value up to LG, XL and beyond, leaving
         // SM and XS with default values
         //
         // The exception to that are negative flexes, which also propagate DOWN

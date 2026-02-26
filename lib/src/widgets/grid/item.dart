@@ -26,7 +26,7 @@ typedef _NullSizeMap = Map<TGridBreakpoint, TGridSize?>;
 /// - md: 2 (inherited from sm)
 /// - lg: 3 (specified directly)
 /// - xl: 3 (inherited from lg)
-/// - xxl: 3 (inherited from xl)
+/// - xxl and beyond: 3 (inherited from xl)
 class TGridItem {
   /// By default, if nothing is specified, an item will be Flexible with a flex
   /// value of 1
@@ -50,6 +50,10 @@ class TGridItem {
     TGridSize? lg,
     TGridSize? xl,
     TGridSize? xxl,
+    TGridSize? xxxl,
+    TGridSize? fhd,
+    TGridSize? qhd,
+    TGridSize? uhd,
   }) {
     // Take the sizes and cascade them upwards as they are defined
     _NullSizeMap nullableSizes = <TGridBreakpoint, TGridSize?>{
@@ -59,6 +63,11 @@ class TGridItem {
       TGridBreakpoint.lg: lg ?? md ?? sm ?? xs,
       TGridBreakpoint.xl: xl ?? lg ?? md ?? sm ?? xs,
       TGridBreakpoint.xxl: xxl ?? xl ?? lg ?? md ?? sm ?? xs,
+      TGridBreakpoint.xxxl: xxxl ?? xxl ?? xl ?? lg ?? md ?? sm ?? xs,
+      TGridBreakpoint.fhd: fhd ?? xxxl ?? xl ?? lg ?? md ?? sm ?? xs,
+      TGridBreakpoint.qhd: qhd ?? fhd ?? xxxl ?? xl ?? lg ?? md ?? sm ?? xs,
+      TGridBreakpoint.uhd:
+          uhd ?? qhd ?? fhd ?? xxxl ?? xl ?? lg ?? md ?? sm ?? xs,
     };
     // Cascade any fills downwards too, in case we have nulls
     for (TGridBreakpoint point in TGridBreakpoint.values) {
@@ -86,7 +95,23 @@ class TGridItem {
     TGridSize? lg,
     TGridSize? xl,
     TGridSize? xxl,
-  }) : this(child: child, xs: xs, sm: sm, md: md, lg: lg, xl: xl, xxl: xxl);
+    TGridSize? xxxl,
+    TGridSize? fhd,
+    TGridSize? qhd,
+    TGridSize? uhd,
+  }) : this(
+    child: child,
+    xs: xs,
+    sm: sm,
+    md: md,
+    lg: lg,
+    xl: xl,
+    xxl: xxl,
+    xxxl: xxxl,
+    fhd: fhd,
+    qhd: qhd,
+    uhd: uhd,
+  );
 
   /// Assigns the same size to all possible TGridBreakpoints
   TGridItem.fixedSize({required Widget child, required TGridSize size}) :

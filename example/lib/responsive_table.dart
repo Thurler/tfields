@@ -283,7 +283,7 @@ class BreakpointBasedTable
     // - xs/sm: Just name and a summary status column
     // - md: Add price (status column still visible)
     // - lg: Replace status with separate stock and category columns
-    // - xl/xxl: All columns visible
+    // - xl/xxl/beyond: All columns visible
     xsColumns: xsColumns,
     mdColumns: mdColumns,
     lgColumns: lgColumns,

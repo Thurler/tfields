@@ -21,7 +21,7 @@ import 'package:tfields/src/widgets/grid/item.dart';
 /// - md: 2 (inherited from sm)
 /// - lg: 3 (specified directly)
 /// - xl: 3 (inherited from lg)
-/// - xxl: 3 (inherited from xl)
+/// - xxl and beyond: 3 (inherited from xl)
 class TGridColumn extends TGridItem {
   TGridColumn({
     required List<Widget> children,
@@ -32,6 +32,10 @@ class TGridColumn extends TGridItem {
     super.lg,
     super.xl,
     super.xxl,
+    super.xxxl,
+    super.fhd,
+    super.qhd,
+    super.uhd,
   }) : super(
     child: Column(crossAxisAlignment: crossAxisAlignment, children: children),
   );
@@ -47,6 +51,10 @@ class TGridColumn extends TGridItem {
     super.lg,
     super.xl,
     super.xxl,
+    super.xxxl,
+    super.fhd,
+    super.qhd,
+    super.uhd,
   }) : super.bootstrap(child: Column(children: children));
 
   /// Assigns the same size to all possible GridBreakpoints

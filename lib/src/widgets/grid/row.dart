@@ -14,6 +14,10 @@ class TGridRowLimits {
   final int? _lg;
   final int? _xl;
   final int? _xxl;
+  final int? _xxxl;
+  final int? _fhd;
+  final int? _qhd;
+  final int? _uhd;
 
   const TGridRowLimits({
     int? xs,
@@ -22,25 +26,83 @@ class TGridRowLimits {
     int? lg,
     int? xl,
     int? xxl,
-  }) : _xs = xs, _sm = sm, _md = md, _lg = lg, _xl = xl, _xxl = xxl;
+  }) :
+    _xs = xs,
+    _sm = sm,
+    _md = md,
+    _lg = lg,
+    _xl = xl,
+    _xxl = xxl,
+    _xxxl = xxl,
+    _fhd = xxl,
+    _qhd = xxl,
+    _uhd = xxl;
+
+  const TGridRowLimits.expanded({
+    int? xs,
+    int? sm,
+    int? md,
+    int? lg,
+    int? xl,
+    int? xxl,
+    int? xxxl,
+    int? fhd,
+    int? qhd,
+    int? uhd,
+  }) :
+    _xs = xs,
+    _sm = sm,
+    _md = md,
+    _lg = lg,
+    _xl = xl,
+    _xxl = xxl,
+    _xxxl = xxxl,
+    _fhd = fhd,
+    _qhd = qhd,
+    _uhd = uhd;
+
+  /// The flex limit for UHD screen size
+  int? get uhd => _uhd;
+
+  /// The flex limit for QHD screen size
+  int? get qhd => _qhd ?? uhd;
+
+  /// The flex limit for FHD screen size
+  int? get fhd => _fhd ?? qhd;
+
+  /// The flex limit for XXXL screen size
+  int? get xxxl => _xxxl ?? fhd;
 
   /// The flex limit for XXL screen size
-  int? get xxl => _xxl;
+  int? get xxl => _xxl ?? xxxl;
 
   /// The flex limit for XL screen size
-  int? get xl => _xl ?? _xxl;
+  int? get xl => _xl ?? xxl;
 
   /// The flex limit for LG screen size
-  int? get lg => _lg ?? _xl ?? _xxl;
+  int? get lg => _lg ?? xl;
 
   /// The flex limit for MD screen size
-  int? get md => _md ?? _lg ?? _xl ?? _xxl;
+  int? get md => _md ?? lg;
 
   /// The flex limit for SM screen size
-  int? get sm => _sm ?? _md ?? _lg ?? _xl ?? _xxl;
+  int? get sm => _sm ?? md;
 
   /// The flex limit for XS screen size
-  int? get xs => _xs ?? _sm ?? _md ?? _lg ?? _xl ?? _xxl;
+  int? get xs => _xs ?? sm;
+
+  int? operator [](TGridBreakpoint breakpoint) => switch (breakpoint) {
+    TGridBreakpoint.xs => xs,
+    TGridBreakpoint.sm => sm,
+    TGridBreakpoint.md => md,
+    TGridBreakpoint.lg => lg,
+    TGridBreakpoint.xl => xl,
+    TGridBreakpoint.xxl => xxl,
+    TGridBreakpoint.xxxl => xxxl,
+    TGridBreakpoint.fhd => fhd,
+    TGridBreakpoint.qhd => qhd,
+    TGridBreakpoint.uhd => uhd,
+  };
 }
 
 /// A wrapper around StatelessWidget for a real TGridItem. Will wrap the
@@ -160,20 +222,58 @@ class TGridRow extends StatelessWidget with TGridBreakpointAware {
   }) :
     _usingBootstrapLogic = false,
     _forceIntrinsicHeight = forceIntrinsicHeight {
-    // Map the given flexes to the sizes, cascading them downwards as they are
-    // defined
-    _allowedFlexes = <TGridBreakpoint, int?>{
-      TGridBreakpoint.xxl: limits?.xxl ?? xxlFlexLimit,
-      TGridBreakpoint.xl: limits?.xl ?? xlFlexLimit ?? xxlFlexLimit,
-      TGridBreakpoint.lg:
-          limits?.lg ?? lgFlexLimit ?? xlFlexLimit ?? xxlFlexLimit,
-      TGridBreakpoint.md: limits?.md ?? mdFlexLimit ?? lgFlexLimit ??
-          xlFlexLimit ?? xxlFlexLimit,
-      TGridBreakpoint.sm: limits?.sm ?? smFlexLimit ?? mdFlexLimit ??
-          lgFlexLimit ?? xlFlexLimit ?? xxlFlexLimit,
-      TGridBreakpoint.xs: limits?.xs ?? xsFlexLimit ?? smFlexLimit ??
-          mdFlexLimit ?? lgFlexLimit ?? xlFlexLimit ?? xxlFlexLimit,
-    };
+    _initFlexesFromLimits(
+      limits,
+      TGridRowLimits(
+        xs: xsFlexLimit,
+        sm: smFlexLimit,
+        md: mdFlexLimit,
+        lg: lgFlexLimit,
+        xl: xlFlexLimit,
+        xxl: xxlFlexLimit,
+      ),
+    );
+  }
+
+  /// Allows specification of sizes beyond the standard xxl breakpoint, going
+  /// all the way to UHD (4K) breakpoints. More useful for desktop applications
+  TGridRow.withExpandedSizes({
+    required this.children,
+    this.mainAxisAlignment = MainAxisAlignment.start,
+    this.crossAxisAlignment = CrossAxisAlignment.center,
+    this.horizontalSpacer = const SizedBox(width: 20),
+    this.verticalSpacer = const SizedBox(height: 20),
+    bool forceIntrinsicHeight = false,
+    TGridRowLimits? limits,
+    int? xsFlexLimit,
+    int? smFlexLimit,
+    int? mdFlexLimit,
+    int? lgFlexLimit,
+    int? xlFlexLimit,
+    int? xxlFlexLimit,
+    int? xxxlFlexLimit,
+    int? fhdFlexLimit,
+    int? qhdFlexLimit,
+    int? uhdFlexLimit,
+    super.key,
+  }) :
+    _usingBootstrapLogic = false,
+    _forceIntrinsicHeight = forceIntrinsicHeight {
+    _initFlexesFromLimits(
+      limits,
+      TGridRowLimits.expanded(
+        xs: xsFlexLimit,
+        sm: smFlexLimit,
+        md: mdFlexLimit,
+        lg: lgFlexLimit,
+        xl: xlFlexLimit,
+        xxl: xxlFlexLimit,
+        xxxl: xxxlFlexLimit,
+        fhd: fhdFlexLimit,
+        qhd: qhdFlexLimit,
+        uhd: uhdFlexLimit,
+      ),
+    );
   }
 
   /// Specify the flex limit for every size should be 12, and that specific
@@ -192,6 +292,17 @@ class TGridRow extends StatelessWidget with TGridBreakpointAware {
     _allowedFlexes = <TGridBreakpoint, int?>{
       for (TGridBreakpoint point in TGridBreakpoint.values) point: 12,
     };
+
+  /// Takes the provided joined limits and split limits and combines them into
+  /// the final flex limits
+  void _initFlexesFromLimits(TGridRowLimits? joined, TGridRowLimits split) {
+    // Map the given flexes to the sizes, cascading them downwards as they are
+    // defined
+    _allowedFlexes = <TGridBreakpoint, int?>{
+      for (TGridBreakpoint breakpoint in TGridBreakpoint.values)
+        breakpoint: joined?[breakpoint] ?? split[breakpoint],
+    };
+  }
 
   @override
   Widget build(BuildContext context) {

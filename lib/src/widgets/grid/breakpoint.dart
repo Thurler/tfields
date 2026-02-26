@@ -9,7 +9,11 @@ enum TGridBreakpoint implements Comparable<TGridBreakpoint> {
   md(768),
   lg(992),
   xl(1200),
-  xxl(1440);
+  xxl(1440),
+  xxxl(1600),
+  fhd(1920),
+  qhd(2560),
+  uhd(3840);
 
   /// How many pixels will be used as a threshold for the viewport width
   final int width;
