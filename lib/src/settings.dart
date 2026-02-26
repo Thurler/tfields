@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tfields/settings.dart';
 import 'package:tfields/src/logger.dart';
 
 /// The common app settings, holding common flags that control how it behaves
@@ -53,4 +54,12 @@ class TCommonSettings {
     'checkUpdates': checkUpdates,
     'themeMode': themeMode.name,
   };
+}
+
+/// The theme provider that applies the common settings to it, so that other
+/// projects that don't have custom settings don't have to implement this
+class CommonSettingsThemeProvider
+    extends TSettingsThemeProvider<TCommonSettings>
+    with TSettingsJsonReader<TCommonSettings>, TCommonSettingsDeserializer {
+  CommonSettingsThemeProvider(super.seedColor);
 }
