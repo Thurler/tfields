@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tfields/src/extensions/iterable.dart';
+import 'package:tfields/src/widgets/icon_chip.dart';
 
 /// A simplification of ExpansionTile with standardized border and text handling
 class TExpansionTile extends StatelessWidget {
@@ -57,8 +58,9 @@ class TExpansionTile extends StatelessWidget {
     super.key,
   }) :
     titleMinHeight = 35,
-    titleSuffix =
-        informationText.isNotEmpty ? _InformationChip(informationText) : null;
+    titleSuffix = informationText.isNotEmpty
+      ? TIconChip.information(informationText)
+      : null;
 
   TExpansionTile.withValidationErrorChip({
     required this.title,
@@ -79,13 +81,14 @@ class TExpansionTile extends StatelessWidget {
           spacing: 10,
           runSpacing: 10,
           children: <Widget>[
-            _ValidationErrorChip(validationErrorText),
-            _InformationChip(informationText),
+            TIconChip.warning(validationErrorText),
+            TIconChip.information(informationText),
           ],
         ),
       _ when validationErrorText.isNotEmpty =>
-        _ValidationErrorChip(validationErrorText),
-      _ when informationText.isNotEmpty => _InformationChip(informationText),
+        TIconChip.warning(validationErrorText),
+      _ when informationText.isNotEmpty =>
+        TIconChip.information(informationText),
       _ => null,
     };
 
@@ -136,52 +139,6 @@ class TExpansionTile extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _InformationChip extends StatelessWidget {
-  final String informationText;
-
-  const _InformationChip(this.informationText);
-
-  @override
-  Widget build(BuildContext context) {
-    return Chip(
-      avatar: Icon(
-        Icons.info,
-        color: Theme.of(context).colorScheme.onPrimaryContainer,
-      ),
-      label: Text(
-        informationText,
-        style: Theme.of(context).textTheme.labelLarge?.copyWith(
-          color: Theme.of(context).colorScheme.onPrimaryContainer,
-        ),
-      ),
-      backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-    );
-  }
-}
-
-class _ValidationErrorChip extends StatelessWidget {
-  final String validationErrorText;
-
-  const _ValidationErrorChip(this.validationErrorText);
-
-  @override
-  Widget build(BuildContext context) {
-    return Chip(
-      avatar: Icon(
-        Icons.warning,
-        color: Theme.of(context).colorScheme.onErrorContainer,
-      ),
-      label: Text(
-        validationErrorText,
-        style: Theme.of(context).textTheme.labelLarge?.copyWith(
-          color: Theme.of(context).colorScheme.onErrorContainer,
-        ),
-      ),
-      backgroundColor: Theme.of(context).colorScheme.errorContainer,
     );
   }
 }
