@@ -329,11 +329,11 @@ class TFormNumberState<I, T extends TFormNumber<I>> extends TFormState<I, T> {
     // propagated to the form's callbacks
     _controller.addListener(() {
       I? newValue = widget.tryParse(_controller.text.split(',').join());
-      widget.onValueChanged?.call(newValue);
       // We explicitly call super.value here to avoid a recursion with the
       // custom setter above, since that changes the controller's value, which
       // would just call this again infinitely
       super.value = newValue;
+      widget.onValueChanged?.call(newValue);
     });
   }
 
