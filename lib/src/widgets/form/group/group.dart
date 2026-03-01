@@ -959,7 +959,12 @@ class TGroupFormState<Value, Group extends GenericGroupForm<Value>>
   void manualValidate() => widget.group.validate();
 
   /// A manual setState call to force the group to redraw itself
-  void redrawGroup() => setState(() {});
+  void redrawGroup(void Function(Duration)? postFrameCallback) {
+    if (postFrameCallback != null) {
+      WidgetsBinding.instance.addPostFrameCallback(postFrameCallback);
+    }
+    setState(() {});
+  }
 
   @override
   set enabled(bool newValue) {
