@@ -96,6 +96,7 @@ abstract class TFormSubgroupListWidget<Subgroup extends TGenericSubgroup,
                 ? validationErrorText
                 : 'Has errors'
               : '',
+            backgroundColor: Theme.of(context).colorScheme.surface,
             children: buildSubgroup(subgroup, context),
           ),
         ),
