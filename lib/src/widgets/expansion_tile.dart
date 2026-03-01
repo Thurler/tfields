@@ -33,6 +33,9 @@ class TExpansionTile extends StatelessWidget {
   /// will not get resized when the suffix is rendered / hidden on demand
   final double? titleMinHeight;
 
+  /// The background color to be used in the [ExpansionTile] widget
+  final Color? backgroundColor;
+
   const TExpansionTile({
     required this.title,
     required this.children,
@@ -41,6 +44,7 @@ class TExpansionTile extends StatelessWidget {
     this.initiallyExpanded = false,
     this.crossAxisAlignment = CrossAxisAlignment.center,
     this.titleMinHeight,
+    this.backgroundColor,
     this.leading,
     this.titleSuffix,
     super.key,
@@ -54,6 +58,7 @@ class TExpansionTile extends StatelessWidget {
     this.maintainState = true,
     this.initiallyExpanded = false,
     this.crossAxisAlignment = CrossAxisAlignment.center,
+    this.backgroundColor,
     this.leading,
     super.key,
   }) :
@@ -71,6 +76,7 @@ class TExpansionTile extends StatelessWidget {
     this.maintainState = true,
     this.initiallyExpanded = false,
     this.crossAxisAlignment = CrossAxisAlignment.center,
+    this.backgroundColor,
     this.leading,
     super.key,
   }) :
@@ -97,6 +103,8 @@ class TExpansionTile extends StatelessWidget {
     return ExpansionTile(
       maintainState: maintainState,
       initiallyExpanded: initiallyExpanded,
+      backgroundColor: backgroundColor,
+      collapsedBackgroundColor: backgroundColor,
       collapsedShape: RoundedRectangleBorder(
         side: BorderSide(
           color: Theme.of(context).colorScheme.inverseSurface.withAlpha(127),
