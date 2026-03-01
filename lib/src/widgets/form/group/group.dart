@@ -958,6 +958,9 @@ class TGroupFormState<Value, Group extends GenericGroupForm<Value>>
   /// A copy of validation function that must be manually called
   void manualValidate() => widget.group.validate();
 
+  /// A manual setState call to force the group to redraw itself
+  void redrawGroup() => setState(() {});
+
   @override
   set enabled(bool newValue) {
     super.enabled = newValue;
