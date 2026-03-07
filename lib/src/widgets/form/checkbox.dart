@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tfields/src/mixins/icon_updateable_form.dart';
 import 'package:tfields/src/widgets/clickable.dart';
 import 'package:tfields/src/widgets/form/base.dart';
 import 'package:tfields/src/widgets/input_decoration.dart';
@@ -31,7 +32,10 @@ class TFormCheckbox extends TForm<bool> {
   TFormCheckboxState createState() => TFormCheckboxState();
 }
 
-class TFormCheckboxState extends TFormState<bool, TFormCheckbox> {
+class TFormCheckboxState extends TFormState<bool, TFormCheckbox>
+    with
+        DecoratorIconUpdateableForm<bool, TFormCheckbox>,
+        SuffixIconUpdateableForm<bool, TFormCheckbox> {
   /// A controller that will display the fixed checkbox text
   final TextEditingController controller = TextEditingController();
 
@@ -63,10 +67,10 @@ class TFormCheckboxState extends TFormState<bool, TFormCheckbox> {
             onChanged:
                 enabled && !readonly ? (_) => _updateValue(!value!) : null,
           ),
-          suffixIcon: widget.suffixIcon,
+          suffixIcon: suffixIcon,
           labelText: title,
           helperText: subtitle,
-          icon: widget.decoratorIcon,
+          icon: decoratorIcon,
         ),
         autovalidateMode: AutovalidateMode.always,
         validator: (_) => errorMessage.isNotEmpty ? errorMessage : null,

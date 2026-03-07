@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:tfields/src/extensions/double.dart';
 import 'package:tfields/src/extensions/int.dart';
 import 'package:tfields/src/input_formatters/number.dart';
+import 'package:tfields/src/mixins/icon_updateable_form.dart';
 import 'package:tfields/src/widgets/form/base.dart';
 import 'package:tfields/src/widgets/input_decoration.dart';
 
@@ -224,7 +225,8 @@ class TFormDouble extends TFormNumber<double> {
 
 /// The state that controls the additional functionality added by
 /// TFormNumber
-class TFormNumberState<I, T extends TFormNumber<I>> extends TFormState<I, T> {
+class TFormNumberState<I, T extends TFormNumber<I>>
+    extends IconUpdateableTFormState<I, T> {
   /// The controller that the user will interact with
   final TextEditingController _controller = TextEditingController();
 
@@ -349,9 +351,9 @@ class TFormNumberState<I, T extends TFormNumber<I>> extends TFormState<I, T> {
         enabled: enabled,
         labelText: title,
         helperText: subtitle,
-        icon: widget.decoratorIcon,
-        prefixIcon: widget.prefixIcon,
-        suffixIcon: widget.suffixIcon,
+        icon: decoratorIcon,
+        prefixIcon: prefixIcon,
+        suffixIcon: suffixIcon,
       ),
       autovalidateMode: AutovalidateMode.always,
       validator: (_) => errorMessage.isNotEmpty ? errorMessage : null,

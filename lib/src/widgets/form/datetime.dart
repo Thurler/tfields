@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tfields/src/mixins/icon_updateable_form.dart';
 import 'package:tfields/src/widgets/button.dart';
 import 'package:tfields/src/widgets/form/base.dart';
 import 'package:tfields/src/widgets/icons.dart';
@@ -287,7 +288,8 @@ class _TFormDateAndTime extends TFormDateTime {
 }
 
 /// The associated state with an TFormDateTime
-class TFormDateTimeState extends TFormState<DateTime, TFormDateTime> {
+class TFormDateTimeState extends TFormState<DateTime, TFormDateTime>
+    with DecoratorIconUpdateableForm<DateTime, TFormDateTime> {
   /// The controller that will store the string representation of the selected
   /// date and time
   final TextEditingController _controller = TextEditingController();
@@ -328,7 +330,7 @@ class TFormDateTimeState extends TFormState<DateTime, TFormDateTime> {
         labelText: title,
         helperText: subtitle,
         hintText: widget.hintText,
-        icon: widget.decoratorIcon,
+        icon: decoratorIcon,
         prefixIcon: TButton.iconOnly(
           icon: TIcon(icon: widget.icon),
           text: widget.hintText,

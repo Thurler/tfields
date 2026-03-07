@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:tfields/src/mixins/icon_updateable_form.dart';
 import 'package:tfields/src/widgets/button.dart';
 import 'package:tfields/src/widgets/form/base.dart';
 import 'package:tfields/src/widgets/icons.dart';
@@ -74,7 +75,7 @@ class TFormString extends TForm<String> {
 }
 
 /// The StringForm's internal state
-class TFormStringState extends TFormState<String, TFormString> {
+class TFormStringState extends IconUpdateableTFormState<String, TFormString> {
   /// The controller that the user will interact with
   final TextEditingController _controller = TextEditingController();
 
@@ -119,9 +120,9 @@ class TFormStringState extends TFormState<String, TFormString> {
         labelText: title,
         helperText: subtitle,
         hintText: widget.hintText,
-        icon: widget.decoratorIcon,
-        prefixIcon: widget.prefixIcon,
-        suffixIcon: widget.suffixIcon,
+        icon: decoratorIcon,
+        prefixIcon: prefixIcon,
+        suffixIcon: suffixIcon,
       ),
       autovalidateMode: AutovalidateMode.always,
       validator: (_) => errorMessage.isNotEmpty ? errorMessage : null,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tfields/src/extensions/iterable.dart';
+import 'package:tfields/src/mixins/icon_updateable_form.dart';
 import 'package:tfields/src/widgets/chip_list.dart';
 import 'package:tfields/src/widgets/form/base.dart';
 import 'package:tfields/src/widgets/form/dropdown.dart';
@@ -118,7 +119,11 @@ class TFormDropdownListChip<T> extends TFormList<T> {
 }
 
 class TFormDropdownListChipState<T>
-    extends TFormListState<T, TFormDropdownListChip<T>> {
+    extends TFormListState<T, TFormDropdownListChip<T>>
+    with
+        DecoratorIconUpdateableForm<List<T>, TFormDropdownListChip<T>>,
+        PrefixIconUpdateableForm<List<T>, TFormDropdownListChip<T>>,
+        SuffixIconUpdateableForm<List<T>, TFormDropdownListChip<T>> {
   /// The base dropdown that will be used for user input
   late final TFormDropdown<T> _dropdown;
 
@@ -268,9 +273,9 @@ class TFormDropdownListChipState<T>
           options: _currentOptions.toList(),
           toDropdownText: widget.toDropdownText,
           sortLogic: widget.sortLogic,
-          decoratorIcon: widget.decoratorIcon,
-          prefixIcon: widget.prefixIcon,
-          suffixIcon: widget.suffixIcon,
+          decoratorIcon: decoratorIcon,
+          prefixIcon: prefixIcon,
+          suffixIcon: suffixIcon,
           otherOptionForm: widget.otherOptionForm!,
           otherOptionPlaceholder: widget.otherOptionPlaceholder != null
             ? widget.otherOptionPlaceholder!

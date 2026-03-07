@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tfields/src/extensions/iterable.dart';
+import 'package:tfields/src/mixins/icon_updateable_form.dart';
 import 'package:tfields/src/widgets/form/base.dart';
 import 'package:tfields/src/widgets/input_decoration.dart';
 
@@ -111,7 +112,8 @@ class TFormDropdown<T> extends TForm<T> {
 }
 
 /// The DropdownForm's internal state
-class TFormDropdownState<T> extends TFormState<T, TFormDropdown<T>> {
+class TFormDropdownState<T>
+    extends IconUpdateableTFormState<T, TFormDropdown<T>> {
   /// The key used to communicate with Flutter's dropdown's state
   final GlobalKey<FormFieldState<T>> _formState =
       GlobalKey<FormFieldState<T>>();
@@ -216,9 +218,9 @@ class TFormDropdownState<T> extends TFormState<T, TFormDropdown<T>> {
         enabled: enabled,
         labelText: title,
         helperText: subtitle,
-        icon: widget.decoratorIcon,
-        prefixIcon: widget.prefixIcon,
-        suffixIcon: widget.suffixIcon,
+        icon: decoratorIcon,
+        prefixIcon: prefixIcon,
+        suffixIcon: suffixIcon,
       ),
       autovalidateMode: AutovalidateMode.always,
       validator: (_) => errorMessage.isNotEmpty ? errorMessage : null,

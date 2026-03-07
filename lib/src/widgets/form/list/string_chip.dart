@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tfields/src/extensions/iterable.dart';
+import 'package:tfields/src/mixins/icon_updateable_form.dart';
 import 'package:tfields/src/widgets/button.dart';
 import 'package:tfields/src/widgets/form/list/list.dart';
 import 'package:tfields/src/widgets/input_decoration.dart';
@@ -41,7 +42,10 @@ class TFormStringListChip extends TFormList<String> {
 }
 
 class TFormStringListChipState
-    extends TFormListState<String, TFormStringListChip> {
+    extends TFormListState<String, TFormStringListChip>
+    with
+        DecoratorIconUpdateableForm<List<String>, TFormStringListChip>,
+        SuffixIconUpdateableForm<List<String>, TFormStringListChip> {
   /// The controller that the user will interact with
   final TextEditingController _controller = TextEditingController();
 
@@ -139,8 +143,8 @@ class TFormStringListChipState
         labelText: title,
         helperText: subtitle,
         errorText: errorMessage.isNotEmpty ? errorMessage : null,
-        icon: widget.decoratorIcon,
-        suffixIcon: widget.suffixIcon,
+        icon: decoratorIcon,
+        suffixIcon: suffixIcon,
       ),
       isEmpty:
           !hasChips && _controller.text.isEmpty && !_textFormFocus.hasFocus,
