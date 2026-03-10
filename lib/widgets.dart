@@ -48,6 +48,7 @@ export 'src/widgets/save_button.dart';
 export 'src/widgets/switch.dart';
 export 'src/widgets/table/paginated.dart';
 export 'src/widgets/table/responsive.dart';
+export 'src/widgets/text_overflow_tooltip.dart';
 export 'src/widgets/theme_switch.dart';
 export 'src/widgets/title_divider.dart';
 export 'src/widgets/update_status.dart';

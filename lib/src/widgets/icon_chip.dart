@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tfields/src/widgets/text_overflow_tooltip.dart';
 
 /// A wrapper around a Chip that contains an icon and a text next to each other,
 /// similar to TIconText but wrapped inside a Chip
@@ -77,7 +78,7 @@ class TIconChip extends StatelessWidget {
           MainAxisSize.max => double.infinity,
           MainAxisSize.min => null,
         },
-        child: Text(
+        child: TextOverflowTooltip(
           text,
           style: Theme.of(context).textTheme.labelLarge?.copyWith(
             color: _textColor(context),
