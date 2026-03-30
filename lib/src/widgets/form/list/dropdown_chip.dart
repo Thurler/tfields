@@ -181,22 +181,22 @@ class TFormDropdownListChipState<T>
   }
 
   @override
-  set decoratorIcon(Widget? newValue) => setState(() {
+  set decoratorIcon(Widget? newValue) {
     _dropdownKey.currentState?.decoratorIcon = newValue;
     super.decoratorIcon = newValue;
-  });
+  }
 
   @override
-  set prefixIcon(Widget? newValue) => setState(() {
+  set prefixIcon(Widget? newValue) {
     _dropdownKey.currentState?.prefixIcon = newValue;
     super.prefixIcon = newValue;
-  });
+  }
 
   @override
-  set suffixIcon(Widget? newValue) => setState(() {
+  set suffixIcon(Widget? newValue) {
     _dropdownKey.currentState?.suffixIcon = newValue;
     super.suffixIcon = newValue;
-  });
+  }
 
   @override
   void validate() {
