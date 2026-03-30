@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tfields/src/extensions/iterable.dart';
 import 'package:tfields/src/widgets/icon_chip.dart';
+import 'package:tfields/src/widgets/text_overflow_tooltip.dart';
 
 /// A simplification of ExpansionTile with standardized border and text handling
 class TExpansionTile extends StatelessWidget {
@@ -13,8 +13,19 @@ class TExpansionTile extends StatelessWidget {
   /// The widget to draw before the title in the expansion header
   final Widget? leading;
 
+  /// The widget to draw just before the expansion arrow in the expansion header
+  final Widget? trailing;
+
   /// The widget to draw after the title in the expansion header
   final Widget? titleSuffix;
+
+  /// The border to use for when the expansion tile is collapsed. Defaults to
+  /// [ColorScheme.inverseSurface] with 127 alpha
+  final ShapeBorder? collapsedBorder;
+
+  /// The border to use for when the expansion tile is expanded. Defaults to
+  /// [ColorScheme.inverseSurface] with 200 alpha
+  final ShapeBorder? expandedBorder;
 
   /// The children to display once the widget is expanded
   final List<Widget> children;
@@ -43,10 +54,13 @@ class TExpansionTile extends StatelessWidget {
     this.maintainState = true,
     this.initiallyExpanded = false,
     this.crossAxisAlignment = CrossAxisAlignment.center,
+    this.leading,
+    this.trailing,
+    this.titleSuffix,
+    this.collapsedBorder,
+    this.expandedBorder,
     this.titleMinHeight,
     this.backgroundColor,
-    this.leading,
-    this.titleSuffix,
     super.key,
   });
 
@@ -59,7 +73,10 @@ class TExpansionTile extends StatelessWidget {
     this.initiallyExpanded = false,
     this.crossAxisAlignment = CrossAxisAlignment.center,
     this.backgroundColor,
+    this.collapsedBorder,
+    this.expandedBorder,
     this.leading,
+    this.trailing,
     super.key,
   }) :
     titleMinHeight = 35,
@@ -77,7 +94,10 @@ class TExpansionTile extends StatelessWidget {
     this.initiallyExpanded = false,
     this.crossAxisAlignment = CrossAxisAlignment.center,
     this.backgroundColor,
+    this.collapsedBorder,
+    this.expandedBorder,
     this.leading,
+    this.trailing,
     super.key,
   }) :
     titleMinHeight = 35,
@@ -123,15 +143,23 @@ class TExpansionTile extends StatelessWidget {
         child: Row(
           children: <Widget>[
             Flexible(
-              child: Text(
+              child: TTextOverflowTooltip(
                 title,
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            if (titleSuffix != null) titleSuffix!,
-          ].separateWith(const SizedBox(width: 10)),
+            if (titleSuffix != null)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: titleSuffix,
+              ),
+            if (trailing != null) ...<Widget>[
+              const Expanded(child: SizedBox(width: double.infinity)),
+              trailing!,
+            ],
+          ],
         ),
       ),
       children: <Widget>[
