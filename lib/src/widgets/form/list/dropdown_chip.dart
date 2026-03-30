@@ -181,6 +181,24 @@ class TFormDropdownListChipState<T>
   }
 
   @override
+  set decoratorIcon(Widget? newValue) => setState(() {
+    _dropdownKey.currentState?.decoratorIcon = newValue;
+    super.decoratorIcon = newValue;
+  });
+
+  @override
+  set prefixIcon(Widget? newValue) => setState(() {
+    _dropdownKey.currentState?.prefixIcon = newValue;
+    super.prefixIcon = newValue;
+  });
+
+  @override
+  set suffixIcon(Widget? newValue) => setState(() {
+    _dropdownKey.currentState?.suffixIcon = newValue;
+    super.suffixIcon = newValue;
+  });
+
+  @override
   void validate() {
     super.validate();
     // Because the error message is displayed in the inner dropdown, we
@@ -313,9 +331,9 @@ class TFormDropdownListChipState<T>
           toDropdownText: widget.toDropdownText,
           isOptionEnabledCallback: widget.isOptionEnabledCallback,
           sortLogic: widget.sortLogic,
-          decoratorIcon: widget.decoratorIcon,
-          prefixIcon: widget.prefixIcon,
-          suffixIcon: widget.suffixIcon,
+          decoratorIcon: decoratorIcon,
+          prefixIcon: prefixIcon,
+          suffixIcon: suffixIcon,
           // There's no need to double validate, just display this form's error
           // message
           validationCallback: (_) => errorMessage,
