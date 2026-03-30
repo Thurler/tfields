@@ -78,7 +78,7 @@ class TIconChip extends StatelessWidget {
           MainAxisSize.max => double.infinity,
           MainAxisSize.min => null,
         },
-        child: TextOverflowTooltip(
+        child: TTextOverflowTooltip(
           text,
           style: Theme.of(context).textTheme.labelLarge?.copyWith(
             color: _textColor(context),

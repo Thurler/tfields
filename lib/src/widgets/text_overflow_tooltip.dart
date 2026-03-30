@@ -3,20 +3,20 @@ import 'package:flutter/material.dart';
 /// A [Text] that wraps itself around a [Tooltip] when it overflows the
 /// available width in the render tree, making sure ellipsis overflow is used
 /// and a tooltip with the whole text is displayed when overflowing
-class TextOverflowTooltip extends StatefulWidget {
+class TTextOverflowTooltip extends StatefulWidget {
   /// The text to be displayed
   final String text;
 
   /// The optional text style to use
   final TextStyle? style;
 
-  const TextOverflowTooltip(this.text, {this.style, super.key});
+  const TTextOverflowTooltip(this.text, {this.style, super.key});
 
   @override
-  State<StatefulWidget> createState() => _TextOverflowTooltipState();
+  State<StatefulWidget> createState() => _TTextOverflowTooltipState();
 }
 
-class _TextOverflowTooltipState extends State<TextOverflowTooltip>
+class _TTextOverflowTooltipState extends State<TTextOverflowTooltip>
     with WidgetsBindingObserver {
   final GlobalKey _textKey = GlobalKey();
   bool _isOverflowing = false;
