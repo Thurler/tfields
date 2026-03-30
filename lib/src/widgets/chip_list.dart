@@ -41,6 +41,10 @@ class TChipList<T> extends StatelessWidget {
   /// The function to convert the displayed data into a String
   final String Function(T) dataToString;
 
+  /// An optional function to provide tooltip text for each chip. Its a function
+  /// because the tooltip may depend on the data of each chip
+  final String Function(T)? chipTooltip;
+
   /// Defines how sorting should be performed in the chip elements. Defaults
   /// to ordering by the text value provided by the `dataToString` function
   final TChipSortLogic sortLogic;
@@ -54,6 +58,7 @@ class TChipList<T> extends StatelessWidget {
     this.sortLogic = TChipSortLogic.text,
     this.deleteCallback,
     this.icon,
+    this.chipTooltip,
     super.key,
   });
 
@@ -64,6 +69,7 @@ class TChipList<T> extends StatelessWidget {
     required this.dataToString,
     this.sortLogic = TChipSortLogic.text,
     this.icon,
+    this.chipTooltip,
     super.key,
   }) : removeText = '', deleteCallback = null;
 
@@ -106,8 +112,8 @@ class TChipList<T> extends StatelessWidget {
         if (content.isEmpty)
           SelectableText(noChipsText)
         else
-          ...items.map(
-            (T data) => Chip(
+          ...items.map((T data) {
+            Widget chip = Chip(
               label: SelectableText(itemTexts[data]!),
               // If we set the callback on the "onDeleted" instead of the
               // button's "onPressed", there will be no cursor change
@@ -118,8 +124,13 @@ class TChipList<T> extends StatelessWidget {
                     textOverride: removeText,
                   )
                 : null,
-            ),
-          ),
+            );
+            // If a tooltip function is provided, wrap the chip in a Tooltip
+            // widget. Otherwise, just return the chip directly
+            return chipTooltip != null
+              ? Tooltip(message: chipTooltip!(data), child: chip)
+              : chip;
+          }),
       ],
     );
   }
@@ -147,6 +158,10 @@ class TStatefulChipList<T> extends StatefulWidget {
   /// The function to convert the displayed data into a String
   final String Function(T) dataToString;
 
+  /// An optional function to provide tooltip text for each chip. Its a function
+  /// because the tooltip may depend on the data of each chip
+  final String Function(T)? chipTooltip;
+
   /// Defines how sorting should be performed in the chip elements. Defaults
   /// to ordering by the text value provided by the `dataToString` function
   final TChipSortLogic sortLogic;
@@ -157,6 +172,7 @@ class TStatefulChipList<T> extends StatefulWidget {
     required this.removeText,
     required this.dataToString,
     this.sortLogic = TChipSortLogic.text,
+    this.chipTooltip,
     this.icon,
     this.deleteCallback,
     super.key,
@@ -167,6 +183,7 @@ class TStatefulChipList<T> extends StatefulWidget {
     required this.noChipsText,
     required this.dataToString,
     this.sortLogic = TChipSortLogic.text,
+    this.chipTooltip,
     this.icon,
     super.key,
   }) : removeText = '', deleteCallback = null;
@@ -206,6 +223,7 @@ class TStatefulChipListState<T> extends State<TStatefulChipList<T>> {
       noChipsText: widget.noChipsText,
       removeText: widget.removeText,
       dataToString: widget.dataToString,
+      chipTooltip: widget.chipTooltip,
       sortLogic: widget.sortLogic,
       icon: widget.icon,
       deleteCallback: _deleteData,
