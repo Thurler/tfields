@@ -26,6 +26,10 @@ class TFormDropdownListChip<T> extends TFormList<T> {
   /// The function that will be used to convert T into a String for the user
   final String Function(T) toDropdownText;
 
+  /// The function that will be used to determine if the option is enabled or
+  /// not in the dropdown. If unspecified, all options are enabled by default
+  final bool Function(T) isOptionEnabledCallback;
+
   /// Whether the last option should be interpreted as an "other" option to
   /// draw a secondary form for the user to fill in the custom value
   final bool otherOptionEnabled;
@@ -54,6 +58,10 @@ class TFormDropdownListChip<T> extends TFormList<T> {
   /// to ordering by the text value provided by the `toDropdownText` function
   final TChipSortLogic chipSortLogic;
 
+  /// A static function that always resolves to true, to be used as a default
+  /// for [isOptionEnabledCallback]
+  static bool _alwaysEnabled(_) => true;
+
   const TFormDropdownListChip({
     required this.selectedValuesText,
     required this.noElementText,
@@ -65,6 +73,7 @@ class TFormDropdownListChip<T> extends TFormList<T> {
     required super.initialValue,
     this.sortLogic = TDropdownSortLogic.text,
     this.chipSortLogic = TChipSortLogic.text,
+    this.isOptionEnabledCallback = _alwaysEnabled,
     super.onValueAdded,
     super.onValueDeleted,
     super.readonly,
@@ -98,6 +107,7 @@ class TFormDropdownListChip<T> extends TFormList<T> {
     required super.initialValue,
     this.sortLogic = TDropdownSortLogic.text,
     this.chipSortLogic = TChipSortLogic.text,
+    this.isOptionEnabledCallback = _alwaysEnabled,
     this.otherOptionText = '',
     super.onValueAdded,
     super.onValueDeleted,
@@ -272,6 +282,7 @@ class TFormDropdownListChipState<T>
           initialValue: null,
           options: _currentOptions.toList(),
           toDropdownText: widget.toDropdownText,
+          isOptionEnabledCallback: widget.isOptionEnabledCallback,
           sortLogic: widget.sortLogic,
           decoratorIcon: decoratorIcon,
           prefixIcon: prefixIcon,
@@ -300,6 +311,7 @@ class TFormDropdownListChipState<T>
           initialValue: null,
           options: _currentOptions.toList(),
           toDropdownText: widget.toDropdownText,
+          isOptionEnabledCallback: widget.isOptionEnabledCallback,
           sortLogic: widget.sortLogic,
           decoratorIcon: widget.decoratorIcon,
           prefixIcon: widget.prefixIcon,

@@ -144,6 +144,10 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
   /// calling the provided setState
   void Function() get onGroupValueChanged => () => _setState?.call(() {});
 
+  /// A function that always resolves to true, to be used as a default argument
+  /// where needed
+  static bool _alwaysTrue(_) => true;
+
   /// Adds a generic form to the group - the user is responsible for making sure
   /// everything has been initialized and bound correctly
   void addGenericForm({
@@ -462,6 +466,7 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
     required V? initialValue,
     required List<V> options,
     required String Function(V) toDropdownText,
+    bool Function(V) isOptionEnabledCallback = _alwaysTrue,
     bool readonly = false,
     TDropdownSortLogic sortLogic = TDropdownSortLogic.text,
     String Function(V?)? validationCallback,
@@ -485,6 +490,7 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
         readonly: readonly,
         initialValue: initialValue,
         toDropdownText: toDropdownText,
+        isOptionEnabledCallback: isOptionEnabledCallback,
         sortLogic: sortLogic,
         hintText: hintText,
         options: options,
@@ -513,6 +519,7 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
     required V otherOptionPlaceholder,
     required Axis? otherOptionAxis,
     required String Function(V) toDropdownText,
+    bool Function(V) isOptionEnabledCallback = _alwaysTrue,
     bool readonly = false,
     TDropdownSortLogic sortLogic = TDropdownSortLogic.text,
     String Function(V?)? validationCallback,
@@ -537,6 +544,7 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
         readonly: readonly,
         initialValue: initialValue,
         toDropdownText: toDropdownText,
+        isOptionEnabledCallback: isOptionEnabledCallback,
         sortLogic: sortLogic,
         hintText: hintText,
         options: options,
@@ -568,6 +576,7 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
     required List<V>? initialValue,
     required List<V> options,
     required String Function(V) toDropdownText,
+    bool Function(V) isOptionEnabledCallback = _alwaysTrue,
     bool readonly = false,
     TDropdownSortLogic sortLogic = TDropdownSortLogic.text,
     TChipSortLogic chipSortLogic = TChipSortLogic.text,
@@ -596,6 +605,7 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
         readonly: readonly,
         initialValue: initialValue,
         toDropdownText: toDropdownText,
+        isOptionEnabledCallback: isOptionEnabledCallback,
         sortLogic: sortLogic,
         chipSortLogic: chipSortLogic,
         hintText: hintText,
@@ -629,6 +639,7 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
     required V otherOptionPlaceholder,
     required Axis? otherOptionAxis,
     required String Function(V) toDropdownText,
+    bool Function(V) isOptionEnabledCallback = _alwaysTrue,
     bool readonly = false,
     TDropdownSortLogic sortLogic = TDropdownSortLogic.text,
     TChipSortLogic chipSortLogic = TChipSortLogic.text,
@@ -662,6 +673,7 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
         readonly: readonly,
         initialValue: initialValue,
         toDropdownText: toDropdownText,
+        isOptionEnabledCallback: isOptionEnabledCallback,
         sortLogic: sortLogic,
         chipSortLogic: chipSortLogic,
         hintText: hintText,

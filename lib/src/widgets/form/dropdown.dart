@@ -31,6 +31,10 @@ class TFormDropdown<T> extends TForm<T> {
   /// The function that will be used to convert T into a String for the user
   final String Function(T) toDropdownText;
 
+  /// The function that will be used to determine if the option is enabled or
+  /// not in the dropdown. If unspecified, all options are enabled by default
+  final bool Function(T) isOptionEnabledCallback;
+
   /// Whether the last option should be interpreted as an "other" option to
   /// draw a secondary form for the user to fill in the custom value
   final bool otherOptionEnabled;
@@ -56,6 +60,10 @@ class TFormDropdown<T> extends TForm<T> {
   /// to ordering by the text value provided by the `toDropdownText` function
   final TDropdownSortLogic sortLogic;
 
+  /// A static function that always resolves to true, to be used as a default
+  /// for [isOptionEnabledCallback]
+  static bool _alwaysEnabled(_) => true;
+
   const TFormDropdown({
     required this.hintText,
     required this.toDropdownText,
@@ -64,6 +72,7 @@ class TFormDropdown<T> extends TForm<T> {
     required super.title,
     required super.initialValue,
     this.sortLogic = TDropdownSortLogic.text,
+    this.isOptionEnabledCallback = _alwaysEnabled,
     super.decoratorIcon,
     super.prefixIcon,
     super.suffixIcon,
@@ -93,6 +102,7 @@ class TFormDropdown<T> extends TForm<T> {
     required super.enabled,
     required super.title,
     required super.initialValue,
+    this.isOptionEnabledCallback = _alwaysEnabled,
     this.sortLogic = TDropdownSortLogic.text,
     this.otherOptionText = '',
     super.readonly,
@@ -210,10 +220,19 @@ class TFormDropdownState<T>
       hint: Text(widget.hintText),
       initialValue: super.value, // Use super here since we override the getter
       onChanged: enabled && !readonly ? _updateValue : null,
-      items: items.map(
-        (T option) =>
-            DropdownMenuItem<T>(value: option, child: Text(itemTexts[option]!)),
-      ).toList(),
+      items: items.map((T option) {
+        bool enabled = widget.isOptionEnabledCallback(option);
+        return DropdownMenuItem<T>(
+          enabled: enabled,
+          value: option,
+          child: Text(
+            itemTexts[option]!,
+            style: enabled
+              ? null
+              : TextStyle(color: Theme.of(context).disabledColor),
+          ),
+        );
+      }).toList(),
       decoration: TInputDecoration(
         enabled: enabled,
         labelText: title,
