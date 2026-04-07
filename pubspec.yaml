@@ -1,6 +1,6 @@
 name: tfields
 description: "Thurler Flutter Fields and Widgets"
-version: 1.0.0
+version: 2.0.0
 
 publish_to: none
 
@@ -15,7 +15,9 @@ dependencies:
       ref: v1.0.0
   flutter:
     sdk: flutter
-  url_launcher: ^6.1.11
+  meta: 1.16.0
+  provider: 6.1.4
+  url_launcher: 6.1.11
 
 dev_dependencies:
   flutter_lints: ^4.0.0

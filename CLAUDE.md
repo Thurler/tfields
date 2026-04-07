@@ -4,9 +4,14 @@
 - Build: `flutter build`
 - Run app: `flutter run`
 - Format code: `dartformat .` (custom formatter, not standard `dart format`)
-- Lint: `flutter analyze`
+- Lint: `dart analyze`
 - Run tests: `flutter test`
 - Run single test: `flutter test example/test/widget_test.dart`
+
+## Workflow
+- After making any code changes, always run:
+  1. `dart analyze` to check for lint issues
+  2. `dartformat <modified_file_path>` to format the modified file(s)
 
 ## Code Style
 - **Imports**: Always use package imports (`always_use_package_imports: true`)
