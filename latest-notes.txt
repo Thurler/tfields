@@ -1,9 +1,5 @@
 Release Notes
 =============
 
-- Re-organized exported libraries to be more idiomatic with Flutter standards
-- More type extensions for numbers and strings
-- Standardized light/dark mode integration
-- Widgets to control responsiveness according to a grid-based system
-- Several more basic UI widgets
-- Reformatted example app to better showcase all the functionalities
+- Added hover position tracking functionality, available through TClickable widget
+- Added a new THoverTrackerState mixin for ease of tracking in States
