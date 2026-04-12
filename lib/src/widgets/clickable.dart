@@ -14,6 +14,9 @@ class TClickable extends StatelessWidget {
   /// The callback for when the mouse cursor exits the widget area
   final void Function(PointerExitEvent)? onExit;
 
+  /// The callback for when the hover pointer event is fired
+  final void Function(PointerHoverEvent)? onHover;
+
   /// Whether the clickable effects are enabled or not
   final bool enabled;
 
@@ -30,6 +33,7 @@ class TClickable extends StatelessWidget {
     this.onTap,
     this.onEnter,
     this.onExit,
+    this.onHover,
     super.key,
   });
 
@@ -41,6 +45,7 @@ class TClickable extends StatelessWidget {
         : SystemMouseCursors.basic,
       onEnter: enabled ? onEnter : null,
       onExit: enabled ? onExit : null,
+      onHover: enabled ? onHover : null,
       child: enabled && onTap != null ? IgnorePointer(child: child) : child,
     );
     return useInkWell

@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 import 'package:tfields/src/widgets/clickable.dart';
 
@@ -32,6 +33,22 @@ mixin THoverState<W extends THoverWidget> on State<W> {
   /// The child that will be drawn inside the TClickable
   Widget buildChild(BuildContext context);
 
+  /// A wrapper around the [TClickable.onEnter] event binding, so that mixin
+  /// implementers can override the behavior
+  void onHoverEnter(PointerEnterEvent event) {
+    setState(() {
+      _highlighted = true;
+    });
+  }
+
+  /// A wrapper around the [TClickable.onExit] event binding, so that mixin
+  /// implementers can override the behavior
+  void onHoverExit(PointerExitEvent event) {
+    setState(() {
+      _highlighted = false;
+    });
+  }
+
   /// The callback that is called when the user clicks on the widget's hover
   /// area. By default, falls back to the function passed as an argument to the
   /// StatefulWidget
@@ -46,14 +63,61 @@ mixin THoverState<W extends THoverWidget> on State<W> {
       // These callbacks are only really useful for web and desktop
       // environments, since mobile users have no mouse cursor to
       // enter and leave the Widget's region
-      onEnter: (_) => setState(() {
-        _highlighted = true;
+      onEnter: (PointerEnterEvent event) {
+        onHoverEnter(event);
         widget.hoverUpdateCallback();
-      }),
-      onExit: (_) => setState(() {
-        _highlighted = false;
+      },
+      onExit: (PointerExitEvent event) {
+        onHoverExit(event);
         widget.hoverUpdateCallback();
-      }),
+      },
+      child: buildChild(context),
+    );
+  }
+}
+
+/// The state assocated with a THoverWidget, which wraps the child in a
+/// TClickable, keeping track of the hover state and position, which can be
+/// checked via the [isHighlighted] and [hoverPosition] getters, respectively
+mixin THoverTrackerState<W extends THoverWidget> on THoverState<W> {
+  Offset _hoverPosition = Offset.zero;
+
+  /// The current hover position, widget coordinates
+  ///
+  /// Null when the cursor is not hovering over the widget
+  Offset? get hoverPosition =>
+      hoverEnabled && isHighlighted ? _hoverPosition : null;
+
+  /// A wrapper around the [TClickable.onHover] event binding, so that mixin
+  /// implementers can override the behavior
+  void onHoverEvent(PointerHoverEvent hoverEvent) {
+    setState(() {
+      _hoverPosition = hoverEvent.localPosition;
+    });
+  }
+
+  @override
+  @nonVirtual
+  // ignore: invalid_override_of_non_virtual_member
+  Widget build(BuildContext context) {
+    return TClickable(
+      enabled: hoverEnabled,
+      onTap: onHoverTap,
+      // These callbacks are only really useful for web and desktop
+      // environments, since mobile users have no mouse cursor to
+      // enter and leave the Widget's region
+      onEnter: (PointerEnterEvent event) {
+        onHoverEnter(event);
+        widget.hoverUpdateCallback();
+      },
+      onExit: (PointerExitEvent event) {
+        onHoverExit(event);
+        widget.hoverUpdateCallback();
+      },
+      onHover: (PointerHoverEvent event) {
+        onHoverEvent(event);
+        widget.hoverUpdateCallback();
+      },
       child: buildChild(context),
     );
   }
