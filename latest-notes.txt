@@ -1,5 +1,4 @@
 Release Notes
 =============
 
-- Added hover position tracking functionality, available through TClickable widget
-- Added a new THoverTrackerState mixin for ease of tracking in States
+- Fixed a bug where empty lines were being concatenated in a TFormGroup's errorSaveWarningMessage getter

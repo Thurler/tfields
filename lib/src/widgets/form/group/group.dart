@@ -863,7 +863,9 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
   /// A list of the save warning messages for each form's individual message
   List<String> get errorSaveWarningMessages => _formKeys.values.map(
     (TGenericFormKey key) => key.currentState?.errorSaveWarningMessage,
-  ).nonNulls.toList();
+  ).nonNulls.where(
+    (String message) => message.isNotEmpty,
+  ).toList();
 
   /// Resets all form's initial values, effectively saving the new values
   void saveValues() {
