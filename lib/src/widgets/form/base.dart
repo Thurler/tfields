@@ -98,14 +98,14 @@ abstract class TFormState<Value, AForm extends TForm<Value>>
   /// comparing the current value to initialValue
   Value? get initialValue => _initialValue;
 
-  bool _enabled = false;
-  bool _readonly = false;
-  String _title = '';
-  String _subtitle = '';
-  String _errorMessage = '';
+  bool? _enabled;
+  bool? _readonly;
+  String? _title;
+  String? _subtitle;
+  String? _errorMessage;
 
   /// Whether the form is currently enabled or not
-  bool get enabled => _enabled;
+  bool get enabled => _enabled ?? widget.enabled;
   set enabled(bool newValue) {
     setState(() {
       _enabled = newValue;
@@ -115,7 +115,7 @@ abstract class TFormState<Value, AForm extends TForm<Value>>
   /// Whether the form is currently readonly or writable - this will not prevent
   /// editing the value directly, but will prevent the user from interacting
   /// with the form to change the state
-  bool get readonly => _readonly;
+  bool get readonly => _readonly ?? widget.readonly;
   set readonly(bool newValue) {
     setState(() {
       _readonly = newValue;
@@ -123,7 +123,7 @@ abstract class TFormState<Value, AForm extends TForm<Value>>
   }
 
   /// The form's title, that will be displayed in the applicable InputDecorator
-  String get title => _title;
+  String get title => _title ?? widget.title;
   set title(String newValue) {
     setState(() {
       _title = newValue;
@@ -132,7 +132,7 @@ abstract class TFormState<Value, AForm extends TForm<Value>>
 
   /// The form's subtitle, that will be displayed under the applicable
   /// InputDecorator
-  String get subtitle => _subtitle;
+  String get subtitle => _subtitle ?? widget.subtitle;
   set subtitle(String newValue) {
     setState(() {
       _subtitle = newValue;
@@ -141,7 +141,7 @@ abstract class TFormState<Value, AForm extends TForm<Value>>
 
   /// The form's error message, that will be displayed under the applicable
   /// InputDecorator
-  String get errorMessage => _errorMessage;
+  String get errorMessage => _errorMessage ?? widget.errorMessage;
   set errorMessage(String newMessage) {
     setState(() {
       _errorMessage = newMessage;
@@ -207,10 +207,6 @@ abstract class TFormState<Value, AForm extends TForm<Value>>
   void initState() {
     super.initState();
     // Copy the initial state from the widget
-    _enabled = widget.enabled;
-    _readonly = widget.readonly;
-    _title = widget.title;
-    _subtitle = widget.subtitle;
     _initialValue = widget.initialValue;
     value = copyValue(widget.initialValue);
     // And then force a validation to make sure invalid initial values are

@@ -131,6 +131,9 @@ class TFormDropdownState<T>
   /// The current list of options the dropdown will render
   late List<T> _options;
 
+  /// Whether options have been updated manually
+  bool _hasUpdatedOptions = false;
+
   // We override the value getter to return the form's value if the other option
   // is selected - fallback to the placeholder
   @override
@@ -159,6 +162,11 @@ class TFormDropdownState<T>
   /// was appointed as an "other" option, and preserving the current value if
   /// it is still among the new options provided
   void updateOptions(Set<T> newOptions) {
+    _hasUpdatedOptions = true;
+    _updateOptions(newOptions);
+  }
+
+  void _updateOptions(Set<T> newOptions) {
     setState(() {
       _options = newOptions.toList();
       // Reset the value if the previous one is not in the new options
@@ -178,6 +186,19 @@ class TFormDropdownState<T>
   void initState() {
     super.initState();
     _options = widget.options;
+  }
+
+  @override
+  void didUpdateWidget(covariant TFormDropdown<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Stop widget updates if we have ever updated options manually through the
+    // public interface
+    if (
+      !_hasUpdatedOptions &&
+      Object.hashAll(_options) != Object.hashAll(widget.options)
+    ) {
+      _updateOptions(widget.options.toSet());
+    }
   }
 
   @override

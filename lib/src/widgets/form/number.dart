@@ -260,26 +260,30 @@ class TFormNumberState<I, T extends TFormNumber<I>>
     super.value = newValue;
   }
 
+  bool _hasSetMinValue = false;
+  bool _hasSetMaxValue = false;
   I? _minValue;
   I? _maxValue;
 
   /// The current min value associated with the input. When this value is
   /// updated, it will update the formatters with the new limits, to ensure
   /// consistent behavior with the min/max snaps
-  I? get minValue => _minValue;
+  I? get minValue => _hasSetMinValue ? _minValue : widget.minValue;
   set minValue(I? newValue) {
     setState(() {
       _minValue = newValue;
+      _hasSetMinValue = true;
     });
   }
 
   /// The current max value associated with the input. When this value is
   /// updated, it will update the formatters with the new limits, to ensure
   /// consistent behavior with the min/max snaps
-  I? get maxValue => _maxValue;
+  I? get maxValue => _hasSetMaxValue ? _maxValue : widget.maxValue;
   set maxValue(I? newValue) {
     setState(() {
       _maxValue = newValue;
+      _hasSetMaxValue = true;
     });
   }
 
@@ -324,8 +328,6 @@ class TFormNumberState<I, T extends TFormNumber<I>>
   void initState() {
     super.initState();
     // Copy the initial state from the widget
-    minValue = widget.minValue;
-    maxValue = widget.maxValue;
     _controller.text = _commaSeparate(widget.initialValue);
     // Add a listener to the controller's input, so that its changes are
     // propagated to the form's callbacks
