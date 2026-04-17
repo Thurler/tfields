@@ -18,7 +18,7 @@ mixin THoverWidget on StatefulWidget {
   void Function() get hoverUpdateCallback;
 }
 
-/// The state assocated with a THoverWidget, which wraps the child in a
+/// The state associated with a THoverWidget, which wraps the child in a
 /// TClickable, keeping track of the hover state, which can be checked via the
 /// [isHighlighted] getter
 mixin THoverState<W extends THoverWidget> on State<W> {
@@ -76,7 +76,7 @@ mixin THoverState<W extends THoverWidget> on State<W> {
   }
 }
 
-/// The state assocated with a THoverWidget, which wraps the child in a
+/// The state associated with a THoverWidget, which wraps the child in a
 /// TClickable, keeping track of the hover state and position, which can be
 /// checked via the [isHighlighted] and [hoverPosition] getters, respectively
 mixin THoverTrackerState<W extends THoverWidget> on THoverState<W> {
