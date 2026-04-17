@@ -179,7 +179,10 @@ class TFormDropdownListChipState<T>
   void addElement(T newValue) {
     // Suppress adding the other option placeholder, we instead want to add it
     // through the "other option submit" function
-    if (newValue == widget.otherOptionPlaceholder) {
+    if (
+      newValue == widget.otherOptionPlaceholder ||
+      (_dropdownKey.currentState?.otherOptionSelected ?? false)
+    ) {
       return;
     }
     super.addElement(newValue);
@@ -215,7 +218,7 @@ class TFormDropdownListChipState<T>
     if (otherOptionValue != null) {
       // We also set the dropdown value to null to reset the selected value
       _dropdownKey.currentState?.value = null;
-      addElement(otherOptionValue);
+      super.addElement(otherOptionValue);
     }
   }
 
