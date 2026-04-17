@@ -33,6 +33,8 @@ class _FormsExampleViewState extends State<FormsExampleView>
 
   bool _dropdownHasBlue = true;
 
+  bool _hasToggledRebuildDemo = false;
+
   // Create keys for the StringListChip examples
   final TStringListChipFormKey _stringListChipKey = TStringListChipFormKey();
 
@@ -61,35 +63,50 @@ class _FormsExampleViewState extends State<FormsExampleView>
           // Attach the typed key to access state externally
           key: _stringKey,
 
-          // enabled: Controls whether the form field accepts user input
+          // enabled: Controls whether the form field accepts user input, and
+          // shows with a grayed out palette or not
           // When false, the field is grayed out and non-interactive
-          enabled: true,
+          enabled: !_hasToggledRebuildDemo,
+
+          // readonly: Controls whether the form field accepts user input when
+          // enabled
+          readonly: _hasToggledRebuildDemo,
 
           // title: Required label displayed above the field
-          title: 'Forms require a title',
+          title: 'Forms require a title'
+              '${_hasToggledRebuildDemo ? ' (Rebuild)' : ''}',
 
           // subtitle: Optional secondary text below the title
           // Useful for providing additional context or instructions
-          subtitle: 'Forms may have a subtitle',
+          subtitle: 'Forms may have a subtitle'
+              '${_hasToggledRebuildDemo ? ' (Rebuild)' : ''}',
 
           // hintText: Placeholder text shown when the field is empty
           // This one is actually string form specific, but we're using it to
           // contextualize the validation
-          hintText: 'In this example, only strings with even length are valid',
+          hintText: 'In this example, only strings with even length are valid'
+              '${_hasToggledRebuildDemo ? ' (Rebuild)' : ''}',
 
           // initialValue: The starting value for the field
           // This is used to track whether the field has changes (hasChanges)
-          initialValue: '',
+          initialValue:
+              _hasToggledRebuildDemo ? _stringKey.currentState?.value : '',
 
           // decoratorIcon: Icon displayed at the far left of the field
           // Visually identifies the field type or purpose
-          decoratorIcon: const Icon(Icons.abc),
+          decoratorIcon: _hasToggledRebuildDemo
+            ? const Icon(Icons.refresh)
+            : const Icon(Icons.abc),
 
           // prefixIcon: Icon displayed inside the input area on the left
-          prefixIcon: const Icon(Icons.arrow_left),
+          prefixIcon: _hasToggledRebuildDemo
+            ? const Icon(Icons.refresh)
+            : const Icon(Icons.arrow_left),
 
           // suffixIcon: Icon displayed inside the input area on the right
-          suffixIcon: const Icon(Icons.arrow_right),
+          suffixIcon: _hasToggledRebuildDemo
+            ? const Icon(Icons.refresh)
+            : const Icon(Icons.arrow_right),
 
           // validationCallback: Function that returns an error message string
           // Return empty string for valid input, error message for invalid
@@ -109,7 +126,30 @@ class _FormsExampleViewState extends State<FormsExampleView>
         // ====================================================================
         //
         // The widgets below demonstrate how to read and modify TForm
-        // state using the typed key (_stringKey.currentState).
+        // state using the typed key (_stringKey.currentState). While properties
+        // can be changed by simply rebuilding the widget (as demonstrated by
+        // the first button)
+        //
+        // IMPORTANT: setting a property through the state typed key prevents
+        // further updates from happening through widget rebuilds. Be careful
+        // when managing the same state between the typed key and widget rebuild
+        //
+        // This can be observed in this demo by toggling the enabled property
+        // manually through the switch - the rebuild button will stop updating
+        // the enabled property on rebuilds
+        //
+        // IMPORTANT: the initial value and current value CANNOT be changed
+        // through rebuilds, as they are integral to the form state. Any changes
+        // to them should be done through the state's typed key
+        TButton.elevated.refresh(
+          textOverride: 'Change attributes through rebuild',
+          onPressed: () => setState(() {
+            _hasToggledRebuildDemo = !_hasToggledRebuildDemo;
+            WidgetsBinding.instance.addPostFrameCallback(
+              (_) => setState(() {}),
+            );
+          }),
+        ),
         Wrap(
           spacing: 20,
           runSpacing: 20,
@@ -444,7 +484,7 @@ class _FormsExampleViewState extends State<FormsExampleView>
                   // minValue: The minimum value accepted by this input
                   // When validate() is called, values below this will show an
                   // error message automatically
-                  minValue: 0,
+                  minValue: 1,
 
                   // maxValue: The maximum value accepted by this input
                   // When validate() is called, values above this will show an
