@@ -673,6 +673,13 @@ class _FormsExampleViewState extends State<FormsExampleView>
                   // toDropdownText: Function to convert the option to a
                   // display string. For strings, we can just return the value
                   toDropdownText: (String option) => option,
+
+                  // deleteButton: Options to use when rendering a suffix widget
+                  // that removes the currently selected option
+                  deleteButton: const TDropdownDeleteButton(
+                    icon: TPresetIcon.close,
+                    text: 'Remove selection',
+                  ),
                 ),
                 TFormDropdown<int>(
                   enabled: true,

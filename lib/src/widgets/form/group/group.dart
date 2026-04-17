@@ -475,6 +475,7 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
     Widget? decoratorIcon,
     Widget? prefixIcon,
     Widget? suffixIcon,
+    TDropdownDeleteButton? deleteButton,
     TFormSaveWithErrorOptions<V>? saveWithErrorOptions,
     bool? enabledOverride,
   }) {
@@ -497,6 +498,7 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
         decoratorIcon: decoratorIcon,
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
+        deleteButton: deleteButton,
         validationCallback: validationCallback,
         saveWithErrorOptions: saveWithErrorOptions,
         onValueChanged: (V? v) {
@@ -529,6 +531,7 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
     Widget? decoratorIcon,
     Widget? prefixIcon,
     Widget? suffixIcon,
+    TDropdownDeleteButton? deleteButton,
     TFormSaveWithErrorOptions<V>? saveWithErrorOptions,
     bool? enabledOverride,
   }) {
@@ -555,6 +558,7 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
         decoratorIcon: decoratorIcon,
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
+        deleteButton: deleteButton,
         validationCallback: validationCallback,
         saveWithErrorOptions: saveWithErrorOptions,
         onValueChanged: (V? v) {

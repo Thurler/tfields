@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:tfields/src/extensions/iterable.dart';
 import 'package:tfields/src/mixins/icon_updateable_form.dart';
+import 'package:tfields/src/widgets/button.dart';
 import 'package:tfields/src/widgets/form/base.dart';
+import 'package:tfields/src/widgets/icons.dart';
 import 'package:tfields/src/widgets/input_decoration.dart';
 
 typedef TDropdownFormKey<T> = GlobalKey<TFormDropdownState<T>>;
@@ -17,6 +19,17 @@ enum TDropdownSortLogic {
 
   /// Sorting is based on the dropdown text that is displayed for the object
   text;
+}
+
+/// A dropdown form's delete button options
+class TDropdownDeleteButton {
+  /// The icon that will be displayed
+  final TIconInterface icon;
+
+  /// The text that is displayed as a tooltip when hovering over it
+  final String? text;
+
+  const TDropdownDeleteButton({required this.icon, this.text});
 }
 
 /// A specialization of the generic Form that allows the user to input a value
@@ -56,6 +69,13 @@ class TFormDropdown<T> extends TForm<T> {
   /// value from the state
   final T? otherOptionPlaceholder;
 
+  /// The delete button struct - if not null, draws a suffix icon that
+  /// de-selects the currently selected value
+  ///
+  /// If specified alongside [suffixIcon], it will be displayed before the
+  /// suffix icon
+  final TDropdownDeleteButton? deleteButton;
+
   /// Defines how sorting should be performed in the dropdown elements. Defaults
   /// to ordering by the text value provided by the `toDropdownText` function
   final TDropdownSortLogic sortLogic;
@@ -73,6 +93,7 @@ class TFormDropdown<T> extends TForm<T> {
     required super.initialValue,
     this.sortLogic = TDropdownSortLogic.text,
     this.isOptionEnabledCallback = _alwaysEnabled,
+    this.deleteButton,
     super.decoratorIcon,
     super.prefixIcon,
     super.suffixIcon,
@@ -105,6 +126,7 @@ class TFormDropdown<T> extends TForm<T> {
     this.isOptionEnabledCallback = _alwaysEnabled,
     this.sortLogic = TDropdownSortLogic.text,
     this.otherOptionText = '',
+    this.deleteButton,
     super.readonly,
     super.decoratorIcon,
     super.prefixIcon,
@@ -149,9 +171,6 @@ class TFormDropdownState<T>
   /// A callback for the DropdownButtonFormField, which will update the internal
   /// selected newValue and call the appropriate callbacks
   void _updateValue(T? newValue) {
-    if (newValue == null) {
-      return;
-    }
     setState(() {
       super.value = newValue;
     });
@@ -260,7 +279,24 @@ class TFormDropdownState<T>
         helperText: subtitle,
         icon: decoratorIcon,
         prefixIcon: prefixIcon,
-        suffixIcon: suffixIcon,
+        suffixIcon:
+            (widget.deleteButton != null && value != null) || suffixIcon != null
+          ? Row(
+              mainAxisSize: MainAxisSize.min,
+              spacing: 5,
+              children: <Widget>[
+                if (widget.deleteButton != null && value != null)
+                  TButton.iconOnly(
+                    icon: widget.deleteButton!.icon,
+                    text: widget.deleteButton?.text,
+                    onPressed:
+                        enabled && !readonly ? () => _updateValue(null) : null,
+                  ),
+                if (suffixIcon != null) suffixIcon!,
+                const Icon(Icons.arrow_drop_down),
+              ],
+            )
+          : null,
       ),
       autovalidateMode: AutovalidateMode.always,
       validator: (_) => errorMessage.isNotEmpty ? errorMessage : null,
