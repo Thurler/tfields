@@ -262,6 +262,34 @@ class TGridRowShowcase extends StatelessWidget with TGridBreakpointAware {
           ],
         ),
 
+        // A uniform grid interface is also provided, to automatically wrap
+        // all children with a flex of 1, spreading them out uniformly among
+        // the rows based on the limit. Because they all have flex 1, this
+        // ensures they will all have the same width, even if the final row has
+        // fewer elements than the limit size
+        _GridExample(
+          title: 'TGridRow uniformGrid',
+          rows: <TGridRow>[
+            TGridRow.uniformGrid(
+              xsFlexLimit: 1,
+              smFlexLimit: 2,
+              mdFlexLimit: 3,
+              lgFlexLimit: 4,
+              xlFlexLimit: 5,
+              xxlFlexLimit: 6,
+              xxxlFlexLimit: 7,
+              fhdFlexLimit: 8,
+              qhdFlexLimit: 9,
+              uhdFlexLimit: 10,
+              children: List<Widget>.generate(
+                23,
+                (_) =>
+                    TButton.elevated(text: '<Same width>', usesMaxWidth: true),
+              ),
+            ),
+          ],
+        ),
+
         // A bootstrap-like interface is also provided, to substitute flex
         // behavior with the hardcoded 12 width. In this mode, the default
         // behavior is to assign 12 to every item, unles otherwise specified
