@@ -30,6 +30,8 @@ class _FormsExampleViewState extends State<FormsExampleView>
   // changes to its state, along with one for the "other" option form
   final TDropdownFormKey<String> _dropdownKey = TDropdownFormKey<String>();
   final TStringFormKey _otherOptionKey = TStringFormKey();
+  final TDropdownListChipFormKey<String> _dropdownChipKey =
+      TDropdownListChipFormKey<String>();
 
   bool _dropdownHasBlue = true;
 
@@ -877,6 +879,7 @@ class _FormsExampleViewState extends State<FormsExampleView>
             TGridColumn(
               children: <Widget>[
                 TFormDropdownListChip<String>.withOtherOption(
+                  key: _dropdownChipKey,
                   enabled: true,
                   title: 'TFormDropdownListChip (with "other" option)',
                   initialValue: const <String>[],
@@ -902,6 +905,8 @@ class _FormsExampleViewState extends State<FormsExampleView>
                     title: 'Customized tag',
                     initialValue: '',
                     hintText: "Type the custom tag's name",
+                    submitCallback: () =>
+                        _dropdownChipKey.currentState?.submitOtherOption(),
                   ),
 
                   // otherOptionAxis: Controls layout of secondary form
