@@ -235,8 +235,8 @@ class TFormNumberState<I, T extends TFormNumber<I>>
   List<TextInputFormatter> get _formatters => <TextInputFormatter>[
     widget.makeNumberRegex(minValue),
     widget.formatterConstructor(
-      minValue: _minValue,
-      maxValue: _maxValue,
+      minValue: minValue,
+      maxValue: maxValue,
       commaSeparate: widget.commaSeparate,
       snapToMinOnEmpty: widget.snapToMinOnEmpty,
       snapToMaxWhenOver: widget.snapToMaxWhenOver,
