@@ -42,3 +42,15 @@ extension IterableExtension<T> on Iterable<T> {
   /// A safe version of elementAt that returns null if the index is invalid
   T? elementAtSafe(int index) => index < length ? elementAt(index) : null;
 }
+
+extension IterableStringExtension on Iterable<String> {
+  /// Return an iterable that filters out empty strings from this iterable
+  Iterable<String> get nonEmpties => where((String value) => value.isNotEmpty);
+}
+
+extension IterableStringNullableExtension on Iterable<String?> {
+  /// Return an iterable that filters out empty strings or null values from this
+  /// iterable
+  Iterable<String> get nonEmpties =>
+      nonNulls.where((String value) => value.isNotEmpty);
+}
