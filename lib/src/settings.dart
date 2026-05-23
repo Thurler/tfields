@@ -56,10 +56,14 @@ class TCommonSettings {
   };
 }
 
-/// The theme provider that applies the common settings to it, so that other
-/// projects that don't have custom settings don't have to implement this
-class CommonSettingsThemeProvider
-    extends TSettingsThemeProvider<TCommonSettings>
-    with TSettingsJsonReader<TCommonSettings>, TCommonSettingsDeserializer {
-  CommonSettingsThemeProvider(super.seedColor);
+/// A class capable of reading/writing the common settings. It will ignore all
+/// errors during write - overwrite this class or implement the write mixin
+/// elsewhere to define error handling behavior
+class CommonSettingsWriter
+    with
+        TSettingsJsonReader<TCommonSettings>,
+        TSettingsJsonWriter<TCommonSettings>,
+        TCommonSettingsDeserializer {
+  @override
+  void handleWriteError(Object exception, StackTrace stackTrace) {}
 }
