@@ -134,6 +134,8 @@ class TThemedApp extends StatefulWidget {
     super.key,
   });
 
+  /// Initialize the themed app with a settings writer, so that toggles in theme
+  /// mode are saved to a settings file
   static TThemedApp withSettings<S extends TCommonSettings>({
     required String title,
     required Widget home,
@@ -145,13 +147,13 @@ class TThemedApp extends StatefulWidget {
     )? materialAppBuilder,
     Key? key,
   }) {
-    settingsWriter.readSettings();
     return TThemedApp(
       title: title,
       home: home,
       seedColor: seedColor,
       initialThemeMode: settingsWriter.settings.themeMode,
       changeThemeMode: (ThemeMode themeMode) {
+        settingsWriter.readSettings();
         settingsWriter.settings.themeMode = themeMode;
         settingsWriter.writeSettings();
       },
