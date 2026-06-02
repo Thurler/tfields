@@ -309,8 +309,8 @@ class TFormNumberState<I, T extends TFormNumber<I>>
     // force a validation error
     if (value != null && maxValue != null) {
       bool aboveMax = switch (value) {
-        int() => (value! as int) > (maxValue! as int),
-        double() => (value! as double) > (maxValue! as double),
+        int() => (value! as num) > (maxValue! as num),
+        double() => (value! as num) > (maxValue! as num),
         BigInt() => (value! as BigInt) > (maxValue! as BigInt),
         _ => false,
       };
