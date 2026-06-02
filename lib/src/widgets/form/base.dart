@@ -208,7 +208,7 @@ abstract class TFormState<Value, AForm extends TForm<Value>>
     super.initState();
     // Copy the initial state from the widget
     _initialValue = widget.initialValue;
-    value = copyValue(widget.initialValue);
+    _value = copyValue(widget.initialValue);
     // And then force a validation to make sure invalid initial values are
     // already loaded with the appropriate error message
     validate();
