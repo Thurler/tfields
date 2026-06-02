@@ -43,6 +43,9 @@ class _FormsExampleViewState extends State<FormsExampleView>
   // Create keys for the DropdownListChip examples
   final TStringFormKey _dropdownListChipOtherOptionKey = TStringFormKey();
 
+  // Key for the requestFocus example
+  final TStringFormKey _focusableKey = TStringFormKey();
+
   // Helper function to display empty strings as '<empty>' for clarity
   String formatString(String value) => value.isNotEmpty ? value : '<empty>';
 
@@ -326,6 +329,42 @@ class _FormsExampleViewState extends State<FormsExampleView>
                 // submitCallback
                 // When true: Multi-line, Enter creates new line
                 isMultiline: true,
+              ),
+            ),
+          ],
+        ),
+
+        // ====================================================================
+        // FOCUSABLE FORM MIXIN / requestFocus
+        // ====================================================================
+        //
+        // Forms that mix in [FocusableForm] expose [requestFocus] on their
+        // state. This is already pre-applied to TFormString, TFormNumber, and
+        // TFormStringListChip.
+        SelectableText(
+          'FocusableForm / requestFocus',
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+        TGridRow(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          smFlexLimit: 1,
+          mdFlexLimit: 2,
+          children: <TGridItem>[
+            TGridItem(
+              child: TFormString(
+                key: _focusableKey,
+                enabled: true,
+                title: 'Form with programmatic focus',
+                initialValue: '',
+                hintText: 'Click the button to the right to focus on the form',
+              ),
+            ),
+            TGridItem.fixedSize(
+              size: const TGridSize.zero(),
+              child: TButton.elevated(
+                icon: const TIcon(icon: Icons.center_focus_strong),
+                text: 'requestFocus',
+                onPressed: () => _focusableKey.currentState?.requestFocus(),
               ),
             ),
           ],

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:tfields/src/extensions/double.dart';
 import 'package:tfields/src/extensions/int.dart';
 import 'package:tfields/src/input_formatters/number.dart';
+import 'package:tfields/src/mixins/focusable_form.dart';
 import 'package:tfields/src/mixins/icon_updateable_form.dart';
 import 'package:tfields/src/widgets/form/base.dart';
 import 'package:tfields/src/widgets/input_decoration.dart';
@@ -226,9 +227,14 @@ class TFormDouble extends TFormNumber<double> {
 /// The state that controls the additional functionality added by
 /// TFormNumber
 class TFormNumberState<I, T extends TFormNumber<I>>
-    extends IconUpdateableTFormState<I, T> {
+    extends IconUpdateableTFormState<I, T> with FocusableForm<I, T> {
   /// The controller that the user will interact with
   final TextEditingController _controller = TextEditingController();
+
+  final FocusNode _focusNode = FocusNode();
+
+  @override
+  FocusNode get focusNode => _focusNode;
 
   /// The formatters that are currently being applied to the
   /// TextEditingController
@@ -345,6 +351,7 @@ class TFormNumberState<I, T extends TFormNumber<I>>
   Widget build(BuildContext context) {
     return TextFormField(
       enabled: enabled,
+      focusNode: focusNode,
       controller: _controller,
       inputFormatters: _formatters,
       onFieldSubmitted: (_) => widget.submitCallback?.call(),

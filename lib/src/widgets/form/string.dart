@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:tfields/src/mixins/focusable_form.dart';
 import 'package:tfields/src/mixins/icon_updateable_form.dart';
 import 'package:tfields/src/widgets/button.dart';
 import 'package:tfields/src/widgets/form/base.dart';
@@ -75,9 +76,15 @@ class TFormString extends TForm<String> {
 }
 
 /// The StringForm's internal state
-class TFormStringState extends IconUpdateableTFormState<String, TFormString> {
+class TFormStringState extends IconUpdateableTFormState<String, TFormString>
+    with FocusableForm<String, TFormString> {
   /// The controller that the user will interact with
   final TextEditingController _controller = TextEditingController();
+
+  final FocusNode _focusNode = FocusNode();
+
+  @override
+  FocusNode get focusNode => _focusNode;
 
   @override
   set value(String? newValue) {
@@ -107,6 +114,7 @@ class TFormStringState extends IconUpdateableTFormState<String, TFormString> {
   Widget build(BuildContext context) {
     return TextFormField(
       enabled: enabled,
+      focusNode: focusNode,
       controller: _controller,
       inputFormatters: widget.formatters,
       onFieldSubmitted:
