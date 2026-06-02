@@ -4,6 +4,7 @@ import 'package:tfields/src/mixins/standard_colorer.dart';
 import 'package:tfields/src/widgets/badge.dart';
 import 'package:tfields/src/widgets/button.dart';
 import 'package:tfields/src/widgets/icons.dart';
+import 'package:tlinter/annotations.dart';
 
 /// A builder redirector to the constructors of _TButtonIconOnly. It is
 /// callable directly to use the normal constructor, and presets are available
@@ -25,6 +26,7 @@ class TButtonIconOnlyBuilder {
   /// The [onPressed] callback is triggered when the button is tapped.
   /// The [text] parameter provides a tooltip for the button.
   /// The [badge] parameter adds a notification badge to the icon.
+  @TReflect(_TButtonIconOnly.new, validateReturnType: false)
   TButton call({
     required TIconInterface icon,
     bool forceDefaultIconColor = false,
@@ -49,6 +51,11 @@ class TButtonIconOnlyBuilder {
   ///
   /// See [call] for parameter descriptions. The [textOverride] parameter can be
   /// used to override the default download text.
+  @TReflect(
+    _TButtonIconOnly.fromPreset,
+    ignoreNamedArguments: <String>{'icon'},
+    validateReturnType: false,
+  )
   TButton download({
     bool forceDefaultIconColor = false,
     bool showBorder = false,
@@ -72,6 +79,11 @@ class TButtonIconOnlyBuilder {
   ///
   /// See [call] for parameter descriptions. The [textOverride] parameter can be
   /// used to override the default upload text.
+  @TReflect(
+    _TButtonIconOnly.fromPreset,
+    ignoreNamedArguments: <String>{'icon'},
+    validateReturnType: false,
+  )
   TButton upload({
     bool forceDefaultIconColor = false,
     bool showBorder = false,
@@ -95,6 +107,11 @@ class TButtonIconOnlyBuilder {
   ///
   /// See [call] for parameter descriptions. The [textOverride] parameter can be
   /// used to override the default filter text.
+  @TReflect(
+    _TButtonIconOnly.fromPreset,
+    ignoreNamedArguments: <String>{'icon'},
+    validateReturnType: false,
+  )
   TButton filter({
     bool forceDefaultIconColor = false,
     bool showBorder = false,
@@ -118,6 +135,11 @@ class TButtonIconOnlyBuilder {
   ///
   /// See [call] for parameter descriptions. The [textOverride] parameter can be
   /// used to override the default close text.
+  @TReflect(
+    _TButtonIconOnly.fromPreset,
+    ignoreNamedArguments: <String>{'icon'},
+    validateReturnType: false,
+  )
   TButton close({
     bool forceDefaultIconColor = false,
     bool showBorder = false,
@@ -141,6 +163,11 @@ class TButtonIconOnlyBuilder {
   ///
   /// See [call] for parameter descriptions. The [textOverride] parameter can be
   /// used to override the default cancel text.
+  @TReflect(
+    _TButtonIconOnly.fromPreset,
+    ignoreNamedArguments: <String>{'icon'},
+    validateReturnType: false,
+  )
   TButton cancel({
     bool forceDefaultIconColor = false,
     bool showBorder = false,
@@ -164,6 +191,11 @@ class TButtonIconOnlyBuilder {
   ///
   /// See [call] for parameter descriptions. The [textOverride] parameter can be
   /// used to override the default save text.
+  @TReflect(
+    _TButtonIconOnly.fromPreset,
+    ignoreNamedArguments: <String>{'icon'},
+    validateReturnType: false,
+  )
   TButton save({
     bool forceDefaultIconColor = false,
     bool showBorder = false,
@@ -187,6 +219,11 @@ class TButtonIconOnlyBuilder {
   ///
   /// See [call] for parameter descriptions. The [textOverride] parameter can be
   /// used to override the default delete text.
+  @TReflect(
+    _TButtonIconOnly.fromPreset,
+    ignoreNamedArguments: <String>{'icon'},
+    validateReturnType: false,
+  )
   TButton delete({
     bool forceDefaultIconColor = false,
     bool showBorder = false,
@@ -210,6 +247,11 @@ class TButtonIconOnlyBuilder {
   ///
   /// See [call] for parameter descriptions. The [textOverride] parameter can be
   /// used to override the default add text.
+  @TReflect(
+    _TButtonIconOnly.fromPreset,
+    ignoreNamedArguments: <String>{'icon'},
+    validateReturnType: false,
+  )
   TButton add({
     bool forceDefaultIconColor = false,
     bool showBorder = false,
@@ -233,6 +275,11 @@ class TButtonIconOnlyBuilder {
   ///
   /// See [call] for parameter descriptions. The [textOverride] parameter can be
   /// used to override the default edit text.
+  @TReflect(
+    _TButtonIconOnly.fromPreset,
+    ignoreNamedArguments: <String>{'icon'},
+    validateReturnType: false,
+  )
   TButton edit({
     bool forceDefaultIconColor = false,
     bool showBorder = false,
@@ -256,11 +303,17 @@ class TButtonIconOnlyBuilder {
   ///
   /// See [call] for parameter descriptions. The [textOverride] parameter can be
   /// used to override the default refresh text.
+  @TReflect(
+    _TButtonIconOnly.fromPreset,
+    ignoreNamedArguments: <String>{'icon'},
+    validateReturnType: false,
+  )
   TButton refresh({
     bool forceDefaultIconColor = false,
     bool showBorder = false,
     String? textOverride,
     void Function()? onPressed,
+    TIconBadge? badge,
     Key? key,
   }) {
     return _TButtonIconOnly.fromPreset(
@@ -269,6 +322,7 @@ class TButtonIconOnlyBuilder {
       textOverride: textOverride,
       onPressed: onPressed,
       showBorder: showBorder,
+      badge: badge,
       key: key,
     );
   }

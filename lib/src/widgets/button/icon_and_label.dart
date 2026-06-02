@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:tfields/src/widgets/button.dart';
 import 'package:tfields/src/widgets/icons.dart';
+import 'package:tlinter/annotations.dart';
 
 /// A builder redirector to the constructors of _TButtonIconAndLabel. It is
 /// callable directly to use the normal constructor, and presets are available
@@ -23,6 +24,7 @@ class TButtonIconAndLabelBuilder {
   /// The [iconAlignment] determines whether the icon appears at the start or
   /// end of the button.
   /// The [onPressed] callback is triggered when the button is tapped.
+  @TReflect(_TButtonIconAndLabel.new, validateReturnType: false)
   TButton call({
     required TIconInterface icon,
     required String text,
@@ -47,6 +49,11 @@ class TButtonIconAndLabelBuilder {
   ///
   /// See [call] for parameter descriptions. The [textOverride] parameter can be
   /// used to override the default download text.
+  @TReflect(
+    _TButtonIconAndLabel.fromPreset,
+    ignoreNamedArguments: <String>{'icon'},
+    validateReturnType: false,
+  )
   TButton download({
     bool forceDefaultIconColor = false,
     IconAlignment iconAlignment = IconAlignment.start,
@@ -68,6 +75,11 @@ class TButtonIconAndLabelBuilder {
   ///
   /// See [call] for parameter descriptions. The [textOverride] parameter can be
   /// used to override the default upload text.
+  @TReflect(
+    _TButtonIconAndLabel.fromPreset,
+    ignoreNamedArguments: <String>{'icon'},
+    validateReturnType: false,
+  )
   TButton upload({
     bool forceDefaultIconColor = false,
     IconAlignment iconAlignment = IconAlignment.start,
@@ -89,6 +101,11 @@ class TButtonIconAndLabelBuilder {
   ///
   /// See [call] for parameter descriptions. The [textOverride] parameter can be
   /// used to override the default filter text.
+  @TReflect(
+    _TButtonIconAndLabel.fromPreset,
+    ignoreNamedArguments: <String>{'icon'},
+    validateReturnType: false,
+  )
   TButton filter({
     bool forceDefaultIconColor = false,
     IconAlignment iconAlignment = IconAlignment.start,
@@ -110,6 +127,11 @@ class TButtonIconAndLabelBuilder {
   ///
   /// See [call] for parameter descriptions. The [textOverride] parameter can be
   /// used to override the default close text.
+  @TReflect(
+    _TButtonIconAndLabel.fromPreset,
+    ignoreNamedArguments: <String>{'icon'},
+    validateReturnType: false,
+  )
   TButton close({
     bool forceDefaultIconColor = false,
     IconAlignment iconAlignment = IconAlignment.start,
@@ -131,6 +153,11 @@ class TButtonIconAndLabelBuilder {
   ///
   /// See [call] for parameter descriptions. The [textOverride] parameter can be
   /// used to override the default cancel text.
+  @TReflect(
+    _TButtonIconAndLabel.fromPreset,
+    ignoreNamedArguments: <String>{'icon'},
+    validateReturnType: false,
+  )
   TButton cancel({
     bool forceDefaultIconColor = false,
     IconAlignment iconAlignment = IconAlignment.start,
@@ -152,6 +179,11 @@ class TButtonIconAndLabelBuilder {
   ///
   /// See [call] for parameter descriptions. The [textOverride] parameter can be
   /// used to override the default save text.
+  @TReflect(
+    _TButtonIconAndLabel.fromPreset,
+    ignoreNamedArguments: <String>{'icon'},
+    validateReturnType: false,
+  )
   TButton save({
     bool forceDefaultIconColor = false,
     IconAlignment iconAlignment = IconAlignment.start,
@@ -173,6 +205,11 @@ class TButtonIconAndLabelBuilder {
   ///
   /// See [call] for parameter descriptions. The [textOverride] parameter can be
   /// used to override the default delete text.
+  @TReflect(
+    _TButtonIconAndLabel.fromPreset,
+    ignoreNamedArguments: <String>{'icon'},
+    validateReturnType: false,
+  )
   TButton delete({
     bool forceDefaultIconColor = false,
     IconAlignment iconAlignment = IconAlignment.start,
@@ -194,6 +231,11 @@ class TButtonIconAndLabelBuilder {
   ///
   /// See [call] for parameter descriptions. The [textOverride] parameter can be
   /// used to override the default add text.
+  @TReflect(
+    _TButtonIconAndLabel.fromPreset,
+    ignoreNamedArguments: <String>{'icon'},
+    validateReturnType: false,
+  )
   TButton add({
     bool forceDefaultIconColor = false,
     IconAlignment iconAlignment = IconAlignment.start,
@@ -215,6 +257,11 @@ class TButtonIconAndLabelBuilder {
   ///
   /// See [call] for parameter descriptions. The [textOverride] parameter can be
   /// used to override the default refresh text.
+  @TReflect(
+    _TButtonIconAndLabel.fromPreset,
+    ignoreNamedArguments: <String>{'icon'},
+    validateReturnType: false,
+  )
   TButton refresh({
     bool forceDefaultIconColor = false,
     IconAlignment iconAlignment = IconAlignment.start,
@@ -236,6 +283,11 @@ class TButtonIconAndLabelBuilder {
   ///
   /// See [call] for parameter descriptions. The [textOverride] parameter can be
   /// used to override the default edit text.
+  @TReflect(
+    _TButtonIconAndLabel.fromPreset,
+    ignoreNamedArguments: <String>{'icon'},
+    validateReturnType: false,
+  )
   TButton edit({
     bool forceDefaultIconColor = false,
     IconAlignment iconAlignment = IconAlignment.start,

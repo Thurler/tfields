@@ -4,6 +4,10 @@ analizer:
   strong-mode:
     implicit-casts: true
 
+plugins:
+  tlinter:
+    path: ../tlinter
+
 linter:
   # https://dart-lang.github.io/linter/lints/index.html.
   rules:

@@ -15,7 +15,9 @@ dependencies:
       ref: v1.0.0
   flutter:
     sdk: flutter
-  meta: 1.16.0
+  meta: 1.17.0
+  tlinter:
+    path: ../tlinter
   url_launcher: 6.1.11
 
 dev_dependencies:

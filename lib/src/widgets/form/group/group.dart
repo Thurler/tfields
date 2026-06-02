@@ -9,6 +9,13 @@ import 'package:tfields/src/widgets/form/list/dropdown_chip.dart';
 import 'package:tfields/src/widgets/form/list/string_chip.dart';
 import 'package:tfields/src/widgets/form/number.dart';
 import 'package:tfields/src/widgets/form/string.dart';
+import 'package:tlinter/annotations.dart';
+
+const Set<String> _baseFieldsToIgnore = <String>{
+  'enabled',
+  'errorMessage',
+  'key',
+};
 
 /// An interface for TForm fields, which for now provides nothing but strictly
 /// limit the fields to belong to an enum of fields
@@ -161,6 +168,11 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
 
   /// Adds a TFormString to the group - this is merely a mirror to the
   /// constructor of that class
+  @TReflect(
+    TFormString.new,
+    ignoreNamedArguments: _baseFieldsToIgnore,
+    validateReturnType: false,
+  )
   void addStringForm({
     required Field formName,
     required String title,
@@ -209,6 +221,11 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
 
   /// Adds a TFormString.searchBar to the group - this is merely a mirror to
   /// that constructor of the class
+  @TReflect(
+    TFormString.searchBar,
+    ignoreNamedArguments: _baseFieldsToIgnore,
+    validateReturnType: false,
+  )
   void addSearchBarForm({
     required Field formName,
     required String title,
@@ -251,6 +268,11 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
 
   /// Adds a TFormStringListChip to the group - this is merely a mirror to
   /// the constructor of that class
+  @TReflect(
+    TFormStringListChip.new,
+    ignoreNamedArguments: _baseFieldsToIgnore,
+    validateReturnType: false,
+  )
   void addStringListChip({
     required Field formName,
     required String title,
@@ -297,6 +319,11 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
 
   /// Adds a TFormInteger to the group - this is merely a mirror to the
   /// constructor of that class
+  @TReflect(
+    TFormInteger.new,
+    ignoreNamedArguments: _baseFieldsToIgnore,
+    validateReturnType: false,
+  )
   void addIntegerForm({
     required Field formName,
     required String title,
@@ -351,6 +378,11 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
 
   /// Adds a TFormBigInteger to the group - this is merely a mirror to the
   /// constructor of that class
+  @TReflect(
+    TFormBigInteger.new,
+    ignoreNamedArguments: _baseFieldsToIgnore,
+    validateReturnType: false,
+  )
   void addBigIntegerForm({
     required Field formName,
     required String title,
@@ -405,6 +437,11 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
 
   /// Adds a TFormDouble to the group - this is merely a mirror to the
   /// constructor of that class
+  @TReflect(
+    TFormDouble.new,
+    ignoreNamedArguments: _baseFieldsToIgnore,
+    validateReturnType: false,
+  )
   void addDoubleForm({
     required Field formName,
     required String title,
@@ -459,6 +496,11 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
 
   /// Adds a TFormDropdown of type V to the group - this is merely a mirror
   /// to the constructor of that class
+  @TReflect(
+    TFormDropdown.new,
+    ignoreNamedArguments: _baseFieldsToIgnore,
+    validateReturnType: false,
+  )
   void addDropdownForm<V>({
     required Field formName,
     required String title,
@@ -511,6 +553,11 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
 
   /// Adds a TFormDropdown of type V to the group, along with a "other"
   /// option - this is merely a mirror to the constructor of that class
+  @TReflect(
+    TFormDropdown.withOtherOption,
+    ignoreNamedArguments: _baseFieldsToIgnore,
+    validateReturnType: false,
+  )
   void addDropdownFormWithOtherOption<V>({
     required Field formName,
     required String title,
@@ -571,6 +618,11 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
 
   /// Adds a TFormDropdownListChip of type V to the group - this is merely a
   /// mirror to the constructor of that class
+  @TReflect(
+    TFormDropdownListChip.new,
+    ignoreNamedArguments: _baseFieldsToIgnore,
+    validateReturnType: false,
+  )
   void addDropdownListChipForm<V>({
     required Field formName,
     required String selectedValuesText,
@@ -631,6 +683,11 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
 
   /// Adds a TFormDropdownListChip of type V to the group, along with an
   /// "other" option - this is merely a mirror to the constructor of that class
+  @TReflect(
+    TFormDropdownListChip.withOtherOption,
+    ignoreNamedArguments: _baseFieldsToIgnore,
+    validateReturnType: false,
+  )
   void addDropdownListChipFormWithOtherOption<V>({
     required Field formName,
     required String selectedValuesText,
@@ -699,6 +756,11 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
 
   /// Adds a TFormCheckbox to the group - this is merely a mirror to the
   /// constructor of that class
+  @TReflect(
+    TFormCheckbox.new,
+    ignoreNamedArguments: _baseFieldsToIgnore,
+    validateReturnType: false,
+  )
   void addCheckboxForm({
     required Field formName,
     required String text,
@@ -740,6 +802,11 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
 
   /// Adds a TFormDateTime to the group, using the date only constructor -
   /// this is merely a mirror to the constructor of that class
+  @TReflect(
+    TFormDateTime.dateOnly,
+    ignoreNamedArguments: _baseFieldsToIgnore,
+    validateReturnType: false,
+  )
   void addDateOnlyForm({
     required Field formName,
     required String title,
@@ -776,6 +843,11 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
 
   /// Adds a TFormDateTime to the group, using the time only constructor -
   /// this is merely a mirror to the constructor of that class
+  @TReflect(
+    TFormDateTime.timeOnly,
+    ignoreNamedArguments: _baseFieldsToIgnore,
+    validateReturnType: false,
+  )
   void addTimeOnlyForm({
     required Field formName,
     required String title,
@@ -812,6 +884,11 @@ abstract class TFormGroup<Value, Data, Field extends TFormField> {
 
   /// Adds a TFormDateTime to the group, using the date and time constructor
   /// - this is merely a mirror to the constructor of that class
+  @TReflect(
+    TFormDateTime.dateAndTime,
+    ignoreNamedArguments: _baseFieldsToIgnore,
+    validateReturnType: false,
+  )
   void addDateAndTimeForm({
     required Field formName,
     required String title,
