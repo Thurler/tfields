@@ -195,6 +195,12 @@ class TGridRow extends StatelessWidget with TGridBreakpointAware {
   /// The widget that will space rows vertically
   final Widget? verticalSpacer;
 
+  /// The main axis size of the column that contains the rows. As an
+  /// AnlixGridRow (Row), the main axis is the horizontal one, whilst the cross
+  /// axis is the vertical one. In a column, as we are using it to encompass
+  /// everything else, they are flipped
+  final MainAxisSize crossAxisSize;
+
   /// The map of allowed flex values for each TGridBreakpoint
   late final Map<TGridBreakpoint, int?> _allowedFlexes;
 
@@ -214,6 +220,7 @@ class TGridRow extends StatelessWidget with TGridBreakpointAware {
     required this.children,
     this.mainAxisAlignment = MainAxisAlignment.start,
     this.crossAxisAlignment = CrossAxisAlignment.center,
+    this.crossAxisSize = MainAxisSize.max,
     this.horizontalSpacer = const SizedBox(width: 20),
     this.verticalSpacer = const SizedBox(height: 20),
     bool forceIntrinsicHeight = false,
@@ -248,6 +255,7 @@ class TGridRow extends StatelessWidget with TGridBreakpointAware {
     required this.children,
     this.mainAxisAlignment = MainAxisAlignment.start,
     this.crossAxisAlignment = CrossAxisAlignment.center,
+    this.crossAxisSize = MainAxisSize.max,
     this.horizontalSpacer = const SizedBox(width: 20),
     this.verticalSpacer = const SizedBox(height: 20),
     bool forceIntrinsicHeight = false,
@@ -291,6 +299,7 @@ class TGridRow extends StatelessWidget with TGridBreakpointAware {
     required List<Widget> children,
     this.mainAxisAlignment = MainAxisAlignment.start,
     this.crossAxisAlignment = CrossAxisAlignment.center,
+    this.crossAxisSize = MainAxisSize.max,
     this.horizontalSpacer = const SizedBox(width: 20),
     this.verticalSpacer = const SizedBox(height: 20),
     bool forceIntrinsicHeight = false,
@@ -337,6 +346,7 @@ class TGridRow extends StatelessWidget with TGridBreakpointAware {
     required this.children,
     this.mainAxisAlignment = MainAxisAlignment.start,
     this.crossAxisAlignment = CrossAxisAlignment.center,
+    this.crossAxisSize = MainAxisSize.max,
     this.horizontalSpacer = const SizedBox(width: 20),
     this.verticalSpacer = const SizedBox(height: 20),
     bool forceIntrinsicHeight = false,
@@ -447,6 +457,9 @@ class TGridRow extends StatelessWidget with TGridBreakpointAware {
     if (_forceIntrinsicHeight) {
       widgetRows = widgetRows.map((Widget row) => IntrinsicHeight(child: row));
     }
-    return Column(children: widgetRows.separateWith(verticalSpacer));
+    return Column(
+      mainAxisSize: crossAxisSize,
+      children: widgetRows.separateWith(verticalSpacer),
+    );
   }
 }
