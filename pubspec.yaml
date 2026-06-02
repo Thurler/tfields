@@ -17,7 +17,9 @@ dependencies:
     sdk: flutter
   meta: 1.17.0
   tlinter:
-    path: ../tlinter
+    git:
+      url: https://github.com/Thurler/tlinter
+      ref: 1.0.0
   url_launcher: 6.1.11
 
 dev_dependencies:
