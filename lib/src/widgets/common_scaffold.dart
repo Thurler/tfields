@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tfields/src/extensions/iterable.dart';
+import 'package:tfields/src/theme_provider.dart';
 import 'package:tfields/src/widgets/appbar_button.dart';
 import 'package:tfields/src/widgets/theme_switch.dart';
 
@@ -39,9 +40,6 @@ class TCommonScaffold extends StatelessWidget {
   /// A footer must specify a widget and the desired height
   final ({Widget widget, double height})? footer;
 
-  /// The callback to call when the theme switch is toggled
-  final void Function(ThemeMode newMode)? themeToggleCallback;
-
   const TCommonScaffold({
     required this.title,
     required this.children,
@@ -52,7 +50,6 @@ class TCommonScaffold extends StatelessWidget {
     this.floatingActionButton,
     this.footer,
     this.additionalAppBarButtons,
-    this.themeToggleCallback,
     super.key,
   });
 
@@ -64,7 +61,7 @@ class TCommonScaffold extends StatelessWidget {
         title: Text(title),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         actions: <Widget>[
-          if (themeToggleCallback != null) TThemeSwitch(themeToggleCallback!),
+          if (TThemeProvider.maybeOf(context) != null) const TThemeSwitch(),
           if (additionalAppBarButtons != null) ...additionalAppBarButtons!,
           if (settingsLink != null)
             // Only add settings action if we pass the function in

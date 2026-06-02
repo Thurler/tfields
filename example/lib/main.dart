@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:tfields/extensions.dart';
 import 'package:tfields/logging.dart';
 import 'package:tfields/settings.dart';
@@ -27,13 +26,14 @@ void main() {
     // Failed to create a default settings file, keep going as is
   }
   // We're using a ThemedApp here to quickly add functionality to toggle between
-  // light and dark modes - we provide the seed color and a theme builder. This
-  // builder is required since we want to save the current mode to the settings,
-  // therefore we'll need the CustomSettingsThemeProvider with our settings
-  // overrides and additions
+  // light and dark modes - we just have to provide the seed color. But in order
+  // for the chosen theme to be saved for next time the app opens, we must
+  // persist it in the settings, and so we use the [withSettings] constructor to
+  // give it a concrete way to read and write to the settings with our overrides
+  // and additions
   runApp(
-    TThemedApp(
-      themeBuilder: (Color color, _) => CustomSettingsThemeProvider(color),
+    TThemedApp.withSettings<CustomSettings>(
+      settingsWriter: CustomSettingsWriter(),
       title: 'TFields Demo',
       seedColor: Colors.green,
       home: const MainWidget(),
@@ -231,10 +231,6 @@ class MainState extends State<MainWidget>
     // scrolling
     return TCommonScaffold(
       title: 'TFields Demo',
-      // Because we want this app to be able to toggle between light/dark modes,
-      // we must provide a themeToggleCallback to redraw it wherever the user is
-      // allowed to toggle between the modes
-      themeToggleCallback: Provider.of<TThemeProvider>(context).changeTheme,
       // Because settings are standardized, the CommonScaffold already provides
       // a convenient way to link to settings in the top right corner, just pass
       // in a function to actually Navigate to it

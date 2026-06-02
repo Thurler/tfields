@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:tfields/src/extensions/double.dart';
 import 'package:tfields/src/extensions/int.dart';
 import 'package:tfields/src/input_formatters/number.dart';
+import 'package:tfields/src/mixins/focusable_form.dart';
 import 'package:tfields/src/mixins/icon_updateable_form.dart';
 import 'package:tfields/src/widgets/form/base.dart';
 import 'package:tfields/src/widgets/input_decoration.dart';
@@ -226,17 +227,22 @@ class TFormDouble extends TFormNumber<double> {
 /// The state that controls the additional functionality added by
 /// TFormNumber
 class TFormNumberState<I, T extends TFormNumber<I>>
-    extends IconUpdateableTFormState<I, T> {
+    extends IconUpdateableTFormState<I, T> with FocusableForm<I, T> {
   /// The controller that the user will interact with
   final TextEditingController _controller = TextEditingController();
+
+  final FocusNode _focusNode = FocusNode();
+
+  @override
+  FocusNode get focusNode => _focusNode;
 
   /// The formatters that are currently being applied to the
   /// TextEditingController
   List<TextInputFormatter> get _formatters => <TextInputFormatter>[
     widget.makeNumberRegex(minValue),
     widget.formatterConstructor(
-      minValue: _minValue,
-      maxValue: _maxValue,
+      minValue: minValue,
+      maxValue: maxValue,
       commaSeparate: widget.commaSeparate,
       snapToMinOnEmpty: widget.snapToMinOnEmpty,
       snapToMaxWhenOver: widget.snapToMaxWhenOver,
@@ -260,26 +266,30 @@ class TFormNumberState<I, T extends TFormNumber<I>>
     super.value = newValue;
   }
 
+  bool _hasSetMinValue = false;
+  bool _hasSetMaxValue = false;
   I? _minValue;
   I? _maxValue;
 
   /// The current min value associated with the input. When this value is
   /// updated, it will update the formatters with the new limits, to ensure
   /// consistent behavior with the min/max snaps
-  I? get minValue => _minValue;
+  I? get minValue => _hasSetMinValue ? _minValue : widget.minValue;
   set minValue(I? newValue) {
     setState(() {
       _minValue = newValue;
+      _hasSetMinValue = true;
     });
   }
 
   /// The current max value associated with the input. When this value is
   /// updated, it will update the formatters with the new limits, to ensure
   /// consistent behavior with the min/max snaps
-  I? get maxValue => _maxValue;
+  I? get maxValue => _hasSetMaxValue ? _maxValue : widget.maxValue;
   set maxValue(I? newValue) {
     setState(() {
       _maxValue = newValue;
+      _hasSetMaxValue = true;
     });
   }
 
@@ -305,8 +315,8 @@ class TFormNumberState<I, T extends TFormNumber<I>>
     // force a validation error
     if (value != null && maxValue != null) {
       bool aboveMax = switch (value) {
-        int() => (value! as int) > (maxValue! as int),
-        double() => (value! as double) > (maxValue! as double),
+        int() => (value! as num) > (maxValue! as num),
+        double() => (value! as num) > (maxValue! as num),
         BigInt() => (value! as BigInt) > (maxValue! as BigInt),
         _ => false,
       };
@@ -324,8 +334,6 @@ class TFormNumberState<I, T extends TFormNumber<I>>
   void initState() {
     super.initState();
     // Copy the initial state from the widget
-    minValue = widget.minValue;
-    maxValue = widget.maxValue;
     _controller.text = _commaSeparate(widget.initialValue);
     // Add a listener to the controller's input, so that its changes are
     // propagated to the form's callbacks
@@ -343,6 +351,7 @@ class TFormNumberState<I, T extends TFormNumber<I>>
   Widget build(BuildContext context) {
     return TextFormField(
       enabled: enabled,
+      focusNode: focusNode,
       controller: _controller,
       inputFormatters: _formatters,
       onFieldSubmitted: (_) => widget.submitCallback?.call(),

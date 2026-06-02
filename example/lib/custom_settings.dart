@@ -112,10 +112,16 @@ mixin CustomSettingsDeserializer on TSettingsDeserializer<CustomSettings> {
   CustomSettings settingsFromDefault() => CustomSettings.fromDefault();
 }
 
-/// We also extend the SettingsThemeProvider with our custom settings class
-class CustomSettingsThemeProvider extends TSettingsThemeProvider<CustomSettings>
-    with TSettingsJsonReader<CustomSettings>, CustomSettingsDeserializer {
-  CustomSettingsThemeProvider(super.seedColor);
+/// We also implement a concrete writer with all the mixins described. It will
+/// ignore all errors during write - overwrite this class or implement the
+/// write mixin elsewhere to define error handling behavior
+class CustomSettingsWriter
+    with
+        TSettingsJsonReader<CustomSettings>,
+        TSettingsJsonWriter<CustomSettings>,
+        CustomSettingsDeserializer {
+  @override
+  void handleWriteError(Object exception, StackTrace stackTrace) {}
 }
 
 /// We also extend the AbstractSettingsWidget with our custom settings class

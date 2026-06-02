@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:tfields/theme.dart';
 
 /// A widget that toggles between light and dark modes, informing the callback
 /// of the newly selected mode. It presents itself as a Switch, with custom
 /// icons for light and dark modes.
 class TThemeSwitch extends StatelessWidget {
-  /// The callback that is called when the user toggles between modes
-  final void Function(ThemeMode newTheme) themeToggleCallback;
-
-  const TThemeSwitch(this.themeToggleCallback, {super.key});
+  const TThemeSwitch({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,8 +21,9 @@ class TThemeSwitch extends StatelessWidget {
       activeTrackColor: Theme.of(context).scaffoldBackgroundColor,
       inactiveThumbColor: Theme.of(context).colorScheme.primary,
       activeThumbColor: Theme.of(context).colorScheme.primary,
-      onChanged: (bool value) =>
-          themeToggleCallback(value ? ThemeMode.dark : ThemeMode.light),
+      onChanged: (bool value) => TThemeProvider.of(context).changeThemeMode(
+        value ? ThemeMode.dark : ThemeMode.light,
+      ),
     );
   }
 }

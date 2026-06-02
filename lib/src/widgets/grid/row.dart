@@ -195,11 +195,23 @@ class TGridRow extends StatelessWidget with TGridBreakpointAware {
   /// The widget that will space rows vertically
   final Widget? verticalSpacer;
 
+  /// The main axis size of the column that contains the rows. As an
+  /// AnlixGridRow (Row), the main axis is the horizontal one, whilst the cross
+  /// axis is the vertical one. In a column, as we are using it to encompass
+  /// everything else, they are flipped
+  final MainAxisSize crossAxisSize;
+
   /// The map of allowed flex values for each TGridBreakpoint
   late final Map<TGridBreakpoint, int?> _allowedFlexes;
 
-  /// Whether we're adapting the flex logic to bootstrap's fixed 12 limit or not
-  final bool _usingBootstrapLogic;
+  /// Whether this row should use the grid-specific layout behavior.
+  /// Fixed flex limits may still be configured independently through
+  /// [_allowedFlexes].
+  final bool _usingGridLayoutLogic;
+
+  /// Whether the last row in a grid-specific layout behaviored row should use
+  /// a singular pad with remaining flex or distribute it uniformly with flex 1
+  final bool _willPadGridLayoutUniformly;
 
   /// Whether we'll force intrinsic height for each row of content
   final bool _forceIntrinsicHeight;
@@ -208,6 +220,7 @@ class TGridRow extends StatelessWidget with TGridBreakpointAware {
     required this.children,
     this.mainAxisAlignment = MainAxisAlignment.start,
     this.crossAxisAlignment = CrossAxisAlignment.center,
+    this.crossAxisSize = MainAxisSize.max,
     this.horizontalSpacer = const SizedBox(width: 20),
     this.verticalSpacer = const SizedBox(height: 20),
     bool forceIntrinsicHeight = false,
@@ -220,7 +233,8 @@ class TGridRow extends StatelessWidget with TGridBreakpointAware {
     int? xxlFlexLimit,
     super.key,
   }) :
-    _usingBootstrapLogic = false,
+    _usingGridLayoutLogic = false,
+    _willPadGridLayoutUniformly = false,
     _forceIntrinsicHeight = forceIntrinsicHeight {
     _initFlexesFromLimits(
       limits,
@@ -241,6 +255,7 @@ class TGridRow extends StatelessWidget with TGridBreakpointAware {
     required this.children,
     this.mainAxisAlignment = MainAxisAlignment.start,
     this.crossAxisAlignment = CrossAxisAlignment.center,
+    this.crossAxisSize = MainAxisSize.max,
     this.horizontalSpacer = const SizedBox(width: 20),
     this.verticalSpacer = const SizedBox(height: 20),
     bool forceIntrinsicHeight = false,
@@ -257,8 +272,57 @@ class TGridRow extends StatelessWidget with TGridBreakpointAware {
     int? uhdFlexLimit,
     super.key,
   }) :
-    _usingBootstrapLogic = false,
+    _usingGridLayoutLogic = false,
+    _willPadGridLayoutUniformly = false,
     _forceIntrinsicHeight = forceIntrinsicHeight {
+    _initFlexesFromLimits(
+      limits,
+      TGridRowLimits.expanded(
+        xs: xsFlexLimit,
+        sm: smFlexLimit,
+        md: mdFlexLimit,
+        lg: lgFlexLimit,
+        xl: xlFlexLimit,
+        xxl: xxlFlexLimit,
+        xxxl: xxxlFlexLimit,
+        fhd: fhdFlexLimit,
+        qhd: qhdFlexLimit,
+        uhd: uhdFlexLimit,
+      ),
+    );
+  }
+
+  /// Automatically assign flex 1 to every child, forcing them to always share
+  /// the same width on a grid-based layout. Will automatically pad out the last
+  /// row with empty space for the missing flex
+  TGridRow.uniformGrid({
+    required List<Widget> children,
+    this.mainAxisAlignment = MainAxisAlignment.start,
+    this.crossAxisAlignment = CrossAxisAlignment.center,
+    this.crossAxisSize = MainAxisSize.max,
+    this.horizontalSpacer = const SizedBox(width: 20),
+    this.verticalSpacer = const SizedBox(height: 20),
+    bool forceIntrinsicHeight = false,
+    TGridRowLimits? limits,
+    int? xsFlexLimit,
+    int? smFlexLimit,
+    int? mdFlexLimit,
+    int? lgFlexLimit,
+    int? xlFlexLimit,
+    int? xxlFlexLimit,
+    int? xxxlFlexLimit,
+    int? fhdFlexLimit,
+    int? qhdFlexLimit,
+    int? uhdFlexLimit,
+    super.key,
+  }) :
+    _usingGridLayoutLogic = true,
+    _willPadGridLayoutUniformly = true,
+    _forceIntrinsicHeight = forceIntrinsicHeight,
+    children = children.map(
+      (Widget child) =>
+          TGridItem.fixedSize(size: const TGridSize(1), child: child),
+    ).toList() {
     _initFlexesFromLimits(
       limits,
       TGridRowLimits.expanded(
@@ -282,12 +346,14 @@ class TGridRow extends StatelessWidget with TGridBreakpointAware {
     required this.children,
     this.mainAxisAlignment = MainAxisAlignment.start,
     this.crossAxisAlignment = CrossAxisAlignment.center,
+    this.crossAxisSize = MainAxisSize.max,
     this.horizontalSpacer = const SizedBox(width: 20),
     this.verticalSpacer = const SizedBox(height: 20),
     bool forceIntrinsicHeight = false,
     super.key,
   }) :
-    _usingBootstrapLogic = true,
+    _usingGridLayoutLogic = true,
+    _willPadGridLayoutUniformly = false,
     _forceIntrinsicHeight = forceIntrinsicHeight,
     _allowedFlexes = <TGridBreakpoint, int?>{
       for (TGridBreakpoint point in TGridBreakpoint.values) point: 12,
@@ -327,11 +393,17 @@ class TGridRow extends StatelessWidget with TGridBreakpointAware {
           // previous row, we pad it out to imitate bootstrap behavior of
           // leaving a blank space after the col
           if (
-            _usingBootstrapLogic && remainingFlex != null && remainingFlex > 0
+            _usingGridLayoutLogic && remainingFlex != null && remainingFlex > 0
           ) {
-            currentRow.add(
-              Flexible(flex: remainingFlex, child: const SizedBox()),
-            );
+            if (_willPadGridLayoutUniformly) {
+              for (int i = 0; i < remainingFlex; i++) {
+                currentRow.add(const Flexible(child: SizedBox()));
+              }
+            } else {
+              currentRow.add(
+                Flexible(flex: remainingFlex, child: const SizedBox()),
+              );
+            }
           }
           rows.add(currentRow);
           currentRow = <Widget>[];
@@ -343,7 +415,8 @@ class TGridRow extends StatelessWidget with TGridBreakpointAware {
         _TGridItem(
           item: item,
           breakpoint: breakpoint,
-          baseFlex: _usingBootstrapLogic ? 12 : 1,
+          baseFlex:
+              _usingGridLayoutLogic ? (_allowedFlexes[breakpoint] ?? 1) : 1,
         ),
       );
       // If the item has negative flex, we must flush the current row to avoid
@@ -359,8 +432,16 @@ class TGridRow extends StatelessWidget with TGridBreakpointAware {
     }
     // After iterating, make sure to add the final row if it has elements
     if (currentRow.isNotEmpty) {
-      if (_usingBootstrapLogic && remainingFlex != null && remainingFlex > 0) {
-        currentRow.add(Flexible(flex: remainingFlex, child: const SizedBox()));
+      if (_usingGridLayoutLogic && remainingFlex != null && remainingFlex > 0) {
+        if (_willPadGridLayoutUniformly) {
+          for (int i = 0; i < remainingFlex; i++) {
+            currentRow.add(const Flexible(child: SizedBox()));
+          }
+        } else {
+          currentRow.add(
+            Flexible(flex: remainingFlex, child: const SizedBox()),
+          );
+        }
       }
       rows.add(currentRow);
     }
@@ -376,6 +457,9 @@ class TGridRow extends StatelessWidget with TGridBreakpointAware {
     if (_forceIntrinsicHeight) {
       widgetRows = widgetRows.map((Widget row) => IntrinsicHeight(child: row));
     }
-    return Column(children: widgetRows.separateWith(verticalSpacer));
+    return Column(
+      mainAxisSize: crossAxisSize,
+      children: widgetRows.separateWith(verticalSpacer),
+    );
   }
 }

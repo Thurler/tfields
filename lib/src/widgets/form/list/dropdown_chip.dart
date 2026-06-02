@@ -134,11 +134,11 @@ class TFormDropdownListChipState<T>
         DecoratorIconUpdateableForm<List<T>, TFormDropdownListChip<T>>,
         PrefixIconUpdateableForm<List<T>, TFormDropdownListChip<T>>,
         SuffixIconUpdateableForm<List<T>, TFormDropdownListChip<T>> {
-  /// The base dropdown that will be used for user input
-  late final TFormDropdown<T> _dropdown;
-
   /// And the associated form key
   final TDropdownFormKey<T> _dropdownKey = TDropdownFormKey<T>();
+
+  /// Whether options have been updated manually
+  bool _hasUpdatedOptions = false;
 
   late List<T> _totalOptions;
 
@@ -151,52 +151,6 @@ class TFormDropdownListChipState<T>
   Iterable<T> get _currentOptions => _totalOptions.where(
     (T data) => !(value ?? <T>[]).contains(data),
   );
-
-  @override
-  set enabled(bool newValue) {
-    // Make sure we also enable/disable the inner dropdown
-    _dropdownKey.currentState?.enabled = newValue;
-    super.enabled = newValue;
-  }
-
-  @override
-  set readonly(bool newValue) {
-    // Make sure we also update the readonly flag for the inner dropdown
-    _dropdownKey.currentState?.readonly = newValue;
-    super.readonly = newValue;
-  }
-
-  @override
-  set title(String newValue) {
-    // Propagate the title change to the inner dropdown since the title is
-    // rendered there
-    _dropdownKey.currentState?.title = newValue;
-  }
-
-  @override
-  set subtitle(String newValue) {
-    // Propagate the title change to the inner dropdown since the title is
-    // rendered there
-    _dropdownKey.currentState?.subtitle = newValue;
-  }
-
-  @override
-  set decoratorIcon(Widget? newValue) {
-    _dropdownKey.currentState?.decoratorIcon = newValue;
-    super.decoratorIcon = newValue;
-  }
-
-  @override
-  set prefixIcon(Widget? newValue) {
-    _dropdownKey.currentState?.prefixIcon = newValue;
-    super.prefixIcon = newValue;
-  }
-
-  @override
-  set suffixIcon(Widget? newValue) {
-    _dropdownKey.currentState?.suffixIcon = newValue;
-    super.suffixIcon = newValue;
-  }
 
   @override
   void validate() {
@@ -225,7 +179,7 @@ class TFormDropdownListChipState<T>
   void addElement(T newValue) {
     // Suppress adding the other option placeholder, we instead want to add it
     // through the "other option submit" function
-    if (newValue == widget.otherOptionPlaceholder) {
+    if (newValue == widget.otherOptionPlaceholder || otherOptionSelected) {
       return;
     }
     super.addElement(newValue);
@@ -252,7 +206,7 @@ class TFormDropdownListChipState<T>
   /// state as a new element in our list
   void submitOtherOption() {
     // If there's no other option, or if it's not selected, abort the call
-    if (!(_dropdownKey.currentState?.otherOptionSelected ?? false)) {
+    if (!otherOptionSelected) {
       return;
     }
     // Take the other option form's value and add it to the list of elements if
@@ -261,7 +215,7 @@ class TFormDropdownListChipState<T>
     if (otherOptionValue != null) {
       // We also set the dropdown value to null to reset the selected value
       _dropdownKey.currentState?.value = null;
-      addElement(otherOptionValue);
+      super.addElement(otherOptionValue);
     }
   }
 
@@ -269,6 +223,11 @@ class TFormDropdownListChipState<T>
   /// was appointed as an "other" option, and preserving the current value if
   /// it is still among the new options provided
   void updateOptions(Set<T> newOptions) {
+    _hasUpdatedOptions = true;
+    _updateOptions(newOptions);
+  }
+
+  void _updateOptions(Set<T> newOptions) {
     // First we update our inner list of options
     _totalOptions = newOptions.toList();
     // Because this triggers a change in the internal state that could cause
@@ -281,67 +240,79 @@ class TFormDropdownListChipState<T>
   }
 
   @override
+  void didUpdateWidget(covariant TFormDropdownListChip<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Stop widget updates if we have ever updated options manually through the
+    // public interface
+    if (
+      !_hasUpdatedOptions &&
+      Object.hashAll(_totalOptions) != Object.hashAll(widget.options)
+    ) {
+      _updateOptions(widget.options.toSet());
+    }
+  }
+
+  @override
   void initState() {
     super.initState();
 
     // Copy the given initial options into the inner state
     _totalOptions = widget.options;
-
-    // Initialize the dropdown with the given data
-    _dropdown = widget.otherOptionEnabled
-      ? TFormDropdown<T>.withOtherOption(
-          key: _dropdownKey,
-          enabled: widget.enabled,
-          readonly: widget.readonly,
-          title: widget.title,
-          subtitle: widget.subtitle,
-          hintText: widget.hintText,
-          errorMessage: widget.errorMessage,
-          initialValue: null,
-          options: _currentOptions.toList(),
-          toDropdownText: widget.toDropdownText,
-          isOptionEnabledCallback: widget.isOptionEnabledCallback,
-          sortLogic: widget.sortLogic,
-          decoratorIcon: decoratorIcon,
-          prefixIcon: prefixIcon,
-          suffixIcon: suffixIcon,
-          otherOptionForm: widget.otherOptionForm!,
-          otherOptionPlaceholder: widget.otherOptionPlaceholder != null
-            ? widget.otherOptionPlaceholder!
-            : throw Exception('Null placeholder received in T dropdown'),
-          otherOptionAxis: widget.otherOptionAxis,
-          otherOptionText: widget.otherOptionText,
-          // There's no need to double validate, just display this form's error
-          // message
-          validationCallback: (_) => errorMessage,
-          // Automatically add a value when we choose it in the dropdown
-          onValueChanged: (T? chosen) =>
-              chosen != null ? addElement(chosen) : null,
-        )
-      : TFormDropdown<T>(
-          key: _dropdownKey,
-          enabled: widget.enabled,
-          readonly: widget.readonly,
-          title: widget.title,
-          subtitle: widget.subtitle,
-          hintText: widget.hintText,
-          errorMessage: widget.errorMessage,
-          initialValue: null,
-          options: _currentOptions.toList(),
-          toDropdownText: widget.toDropdownText,
-          isOptionEnabledCallback: widget.isOptionEnabledCallback,
-          sortLogic: widget.sortLogic,
-          decoratorIcon: decoratorIcon,
-          prefixIcon: prefixIcon,
-          suffixIcon: suffixIcon,
-          // There's no need to double validate, just display this form's error
-          // message
-          validationCallback: (_) => errorMessage,
-          // Automatically add a value when we choose it in the dropdown
-          onValueChanged: (T? chosen) =>
-              chosen != null ? addElement(chosen) : null,
-        );
   }
+
+  Widget get _dropdown => widget.otherOptionEnabled
+    ? TFormDropdown<T>.withOtherOption(
+        key: _dropdownKey,
+        enabled: enabled,
+        readonly: readonly,
+        title: title,
+        subtitle: subtitle,
+        hintText: widget.hintText,
+        errorMessage: errorMessage,
+        initialValue: null,
+        options: _currentOptions.toList(),
+        toDropdownText: widget.toDropdownText,
+        isOptionEnabledCallback: widget.isOptionEnabledCallback,
+        sortLogic: widget.sortLogic,
+        decoratorIcon: decoratorIcon,
+        prefixIcon: prefixIcon,
+        suffixIcon: suffixIcon,
+        otherOptionForm: widget.otherOptionForm!,
+        otherOptionPlaceholder: widget.otherOptionPlaceholder != null
+          ? widget.otherOptionPlaceholder!
+          : throw Exception('Null placeholder received in T dropdown'),
+        otherOptionAxis: widget.otherOptionAxis,
+        otherOptionText: widget.otherOptionText,
+        // There's no need to double validate, just display this form's error
+        // message
+        validationCallback: (_) => errorMessage,
+        // Automatically add a value when we choose it in the dropdown
+        onValueChanged: (T? chosen) =>
+            chosen != null ? addElement(chosen) : null,
+      )
+    : TFormDropdown<T>(
+        key: _dropdownKey,
+        enabled: enabled,
+        readonly: readonly,
+        title: title,
+        subtitle: subtitle,
+        hintText: widget.hintText,
+        errorMessage: errorMessage,
+        initialValue: null,
+        options: _currentOptions.toList(),
+        toDropdownText: widget.toDropdownText,
+        isOptionEnabledCallback: widget.isOptionEnabledCallback,
+        sortLogic: widget.sortLogic,
+        decoratorIcon: decoratorIcon,
+        prefixIcon: prefixIcon,
+        suffixIcon: suffixIcon,
+        // There's no need to double validate, just display this form's error
+        // message
+        validationCallback: (_) => errorMessage,
+        // Automatically add a value when we choose it in the dropdown
+        onValueChanged: (T? chosen) =>
+            chosen != null ? addElement(chosen) : null,
+      );
 
   @override
   Widget build(BuildContext context) {

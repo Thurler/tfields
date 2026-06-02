@@ -9,6 +9,5 @@ library settings;
 
 export 'src/mixins/settings.dart';
 export 'src/settings.dart';
-export 'src/theme_provider.dart' show TSettingsThemeProvider;
 export 'src/views/settings.dart';
 export 'src/widgets/form/group/common_settings.dart';

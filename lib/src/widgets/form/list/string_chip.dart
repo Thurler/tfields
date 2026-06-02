@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tfields/src/extensions/iterable.dart';
+import 'package:tfields/src/mixins/focusable_form.dart';
 import 'package:tfields/src/mixins/icon_updateable_form.dart';
 import 'package:tfields/src/widgets/button.dart';
 import 'package:tfields/src/widgets/form/list/list.dart';
@@ -45,7 +46,8 @@ class TFormStringListChipState
     extends TFormListState<String, TFormStringListChip>
     with
         DecoratorIconUpdateableForm<List<String>, TFormStringListChip>,
-        SuffixIconUpdateableForm<List<String>, TFormStringListChip> {
+        SuffixIconUpdateableForm<List<String>, TFormStringListChip>,
+        FocusableForm<List<String>, TFormStringListChip> {
   /// The controller that the user will interact with
   final TextEditingController _controller = TextEditingController();
 
@@ -54,6 +56,9 @@ class TFormStringListChipState
 
   /// The focus node associated with the text form
   late final FocusNode _textFormFocus;
+
+  @override
+  FocusNode get focusNode => _textFormFocus;
 
   /// The text that has currently been input, but not submitted as a chip
   String get inputText => _controller.text;
@@ -137,6 +142,7 @@ class TFormStringListChipState
   Widget build(BuildContext context) {
     // We handle the decoration manually to set up the horizontal scroll
     return InputDecorator(
+      isFocused: focusNode.hasFocus,
       decoration: TInputDecoration(
         enabled: enabled,
         isDense: true,
@@ -146,8 +152,7 @@ class TFormStringListChipState
         icon: decoratorIcon,
         suffixIcon: suffixIcon,
       ),
-      isEmpty:
-          !hasChips && _controller.text.isEmpty && !_textFormFocus.hasFocus,
+      isEmpty: !hasChips && _controller.text.isEmpty,
       child: GestureDetector(
         // Whenever we clip inside the decorator, send focus to text form
         onTap: () => setState(_textFormFocus.requestFocus),

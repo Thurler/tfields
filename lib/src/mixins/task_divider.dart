@@ -1,8 +1,7 @@
 import 'dart:async';
-import 'dart:math';
 
 /// Defines whether work should be processed sequentially or in parallel
-enum TProcessMethod {
+enum ProcessMethod {
   sequential,
   parallel;
 }
@@ -10,10 +9,12 @@ enum TProcessMethod {
 /// A mixin that adds the `divideWork` function to a class. That class can now
 /// call this method to asynchronously execute tasks on a list of data elements,
 /// without blocking the rendering thread
-mixin TTaskDivider {
+mixin TaskDivider {
   /// Iterates over the work list, waiting for one execution before moving on to
   /// the next one. If any work returns FALSE, execution is aborted immediately.
-  Future<bool> _doSequentialWork(List<Future<bool> Function()> workList) async {
+  Future<bool> _doSequentialWork(
+    Iterable<Future<bool> Function()> workList,
+  ) async {
     for (Future<bool> Function() work in workList) {
       bool keepGoing = await work();
       if (!keepGoing) {
@@ -25,7 +26,9 @@ mixin TTaskDivider {
 
   /// Calls Future.wait on the work list that is passed in, returning whether
   /// ALL work calls returned TRUE
-  Future<bool> _doParallelWork(List<Future<bool> Function()> workList) async {
+  Future<bool> _doParallelWork(
+    Iterable<Future<bool> Function()> workList,
+  ) async {
     List<bool> results = await Future.wait(
       workList.map((Future<bool> Function() work) => work()),
     );
@@ -39,7 +42,7 @@ mixin TTaskDivider {
   ///
   /// The data is divided into chunks of size `chunkSize`, that will be
   /// processed either sequentially or in parallel, depending on the
-  /// `TprocessMethod` that is passed in.
+  /// `processMethod` that is passed in.
   ///
   /// The caller is responsible for ensuring the `SharedState` object can keep
   /// track of the processing result, as well as handle concurrent access to it
@@ -55,10 +58,10 @@ mixin TTaskDivider {
   /// `processFunction` call. Execution will only move on to the next chunk if
   /// EVERY data process for a chunk returned TRUE.
   Future<SharedState> divideWork<Data, SharedState>({
-    required List<Data> dataList,
+    required Iterable<Data> dataList,
     required SharedState sharedState,
     required Future<bool> Function(Data, SharedState) processFunction,
-    required TProcessMethod processMethod,
+    required ProcessMethod processMethod,
     required int chunkSize,
   }) async {
     // Think of this as a Promise, we call completer.complete() like we would
@@ -68,33 +71,47 @@ mixin TTaskDivider {
     if (dataList.isEmpty) {
       return sharedState;
     }
-    int length = dataList.length;
+    // We keep this as a "global" variable for the async chunks
+    bool isFinished = false;
+    // Generates an iterable of at most [chunkSize] elements from the given
+    // [iterator], effectively advancing the [iterator] by [chunkSize] positions
+    // or until it is finished with no more data to be read
+    //
+    // The reason we declare it inline is because we need to update the state of
+    // [isFinished] when we run out of elements
+    Iterable<Data> generateChunk(int chunkSize, Iterator<Data> iterator) sync* {
+      for (int i = 0; i < chunkSize; i++) {
+        if (iterator.moveNext()) {
+          yield iterator.current;
+        } else {
+          isFinished = true;
+          break;
+        }
+      }
+    }
+
     // This is just a fancy way to isolate a part of our function as a separate
     // function, so we can call that separate part recursively, keeping the
     // outside variables as context for the inner computation.
     // The only argument is the progress, so we can keep track of what each exec
     // loop needs to accomplish
-    Function(int progress)? exec;
-    exec = (int progress) async {
-      // If our progress exceeds the length of data to check, resolve the value
-      if (progress >= length) {
-        return completer.complete(sharedState);
-      }
-      // Iterate on the next [chunk] elements of our given data. In order to
-      // avoid going over the prefetched data length, we compute the minimum
-      // between the length and our progress + chunk size
-      List<Future<bool> Function()> workList = <Future<bool> Function()>[];
-      for (int i = progress; i < min(length, progress + chunkSize); i++) {
-        workList.add(() => processFunction(dataList[i], sharedState));
-      }
+    Function(Iterator<Data> iterator)? exec;
+    exec = (Iterator<Data> iterator) async {
+      // Iterate on the iterator [chunkSize] times, populating a data chunk to
+      // work on and always updating whether more data is available or not
+      Iterable<Data> dataChunk = generateChunk(chunkSize, iterator);
+      Iterable<Future<bool> Function()> workList = dataChunk.map(
+        (Data data) => () => processFunction(data, sharedState),
+      );
       // Call the appropriate function to divide the work either sequentially or
       // in parallel. If the processing returns to not keep going, we resolve
       // the value and exit the processing
+      // We also stop if we have run out of elements in our iterator
       bool keepGoing = await switch (processMethod) {
-        TProcessMethod.sequential => _doSequentialWork(workList),
-        TProcessMethod.parallel => _doParallelWork(workList),
+        ProcessMethod.sequential => _doSequentialWork(workList),
+        ProcessMethod.parallel => _doParallelWork(workList),
       };
-      if (!keepGoing) {
+      if (!keepGoing || isFinished) {
         return completer.complete(sharedState);
       }
       // After we're done processing a chunk, we add a recursive call to exec
@@ -103,14 +120,11 @@ mixin TTaskDivider {
       // This is achieved by creating a delayed Future with duration zero, so
       // that we can go right back to processing our data if there are no other
       // events in the queue
-      Future<void>.delayed(
-        Duration.zero,
-        () => exec?.call(progress + chunkSize),
-      );
+      Future<void>.delayed(Duration.zero, () => exec?.call(iterator));
     };
     // Start the processing and then return the future for the completer - that
     // future will complete when we call completer.complete() above
-    exec(0);
+    exec(dataList.iterator);
     return completer.future;
   }
 }

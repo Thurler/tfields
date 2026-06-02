@@ -4,6 +4,7 @@ import 'package:tfields/src/extensions/iterable.dart';
 import 'package:tfields/src/widgets/button.dart';
 import 'package:tfields/src/widgets/circular_progress_icon.dart';
 import 'package:tfields/src/widgets/icons.dart';
+import 'package:tlinter/annotations.dart';
 
 /// A builder redirector to the constructors of _TButtonElevated. It is
 /// callable directly to use the normal constructor, and presets are available
@@ -28,6 +29,7 @@ class TButtonElevatedBuilder {
   /// The [iconOverride] can be used to provide a custom widget in place of the
   /// icon (e.g., a loading indicator).
   /// The [onPressed] callback is triggered when the button is tapped.
+  @TReflect(_TButtonElevated.new, validateReturnType: false)
   TButton call({
     required String text,
     void Function()? onPressed,
@@ -53,6 +55,7 @@ class TButtonElevatedBuilder {
   /// A shorthand for an elevated form submit button, that automatically
   /// disables itself and changes text when submitting. It will also standardize
   /// the icons used for submitting and loading
+  @TReflect(_TButtonElevated.formSubmit, validateReturnType: false)
   TButton formSubmit({
     required String saveText,
     required String savingText,
@@ -79,6 +82,11 @@ class TButtonElevatedBuilder {
   ///
   /// See [call] for parameter descriptions. The [textOverride] parameter can be
   /// used to override the default download text.
+  @TReflect(
+    _TButtonElevated.fromPreset,
+    ignoreNamedArguments: <String>{'icon'},
+    validateReturnType: false,
+  )
   TButton download({
     String? textOverride,
     void Function()? onPressed,
@@ -102,6 +110,11 @@ class TButtonElevatedBuilder {
   ///
   /// See [call] for parameter descriptions. The [textOverride] parameter can be
   /// used to override the default upload text.
+  @TReflect(
+    _TButtonElevated.fromPreset,
+    ignoreNamedArguments: <String>{'icon'},
+    validateReturnType: false,
+  )
   TButton upload({
     String? textOverride,
     void Function()? onPressed,
@@ -125,6 +138,11 @@ class TButtonElevatedBuilder {
   ///
   /// See [call] for parameter descriptions. The [textOverride] parameter can be
   /// used to override the default filter text.
+  @TReflect(
+    _TButtonElevated.fromPreset,
+    ignoreNamedArguments: <String>{'icon'},
+    validateReturnType: false,
+  )
   TButton filter({
     String? textOverride,
     void Function()? onPressed,
@@ -148,6 +166,11 @@ class TButtonElevatedBuilder {
   ///
   /// See [call] for parameter descriptions. The [textOverride] parameter can be
   /// used to override the default close text.
+  @TReflect(
+    _TButtonElevated.fromPreset,
+    ignoreNamedArguments: <String>{'icon'},
+    validateReturnType: false,
+  )
   TButton close({
     String? textOverride,
     void Function()? onPressed,
@@ -171,6 +194,11 @@ class TButtonElevatedBuilder {
   ///
   /// See [call] for parameter descriptions. The [textOverride] parameter can be
   /// used to override the default cancel text.
+  @TReflect(
+    _TButtonElevated.fromPreset,
+    ignoreNamedArguments: <String>{'icon'},
+    validateReturnType: false,
+  )
   TButton cancel({
     String? textOverride,
     void Function()? onPressed,
@@ -194,6 +222,11 @@ class TButtonElevatedBuilder {
   ///
   /// See [call] for parameter descriptions. The [textOverride] parameter can be
   /// used to override the default save text.
+  @TReflect(
+    _TButtonElevated.fromPreset,
+    ignoreNamedArguments: <String>{'icon'},
+    validateReturnType: false,
+  )
   TButton save({
     String? textOverride,
     void Function()? onPressed,
@@ -217,6 +250,11 @@ class TButtonElevatedBuilder {
   ///
   /// See [call] for parameter descriptions. The [textOverride] parameter can be
   /// used to override the default delete text.
+  @TReflect(
+    _TButtonElevated.fromPreset,
+    ignoreNamedArguments: <String>{'icon'},
+    validateReturnType: false,
+  )
   TButton delete({
     String? textOverride,
     void Function()? onPressed,
@@ -240,6 +278,11 @@ class TButtonElevatedBuilder {
   ///
   /// See [call] for parameter descriptions. The [textOverride] parameter can be
   /// used to override the default add text.
+  @TReflect(
+    _TButtonElevated.fromPreset,
+    ignoreNamedArguments: <String>{'icon'},
+    validateReturnType: false,
+  )
   TButton add({
     String? textOverride,
     void Function()? onPressed,
@@ -263,6 +306,11 @@ class TButtonElevatedBuilder {
   ///
   /// See [call] for parameter descriptions. The [textOverride] parameter can be
   /// used to override the default refresh text.
+  @TReflect(
+    _TButtonElevated.fromPreset,
+    ignoreNamedArguments: <String>{'icon'},
+    validateReturnType: false,
+  )
   TButton refresh({
     String? textOverride,
     void Function()? onPressed,
@@ -286,6 +334,11 @@ class TButtonElevatedBuilder {
   ///
   /// See [call] for parameter descriptions. The [textOverride] parameter can be
   /// used to override the default edit text.
+  @TReflect(
+    _TButtonElevated.fromPreset,
+    ignoreNamedArguments: <String>{'icon'},
+    validateReturnType: false,
+  )
   TButton edit({
     String? textOverride,
     void Function()? onPressed,
