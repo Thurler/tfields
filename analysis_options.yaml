@@ -8,7 +8,7 @@ plugins:
   tlinter:
     git:
       url: https://github.com/Thurler/tlinter
-      ref: 1.0.0
+      ref: 1.1.0
 
 linter:
   # https://dart-lang.github.io/linter/lints/index.html.
